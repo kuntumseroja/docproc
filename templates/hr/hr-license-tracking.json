@@ -1,0 +1,51 @@
+{
+  "id": "hr-license-tracking",
+  "name": "Regulatory License Tracking",
+  "version": "1.0",
+  "category": "hr-core",
+  "description": "Track and validate banking employee certifications, professional licenses, and regulatory compliance documents. Ensures OJK-mandated certification requirements are met.",
+  "document_types": [
+    "Sertifikasi Manajemen Risiko (Risk Management Certification)",
+    "BSMR Certificate (Badan Sertifikasi Manajemen Risiko)",
+    "WMI (Wealth Management Indonesia) License",
+    "AAJI (Insurance Agent License)",
+    "CFA/FRM Certificate",
+    "OJK Fit & Proper Letter",
+    "Professional Development Certificate",
+    "Internal Certification Record"
+  ],
+  "extraction_schema": {
+    "fields": [
+      {"name": "employee_id", "type": "string", "required": true, "source": "Certificate/License"},
+      {"name": "employee_name", "type": "string", "required": true, "source": "Certificate/License"},
+      {"name": "certificate_type", "type": "string", "required": true, "source": "Certificate/License", "enum": ["BSMR Level 1", "BSMR Level 2", "BSMR Level 3", "BSMR Level 4", "BSMR Level 5", "WMI", "AAJI", "CFA", "FRM", "OJK Fit & Proper", "Internal"]},
+      {"name": "certificate_number", "type": "string", "required": true, "source": "Certificate/License"},
+      {"name": "issuing_body", "type": "string", "required": true, "source": "Certificate/License"},
+      {"name": "issue_date", "type": "date", "required": true, "source": "Certificate/License"},
+      {"name": "expiry_date", "type": "date", "required": true, "source": "Certificate/License"},
+      {"name": "certification_level", "type": "string", "required": false, "source": "Certificate/License"},
+      {"name": "score", "type": "number", "required": false, "source": "Certificate/License"},
+      {"name": "passing_grade", "type": "number", "required": false, "source": "Certificate/License"},
+      {"name": "renewal_required", "type": "boolean", "required": true, "source": "Derived"},
+      {"name": "employee_role", "type": "string", "required": true, "source": "HR System"},
+      {"name": "required_certifications", "type": "array", "required": true, "source": "HR System", "description": "List of certifications required for employee's current role"}
+    ]
+  },
+  "validation_rules": [
+    {"rule": "certificate_not_expired", "description": "Certificate must not be expired", "type": "date_check", "field": "expiry_date"},
+    {"rule": "bsmr_level_match", "description": "BSMR level must match or exceed role requirement", "type": "role_certification_matrix"},
+    {"rule": "ojk_fit_proper_valid", "description": "OJK Fit & Proper letter must be valid for current position", "type": "regulatory_check"},
+    {"rule": "score_above_passing", "description": "Certification score must meet or exceed passing grade", "type": "comparison", "operator": ">="},
+    {"rule": "renewal_window", "description": "Flag certificates expiring within 90 days", "type": "date_range", "warning_days": 90},
+    {"rule": "role_coverage", "description": "Employee must hold all certifications required for their role", "type": "completeness_check"}
+  ],
+  "action_triggers": [
+    {"trigger": "expiring_90_days", "action": "send_renewal_reminder", "target": "employee", "description": "Send renewal reminder 90 days before expiry"},
+    {"trigger": "expiring_30_days", "action": "escalate_to_manager", "target": "line_manager", "description": "Escalate to manager 30 days before expiry"},
+    {"trigger": "expired", "action": "compliance_alert", "target": "compliance_officer", "description": "Alert compliance team immediately on expiry"},
+    {"trigger": "expired", "action": "restrict_activities", "target": "system", "description": "Flag employee for activity restriction pending renewal"},
+    {"trigger": "new_certification", "action": "update_registry", "target": "certification_registry", "description": "Update central certification registry"},
+    {"trigger": "role_change", "action": "gap_analysis", "target": "hr_manager", "description": "Run certification gap analysis on role change"}
+  ],
+  "nl_prompt": "Extract certification and license details from banking regulatory documents. Identify the certificate type (BSMR, WMI, AAJI, CFA, FRM, or OJK Fit & Proper), certificate number, issuing body, issue date, and expiry date. For BSMR certificates, identify the certification level (1 through 5). Check if the certification score meets the passing grade. Flag any expired or soon-to-expire certificates. Cross-reference with the employee's role to identify certification gaps."
+}

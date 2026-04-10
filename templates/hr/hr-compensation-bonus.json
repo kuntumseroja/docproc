@@ -1,0 +1,50 @@
+{
+  "id": "hr-compensation-bonus",
+  "name": "Compensation & Bonus Calculation",
+  "version": "1.0",
+  "category": "hr-operations",
+  "description": "Process salary adjustments, annual bonus calculations, and compensation reviews. Links performance ratings to compensation outcomes.",
+  "document_types": [
+    "Salary Adjustment Letter",
+    "Annual Bonus Letter",
+    "Compensation Review Form",
+    "Market Benchmarking Report",
+    "Salary Structure Document",
+    "THR (Religious Holiday Bonus) Calculation",
+    "Incentive/Commission Statement"
+  ],
+  "extraction_schema": {
+    "fields": [
+      {"name": "employee_id", "type": "string", "required": true, "source": "Letter/Form"},
+      {"name": "employee_name", "type": "string", "required": true, "source": "Letter/Form"},
+      {"name": "current_salary", "type": "number", "required": true, "source": "Compensation Form"},
+      {"name": "new_salary", "type": "number", "required": false, "source": "Adjustment Letter"},
+      {"name": "salary_increase_pct", "type": "number", "required": false, "source": "Adjustment Letter"},
+      {"name": "effective_date", "type": "date", "required": true, "source": "Letter"},
+      {"name": "performance_rating", "type": "string", "required": true, "source": "Review Linkage"},
+      {"name": "bonus_amount", "type": "number", "required": false, "source": "Bonus Letter"},
+      {"name": "bonus_months", "type": "number", "required": false, "source": "Bonus Letter", "description": "Bonus as X months salary"},
+      {"name": "bonus_type", "type": "string", "required": false, "source": "Bonus Letter", "enum": ["Annual Performance", "THR", "Incentive", "Commission", "Signing", "Retention"]},
+      {"name": "compa_ratio", "type": "number", "required": false, "source": "Benchmarking", "description": "Salary vs market midpoint ratio"},
+      {"name": "salary_band", "type": "string", "required": false, "source": "Structure", "description": "Min-Mid-Max salary band for grade"},
+      {"name": "grade_level", "type": "string", "required": false, "source": "Form"},
+      {"name": "approval_chain", "type": "array", "required": true, "source": "Form", "description": "List of approvers with status"}
+    ]
+  },
+  "validation_rules": [
+    {"rule": "increase_within_band", "description": "New salary must fall within salary band for grade", "type": "range_check"},
+    {"rule": "performance_alignment", "description": "Increase % must align with performance rating tier", "type": "mapping_check"},
+    {"rule": "budget_compliance", "description": "Total dept increases must not exceed approved budget", "type": "budget_check"},
+    {"rule": "compa_ratio_range", "description": "Compa-ratio should be 0.8-1.2 post-adjustment", "type": "range_check", "min": 0.8, "max": 1.2},
+    {"rule": "thr_minimum", "description": "THR must be minimum 1 month salary (UU Cipta Kerja)", "type": "threshold"},
+    {"rule": "approval_complete", "description": "All required approvals must be obtained", "type": "completeness_check"}
+  ],
+  "action_triggers": [
+    {"trigger": "adjustment_approved", "action": "update_payroll", "target": "payroll_system", "description": "Update payroll with new salary"},
+    {"trigger": "bonus_approved", "action": "schedule_payment", "target": "finance", "description": "Schedule bonus payment in next payroll run"},
+    {"trigger": "above_band_maximum", "action": "flag_for_review", "target": "compensation_committee", "description": "Flag cases where salary exceeds band max"},
+    {"trigger": "compa_ratio_outlier", "action": "market_review", "target": "hr_compensation", "description": "Trigger market review for outliers"},
+    {"trigger": "annual_review_complete", "action": "generate_summary", "target": "hr_director", "description": "Generate compensation review summary"}
+  ],
+  "nl_prompt": "Extract compensation details from this salary adjustment or bonus document. Identify current salary, new salary, increase percentage, effective date, and performance rating linkage. For bonuses, extract the amount, type, and whether it's expressed as months of salary. Check that the new salary falls within the salary band for the employee's grade. Verify bonus calculations align with performance rating tiers. Check all approvals are complete."
+}

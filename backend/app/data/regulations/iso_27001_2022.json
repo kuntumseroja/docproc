@@ -1,0 +1,159 @@
+{
+  "id": "iso-27001-2022",
+  "name": "ISO/IEC 27001:2022",
+  "title": "Information Security Management Systems — Requirements",
+  "issuer": "International Organization for Standardization (ISO) / International Electrotechnical Commission (IEC)",
+  "country": "International",
+  "category": "information_security",
+  "effective_date": "2022-10-25",
+  "language": "en",
+  "version": "3.0",
+  "last_updated": "2024-12-01",
+  "sections": [
+    {
+      "id": "iso-27001-2022-a5",
+      "section_number": "A.5",
+      "title": "Organizational Controls",
+      "description": "Annex A controls related to the organizational aspects of information security, including policies, roles, responsibilities, segregation of duties, contact with authorities, threat intelligence, information security in project management, and asset management.",
+      "risk_level": "high",
+      "controls_count": 37,
+      "key_controls": [
+        {
+          "id": "A.5.1",
+          "title": "Policies for information security",
+          "description": "Information security policy and topic-specific policies shall be defined, approved by management, published, communicated to and acknowledged by relevant personnel and relevant interested parties, and reviewed at planned intervals."
+        },
+        {
+          "id": "A.5.7",
+          "title": "Threat intelligence",
+          "description": "Information relating to information security threats shall be collected and analyzed to produce threat intelligence."
+        },
+        {
+          "id": "A.5.23",
+          "title": "Information security for use of cloud services",
+          "description": "Processes for acquisition, use, management and exit from cloud services shall be established in accordance with the organization's information security requirements."
+        },
+        {
+          "id": "A.5.30",
+          "title": "ICT readiness for business continuity",
+          "description": "ICT readiness shall be planned, implemented, maintained and tested based on business continuity objectives and ICT continuity requirements."
+        }
+      ],
+      "requirements": [
+        "Establish, maintain, and communicate a comprehensive information security policy approved by top management, with topic-specific policies addressing access control, data classification, cryptography, physical security, and acceptable use.",
+        "Define and assign all information security roles and responsibilities, including segregation of conflicting duties to reduce opportunities for unauthorized or unintentional modification or misuse of assets.",
+        "Implement threat intelligence capabilities to collect, analyze, and act on information about current and emerging information security threats relevant to the organization.",
+        "Establish information security requirements for cloud service acquisition, use, and exit, including shared responsibility definitions, data portability, and secure decommissioning procedures.",
+        "Integrate information security into project management methodologies to ensure security requirements are identified and addressed throughout the project lifecycle regardless of project type.",
+        "Maintain an accurate inventory of information and associated assets, with defined ownership and acceptable use rules communicated to all users."
+      ]
+    },
+    {
+      "id": "iso-27001-2022-a6",
+      "section_number": "A.6",
+      "title": "People Controls",
+      "description": "Annex A controls addressing the human aspects of information security, including screening, terms and conditions of employment, awareness and training, disciplinary processes, responsibilities after termination, confidentiality agreements, and remote working security.",
+      "risk_level": "medium",
+      "controls_count": 8,
+      "key_controls": [
+        {
+          "id": "A.6.1",
+          "title": "Screening",
+          "description": "Background verification checks on all candidates to become personnel shall be carried out prior to joining the organization and on an ongoing basis taking into account applicable laws, regulations, ethics, and the business requirements."
+        },
+        {
+          "id": "A.6.3",
+          "title": "Information security awareness, education and training",
+          "description": "Personnel of the organization and relevant interested parties shall receive appropriate information security awareness, education and training and regular updates of the organization's information security policy."
+        },
+        {
+          "id": "A.6.7",
+          "title": "Remote working",
+          "description": "Security measures shall be implemented when personnel are working remotely to protect information accessed, processed or stored outside the organization's premises."
+        }
+      ],
+      "requirements": [
+        "Conduct pre-employment background verification checks proportional to the role's access to sensitive information, business requirements, and applicable legal and regulatory requirements.",
+        "Define information security responsibilities in employment terms and conditions, including obligations that continue after employment termination or change of role.",
+        "Implement a comprehensive security awareness and training program covering phishing recognition, social engineering, data handling, incident reporting, and role-specific security practices.",
+        "Establish a formal disciplinary process for personnel who commit information security policy violations, communicated to all employees as a deterrent measure.",
+        "Implement security controls for remote working including secure VPN connections, endpoint protection, encrypted storage, and restrictions on use of personal devices for processing organizational information."
+      ]
+    },
+    {
+      "id": "iso-27001-2022-a7",
+      "section_number": "A.7",
+      "title": "Physical Controls",
+      "description": "Annex A controls for the physical protection of organizational facilities, equipment, and information assets. Covers physical security perimeters, entry controls, securing offices, physical security monitoring, protection against environmental threats, working in secure areas, and equipment security.",
+      "risk_level": "medium",
+      "controls_count": 14,
+      "key_controls": [
+        {
+          "id": "A.7.1",
+          "title": "Physical security perimeters",
+          "description": "Security perimeters shall be defined and used to protect areas that contain information and other associated assets."
+        },
+        {
+          "id": "A.7.4",
+          "title": "Physical security monitoring",
+          "description": "Premises shall be continuously monitored for unauthorized physical access."
+        },
+        {
+          "id": "A.7.10",
+          "title": "Storage media",
+          "description": "Storage media shall be managed through their life cycle of acquisition, use, transportation and disposal in accordance with the organization's classification scheme and handling requirements."
+        }
+      ],
+      "requirements": [
+        "Define and implement physical security perimeters using appropriate controls such as walls, card-controlled entry gates, and staffed reception desks to protect areas containing sensitive information and critical IT infrastructure.",
+        "Implement physical access controls including multi-factor authentication for data centers and server rooms, visitor registration and escort procedures, and access logging with retention of at minimum 90 days.",
+        "Deploy continuous physical security monitoring including CCTV surveillance, intrusion detection systems, and alarm monitoring for all facilities housing critical information assets.",
+        "Implement environmental controls including fire suppression, temperature and humidity monitoring, water leak detection, and power supply protection (UPS and generators) for data centers and server rooms.",
+        "Establish secure disposal procedures for storage media and equipment containing sensitive data, including degaussing, physical destruction, or certified data wiping with documented chain of custody."
+      ]
+    },
+    {
+      "id": "iso-27001-2022-a8",
+      "section_number": "A.8",
+      "title": "Technological Controls",
+      "description": "Annex A controls covering the technological measures for information security, including user endpoint devices, privileged access rights, information access restriction, secure authentication, capacity management, malware protection, vulnerability management, configuration management, data masking, data leakage prevention, monitoring, web filtering, and secure coding.",
+      "risk_level": "high",
+      "controls_count": 34,
+      "key_controls": [
+        {
+          "id": "A.8.5",
+          "title": "Secure authentication",
+          "description": "Secure authentication technologies and procedures shall be established and implemented based on information access restrictions and the topic-specific policy on access control."
+        },
+        {
+          "id": "A.8.8",
+          "title": "Management of technical vulnerabilities",
+          "description": "Information about technical vulnerabilities of information systems in use shall be obtained, the organization's exposure to such vulnerabilities shall be evaluated and appropriate measures shall be taken."
+        },
+        {
+          "id": "A.8.11",
+          "title": "Data masking",
+          "description": "Data masking shall be used in accordance with the organization's topic-specific policy on access control and other related topic-specific policies, and business requirements, taking applicable legislation into consideration."
+        },
+        {
+          "id": "A.8.12",
+          "title": "Data leakage prevention",
+          "description": "Data leakage prevention measures shall be applied to systems, networks and any other devices that process, store or transmit sensitive information."
+        },
+        {
+          "id": "A.8.28",
+          "title": "Secure coding",
+          "description": "Secure coding principles shall be applied to software development."
+        }
+      ],
+      "requirements": [
+        "Implement secure authentication mechanisms including multi-factor authentication for access to sensitive systems, with password policies enforcing minimum length of 12 characters, complexity requirements, and prohibition of known compromised passwords.",
+        "Establish a vulnerability management program with automated scanning, risk-based prioritization, defined remediation SLAs (critical: 72 hours, high: 7 days, medium: 30 days), and exception management procedures.",
+        "Implement data leakage prevention (DLP) controls across endpoints, networks, email, and cloud services to detect and prevent unauthorized transfer of sensitive information based on data classification.",
+        "Apply data masking techniques including pseudonymization, tokenization, and anonymization for sensitive data in non-production environments, analytics, and when shared with third parties.",
+        "Implement secure coding practices throughout the software development lifecycle including SAST, DAST, SCA, code review, and developer security training with OWASP Top 10 awareness.",
+        "Deploy endpoint protection on all user devices including anti-malware, host-based firewall, device encryption, and mobile device management (MDM) for devices accessing organizational information."
+      ]
+    }
+  ]
+}

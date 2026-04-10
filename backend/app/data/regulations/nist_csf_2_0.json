@@ -1,0 +1,214 @@
+{
+  "id": "nist-csf-2-0",
+  "name": "NIST Cybersecurity Framework 2.0",
+  "title": "Framework for Improving Critical Infrastructure Cybersecurity",
+  "issuer": "National Institute of Standards and Technology (NIST)",
+  "country": "United States",
+  "category": "cybersecurity",
+  "effective_date": "2024-02-26",
+  "language": "en",
+  "version": "2.0",
+  "last_updated": "2024-12-01",
+  "sections": [
+    {
+      "id": "nist-csf-2-0-gv",
+      "section_number": "GV",
+      "title": "Govern (GV)",
+      "description": "The organization's cybersecurity risk management strategy, expectations, and policy are established, communicated, and monitored. The Govern function provides outcomes to inform what an organization may do to achieve and prioritize the outcomes of the other five functions in the context of its mission and stakeholder expectations.",
+      "risk_level": "high",
+      "categories": [
+        {
+          "id": "GV.OC",
+          "title": "Organizational Context",
+          "description": "The circumstances — mission, stakeholder expectations, dependencies, and legal, regulatory, and contractual requirements — surrounding the organization's cybersecurity risk management decisions are understood."
+        },
+        {
+          "id": "GV.RM",
+          "title": "Risk Management Strategy",
+          "description": "The organization's priorities, constraints, risk tolerance and appetite statements, and assumptions are established, communicated, and used to support operational risk decisions."
+        },
+        {
+          "id": "GV.RR",
+          "title": "Roles, Responsibilities, and Authorities",
+          "description": "Cybersecurity roles, responsibilities, and authorities to foster accountability, performance assessment, and continuous improvement are established and communicated."
+        },
+        {
+          "id": "GV.PO",
+          "title": "Policy",
+          "description": "Organizational cybersecurity policy is established, communicated, and enforced."
+        },
+        {
+          "id": "GV.SC",
+          "title": "Supply Chain Risk Management",
+          "description": "Cyber supply chain risk management processes are identified, established, managed, monitored, and improved by organizational stakeholders."
+        }
+      ],
+      "requirements": [
+        "Establish and communicate the organization's cybersecurity risk management strategy, including risk appetite and tolerance statements, to all relevant internal and external stakeholders.",
+        "Define and assign cybersecurity roles, responsibilities, and authorities across the organization, including executive leadership accountability for cybersecurity risk management.",
+        "Develop and maintain cybersecurity policies that address the organization's risk management objectives, legal and regulatory obligations, and operational requirements.",
+        "Implement supply chain cybersecurity risk management practices including vendor assessments, contractual security requirements, and ongoing monitoring of third-party risk.",
+        "Establish oversight mechanisms for cybersecurity governance, including regular reporting to executive leadership and board of directors on cybersecurity posture and risk trends."
+      ]
+    },
+    {
+      "id": "nist-csf-2-0-id",
+      "section_number": "ID",
+      "title": "Identify (ID)",
+      "description": "The organization's current cybersecurity risks are understood. Understanding its assets, suppliers, and related cybersecurity risks enables an organization to prioritize its efforts consistent with its risk management strategy and the mission needs.",
+      "risk_level": "high",
+      "categories": [
+        {
+          "id": "ID.AM",
+          "title": "Asset Management",
+          "description": "Assets that enable the organization to achieve business purposes are identified and managed consistent with their relative importance to organizational objectives and the organization's risk strategy."
+        },
+        {
+          "id": "ID.RA",
+          "title": "Risk Assessment",
+          "description": "The cybersecurity risk to the organization, assets, and individuals is understood by the organization."
+        },
+        {
+          "id": "ID.IM",
+          "title": "Improvement",
+          "description": "Improvements to organizational cybersecurity risk management processes, procedures, and activities are identified across all CSF functions."
+        }
+      ],
+      "requirements": [
+        "Maintain a comprehensive, up-to-date inventory of all hardware, software, data, and service assets, including cloud resources and shadow IT, with assigned ownership and classification levels.",
+        "Conduct regular cybersecurity risk assessments that identify threats, vulnerabilities, likelihood, and potential impacts to organizational assets and operations.",
+        "Identify and document all external information systems, services, and supply chain dependencies that could impact the organization's cybersecurity posture.",
+        "Implement vulnerability management processes including automated scanning, prioritization based on exploitability and asset criticality, and timely remediation tracking.",
+        "Establish continuous improvement processes that incorporate lessons learned from incidents, assessments, exercises, and industry threat intelligence into the cybersecurity program."
+      ]
+    },
+    {
+      "id": "nist-csf-2-0-pr",
+      "section_number": "PR",
+      "title": "Protect (PR)",
+      "description": "Safeguards to manage the organization's cybersecurity risks are used. Once assets and risks are identified, Protect supports the ability to secure those assets to prevent or lower the likelihood and impact of adverse cybersecurity events.",
+      "risk_level": "high",
+      "categories": [
+        {
+          "id": "PR.AA",
+          "title": "Identity Management, Authentication, and Access Control",
+          "description": "Access to physical and logical assets is limited to authorized users, services, and hardware and managed commensurate with the assessed risk of unauthorized access."
+        },
+        {
+          "id": "PR.AT",
+          "title": "Awareness and Training",
+          "description": "The organization's personnel are provided cybersecurity awareness and training so that they can perform their cybersecurity-related tasks."
+        },
+        {
+          "id": "PR.DS",
+          "title": "Data Security",
+          "description": "Data are managed consistent with the organization's risk strategy to protect the confidentiality, integrity, and availability of information."
+        },
+        {
+          "id": "PR.PS",
+          "title": "Platform Security",
+          "description": "The hardware, software, and services of physical and virtual platforms are managed consistent with the organization's risk strategy."
+        },
+        {
+          "id": "PR.IR",
+          "title": "Technology Infrastructure Resilience",
+          "description": "Security architectures are managed with the organization's risk strategy to protect asset confidentiality, integrity, and availability, and organizational resilience."
+        }
+      ],
+      "requirements": [
+        "Implement identity management and access control mechanisms including multi-factor authentication, role-based access control, and privileged access management for all critical systems.",
+        "Provide cybersecurity awareness training to all employees upon onboarding and annually, with role-specific training for IT, security, and executive personnel.",
+        "Implement data protection controls including encryption at rest and in transit, data loss prevention, and secure data disposal procedures aligned with data classification policies.",
+        "Maintain secure configuration baselines for all platforms and infrastructure components, with automated configuration management and drift detection capabilities.",
+        "Design and implement resilient technology architectures including redundancy, failover capabilities, and network segmentation to limit the blast radius of security incidents."
+      ]
+    },
+    {
+      "id": "nist-csf-2-0-de",
+      "section_number": "DE",
+      "title": "Detect (DE)",
+      "description": "Possible cybersecurity attacks and compromises are found and analyzed. Detection enables timely discovery and analysis of anomalies, indicators of compromise, and other potentially adverse events that may indicate that cybersecurity attacks and incidents are occurring.",
+      "risk_level": "high",
+      "categories": [
+        {
+          "id": "DE.CM",
+          "title": "Continuous Monitoring",
+          "description": "Assets are monitored to find anomalies, indicators of compromise, and other potentially adverse events."
+        },
+        {
+          "id": "DE.AE",
+          "title": "Adverse Event Analysis",
+          "description": "Anomalies, indicators of compromise, and other potentially adverse events are analyzed to characterize the events and detect cybersecurity incidents."
+        }
+      ],
+      "requirements": [
+        "Implement continuous monitoring of networks, systems, and applications using SIEM, EDR, and network detection tools to identify anomalies and potential security incidents.",
+        "Establish baseline profiles for normal network traffic, system behavior, and user activity to enable effective anomaly detection and reduce false positive rates.",
+        "Implement automated correlation and analysis of security events from multiple sources to identify patterns indicative of cybersecurity attacks or compromises.",
+        "Monitor the external threat landscape including vulnerability disclosures, threat intelligence feeds, and sector-specific threat advisories relevant to the organization."
+      ]
+    },
+    {
+      "id": "nist-csf-2-0-rs",
+      "section_number": "RS",
+      "title": "Respond (RS)",
+      "description": "Actions regarding a detected cybersecurity incident are taken. Respond supports the ability to contain the impact of cybersecurity incidents and includes incident management, analysis, mitigation, reporting, and communication.",
+      "risk_level": "high",
+      "categories": [
+        {
+          "id": "RS.MA",
+          "title": "Incident Management",
+          "description": "Responses to detected cybersecurity incidents are managed."
+        },
+        {
+          "id": "RS.AN",
+          "title": "Incident Analysis",
+          "description": "Investigations are conducted to ensure effective response and support forensics and recovery activities."
+        },
+        {
+          "id": "RS.CO",
+          "title": "Incident Response Reporting and Communication",
+          "description": "Response activities are coordinated with internal and external stakeholders as required by laws, regulations, or policies."
+        },
+        {
+          "id": "RS.MI",
+          "title": "Incident Mitigation",
+          "description": "Activities are performed to prevent expansion of an event and mitigate its effects."
+        }
+      ],
+      "requirements": [
+        "Establish and maintain an incident response plan that defines roles, responsibilities, escalation procedures, communication protocols, and coordination with law enforcement and regulatory bodies.",
+        "Conduct forensic analysis of cybersecurity incidents to determine root causes, attack vectors, scope of compromise, and data exfiltration, preserving chain of custody for evidence.",
+        "Implement incident containment strategies including network isolation, account suspension, and system quarantine to prevent lateral movement and limit damage.",
+        "Communicate incident status and impact to internal stakeholders, affected individuals, regulators, and law enforcement in accordance with legal and regulatory notification requirements.",
+        "Conduct post-incident reviews within 30 days of incident closure to identify lessons learned, update response procedures, and implement preventive measures."
+      ]
+    },
+    {
+      "id": "nist-csf-2-0-rc",
+      "section_number": "RC",
+      "title": "Recover (RC)",
+      "description": "Assets and operations affected by a cybersecurity incident are restored. Recovery supports timely restoration of normal operations to reduce the impact of cybersecurity incidents and enable appropriate communication during recovery efforts.",
+      "risk_level": "medium",
+      "categories": [
+        {
+          "id": "RC.RP",
+          "title": "Incident Recovery Plan Execution",
+          "description": "Restoration activities are performed to ensure operational availability of systems and services affected by cybersecurity incidents."
+        },
+        {
+          "id": "RC.CO",
+          "title": "Incident Recovery Communication",
+          "description": "Restoration activities are coordinated with internal and external parties."
+        }
+      ],
+      "requirements": [
+        "Develop and maintain recovery plans for all critical business functions and systems, with defined Recovery Time Objectives (RTO) and Recovery Point Objectives (RPO) based on business impact analysis.",
+        "Test recovery procedures through tabletop exercises, functional tests, and full-scale recovery drills at minimum annually, with results documented and gaps remediated.",
+        "Implement backup and restoration capabilities including offline backups, immutable backup copies, and geographically separated backup storage to protect against ransomware and catastrophic events.",
+        "Coordinate recovery communications with internal stakeholders, customers, partners, regulators, and media through predefined communication templates and designated spokespersons.",
+        "Incorporate lessons learned from recovery activities into business continuity plans, recovery procedures, and cybersecurity controls to improve future resilience."
+      ]
+    }
+  ]
+}

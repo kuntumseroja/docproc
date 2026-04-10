@@ -1,0 +1,99 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Node
+node_modules/
+frontend/build/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Database
+*.db
+*.sqlite3
+
+# Alembic
+alembic/versions/__pycache__/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# Pytest
+.pytest_cache/
+
+# MinIO data
+minio_data/
+
+# Service manager
+.backend.pid
+.frontend.pid
+.celery.pid
+.backend.log
+.frontend.log
+.celery.log
+backups/
+
+# Temp / lock files
+*.tmp
+.~lock.*
+
+# Presentation slides / workshop docs (large binaries)
+slide-*.jpg
+*.pptx
+BankMantap-*.docx
+DocProc-Compliance-Demo-Guide.docx
+
+# Claude Code session data
+.claude/
+
+# PDF worker copied to public
+frontend/public/pdf.worker.min.mjs
+
+# Large demo PDFs (sustainability reports)
+demo-data/compliance-demo/SR-*.pdf
+demo-data/compliance-demo/SR2025-*.pdf
+demo-data/compliance-demo/SR *.pdf
+demo-data/compliance-demo/Sustainability*.pdf
+demo-data/compliance-demo/compliance-report*.pdf
+demo-data/compliance-demo/compliance report*.pdf
+demo-data/compliance-demo/compliance\ report*.pdf
+
+# Large generated images / logos
+Gemini_Generated_Image*
+demo-data/Gemini_Generated_Image*
+demo-data/logoDocProcpng.png

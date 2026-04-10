@@ -1,0 +1,60 @@
+{
+  "version": "1.0",
+  "description": "Indonesian PPh 21 progressive income tax brackets and PTKP reference data",
+  "tax_brackets": [
+    {"min": 0, "max": 60000000, "rate": 0.05, "description": "5% for income up to Rp 60 million"},
+    {"min": 60000000, "max": 250000000, "rate": 0.15, "description": "15% for Rp 60M - 250M"},
+    {"min": 250000000, "max": 500000000, "rate": 0.25, "description": "25% for Rp 250M - 500M"},
+    {"min": 500000000, "max": 5000000000, "rate": 0.30, "description": "30% for Rp 500M - 5B"},
+    {"min": 5000000000, "max": null, "rate": 0.35, "description": "35% for income above Rp 5 billion"}
+  ],
+  "ptkp": {
+    "TK/0": 54000000,
+    "TK/1": 58500000,
+    "TK/2": 63000000,
+    "TK/3": 67500000,
+    "K/0": 58500000,
+    "K/1": 63000000,
+    "K/2": 67500000,
+    "K/3": 72000000,
+    "K/I/0": 112500000,
+    "K/I/1": 117000000,
+    "K/I/2": 121500000,
+    "K/I/3": 126000000
+  },
+  "biaya_jabatan": {
+    "rate": 0.05,
+    "max_monthly": 500000,
+    "max_annual": 6000000,
+    "description": "Position cost deduction: 5% of gross income, max Rp 500K/month"
+  },
+  "bpjs_rates": {
+    "ketenagakerjaan": {
+      "jht_employee": 0.02,
+      "jht_employer": 0.037,
+      "jkk_employer_min": 0.0024,
+      "jkk_employer_max": 0.0174,
+      "jkm_employer": 0.003,
+      "jp_employee": 0.01,
+      "jp_employer": 0.02,
+      "jp_salary_cap": 10042300
+    },
+    "kesehatan": {
+      "employee": 0.01,
+      "employer": 0.04,
+      "salary_cap": 12000000
+    }
+  },
+  "severance_table": {
+    "description": "Uang Pesangon per UU Cipta Kerja — months of salary by years of service",
+    "table": {
+      "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9+": 9
+    }
+  },
+  "upmk_table": {
+    "description": "Uang Penghargaan Masa Kerja — months of salary by years of service",
+    "table": {
+      "3-5": 2, "6-8": 3, "9-11": 4, "12-14": 5, "15-17": 6, "18-20": 7, "21-23": 8, "24+": 10
+    }
+  }
+}

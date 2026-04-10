@@ -1,0 +1,35 @@
+{
+  "id": "sox",
+  "name": "SOX",
+  "title": "Sarbanes-Oxley Act",
+  "issuer": "U.S. Securities and Exchange Commission",
+  "country": "US",
+  "category": "Financial Reporting",
+  "effective_date": "2002-07-30",
+  "sections": [
+    {
+      "id": "sox-302",
+      "title": "Section 302 - Corporate Responsibility for Financial Reports",
+      "description": "The CEO and CFO must certify that financial statements fairly present the financial condition and results of operations. They must certify they are responsible for establishing and maintaining internal controls, have designed controls to ensure material information is made known to them, and have evaluated the effectiveness of internal controls within 90 days prior to the report.",
+      "keywords": ["certification", "CEO", "CFO", "financial statements", "internal controls"]
+    },
+    {
+      "id": "sox-404",
+      "title": "Section 404 - Management Assessment of Internal Controls",
+      "description": "Management must include an internal control report in the annual report that states management's responsibility for establishing adequate internal control structure and procedures for financial reporting. The report must contain an assessment of the effectiveness of the internal control structure. External auditors must attest to and report on management's assessment.",
+      "keywords": ["internal controls", "assessment", "audit", "financial reporting", "management responsibility"]
+    },
+    {
+      "id": "sox-409",
+      "title": "Section 409 - Real-Time Issuer Disclosures",
+      "description": "Issuers are required to disclose to the public on a rapid and current basis such additional information concerning material changes in the financial condition or operations of the issuer. Disclosures must be in plain English and presented in a manner that is accessible and understandable.",
+      "keywords": ["disclosure", "material changes", "real-time", "transparency", "financial condition"]
+    },
+    {
+      "id": "sox-802",
+      "title": "Section 802 - Criminal Penalties for Altering Documents",
+      "description": "It is a criminal offence to knowingly alter, destroy, mutilate, conceal, or falsify any record, document, or tangible object with the intent to impede or obstruct an investigation. Penalties include fines and imprisonment for up to 20 years. Auditors are required to maintain all audit or review work papers for a period of 5 years.",
+      "keywords": ["document retention", "records", "criminal penalties", "audit papers", "obstruction"]
+    }
+  ]
+}

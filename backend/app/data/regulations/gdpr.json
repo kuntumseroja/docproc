@@ -1,0 +1,41 @@
+{
+  "id": "gdpr",
+  "name": "GDPR",
+  "title": "General Data Protection Regulation",
+  "issuer": "European Union",
+  "country": "EU",
+  "category": "Data Privacy",
+  "effective_date": "2018-05-25",
+  "sections": [
+    {
+      "id": "gdpr-art5",
+      "title": "Article 5 - Principles relating to processing of personal data",
+      "description": "Personal data shall be processed lawfully, fairly and in a transparent manner. Data must be collected for specified, explicit and legitimate purposes and not further processed in a manner incompatible with those purposes. Data must be adequate, relevant, and limited to what is necessary.",
+      "keywords": ["lawfulness", "fairness", "transparency", "purpose limitation", "data minimisation"]
+    },
+    {
+      "id": "gdpr-art6",
+      "title": "Article 6 - Lawfulness of processing",
+      "description": "Processing shall be lawful only if and to the extent that at least one of the following applies: the data subject has given consent, processing is necessary for the performance of a contract, compliance with a legal obligation, protection of vital interests, performance of a task carried out in the public interest, or legitimate interests pursued by the controller.",
+      "keywords": ["consent", "contract", "legal obligation", "legitimate interest"]
+    },
+    {
+      "id": "gdpr-art13",
+      "title": "Article 13 - Information to be provided where personal data are collected",
+      "description": "Where personal data are collected from the data subject, the controller shall provide the data subject with the identity of the controller, purposes of processing, recipients of data, retention period, the right to lodge a complaint, and whether provision of data is a statutory or contractual requirement.",
+      "keywords": ["transparency", "notice", "data subject rights", "privacy notice"]
+    },
+    {
+      "id": "gdpr-art17",
+      "title": "Article 17 - Right to erasure (Right to be forgotten)",
+      "description": "The data subject shall have the right to obtain from the controller the erasure of personal data concerning him or her without undue delay where the data is no longer necessary, consent is withdrawn, the data subject objects to processing, or the data has been unlawfully processed.",
+      "keywords": ["erasure", "deletion", "right to be forgotten", "data retention"]
+    },
+    {
+      "id": "gdpr-art32",
+      "title": "Article 32 - Security of processing",
+      "description": "The controller and processor shall implement appropriate technical and organisational measures to ensure a level of security appropriate to the risk, including pseudonymisation and encryption of personal data, the ability to ensure ongoing confidentiality, integrity, availability and resilience of processing systems, and a process for regularly testing and evaluating effectiveness of security measures.",
+      "keywords": ["security", "encryption", "pseudonymisation", "confidentiality", "integrity"]
+    }
+  ]
+}

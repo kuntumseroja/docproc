@@ -1,0 +1,86 @@
+{
+  "id": "pbi-23-2021",
+  "name": "PBI No.23/6/PBI/2021",
+  "title": "Payment System",
+  "title_id": "Sistem Pembayaran",
+  "issuer": "Bank Indonesia (BI)",
+  "country": "Indonesia",
+  "category": "payment_system",
+  "effective_date": "2021-07-01",
+  "language": "en",
+  "version": "1.0",
+  "last_updated": "2024-12-01",
+  "sections": [
+    {
+      "id": "pbi-23-2021-s1",
+      "section_number": "1",
+      "title": "Payment System Governance (Tata Kelola Sistem Pembayaran)",
+      "description": "Establishes the governance framework for payment system providers (Penyelenggara Sistem Pembayaran), including licensing requirements, organizational structure, and operational standards. Covers both bank and non-bank payment system providers operating in Indonesia.",
+      "risk_level": "high",
+      "requirements": [
+        "Payment system providers must obtain a license (Izin) from Bank Indonesia before commencing operations, with separate license categories for payment service providers (PJP) and payment system infrastructure providers (PIP).",
+        "Providers must establish a dedicated compliance function responsible for monitoring adherence to BI regulations, with quarterly compliance reports submitted to Bank Indonesia.",
+        "The Board of Directors must include at least one member with demonstrated expertise in payment systems, information technology, or financial risk management.",
+        "Providers must implement a three-lines-of-defense model with operational management (first line), risk and compliance (second line), and internal audit (third line) for payment operations oversight.",
+        "Annual self-assessment reports on governance effectiveness must be submitted to Bank Indonesia within 120 days after the fiscal year end."
+      ]
+    },
+    {
+      "id": "pbi-23-2021-s2",
+      "section_number": "2",
+      "title": "Consumer Protection (Perlindungan Konsumen)",
+      "description": "Defines consumer protection requirements for payment system participants, including transparency in pricing, complaint handling, dispute resolution, and consumer education. Providers must ensure fair treatment and adequate protection of consumer rights in all payment transactions.",
+      "risk_level": "high",
+      "requirements": [
+        "Payment providers must disclose all fees, charges, and exchange rates applicable to transactions in a clear and transparent manner before transaction confirmation, in Bahasa Indonesia.",
+        "A formal complaint handling mechanism (Mekanisme Penanganan Pengaduan) must be established with maximum resolution timelines of 20 business days for domestic transaction disputes and 40 business days for cross-border disputes.",
+        "Providers must implement a consumer fund protection mechanism, including segregation of consumer funds from operational funds, maintained in dedicated escrow accounts at licensed banks.",
+        "Consumer education programs must be conducted regularly, focusing on safe payment practices, fraud awareness, and consumer rights, with reach targets defined annually.",
+        "Providers must ensure transaction receipts or electronic confirmations are provided for all payments, including transaction amount, date, time, merchant name, and unique reference number."
+      ]
+    },
+    {
+      "id": "pbi-23-2021-s3",
+      "section_number": "3",
+      "title": "Data Security (Keamanan Data)",
+      "description": "Specifies data security requirements for payment system providers covering data classification, protection of payment credentials, encryption standards, and data localization. Aligned with PCI DSS requirements and Indonesian data protection regulations.",
+      "risk_level": "high",
+      "requirements": [
+        "Payment card data must be handled in compliance with PCI DSS standards, with annual compliance validation through Qualified Security Assessors (QSA) for Level 1 providers processing over 6 million transactions annually.",
+        "Payment credentials including PINs, passwords, and biometric data must be encrypted using industry-standard algorithms (AES-256 minimum) and must never be stored in plain text.",
+        "Transaction data processing and storage systems must be located within Indonesian territory (Wilayah Indonesia), with Bank Indonesia approval required for any offshore data processing arrangements.",
+        "Payment providers must implement tokenization for all stored payment card numbers, replacing primary account numbers (PAN) with non-reversible tokens for storage and transmission.",
+        "Data breach notification must be provided to Bank Indonesia within 1 hour of confirmed breach detection, to affected consumers within 14 days, and include scope assessment and remediation measures."
+      ]
+    },
+    {
+      "id": "pbi-23-2021-s4",
+      "section_number": "4",
+      "title": "Transaction Reporting (Pelaporan Transaksi)",
+      "description": "Defines the reporting obligations for payment system providers to Bank Indonesia, including transaction volume reporting, statistical data, suspicious transaction flagging, and regulatory reporting formats. Supports BI's oversight function and monetary policy analysis.",
+      "risk_level": "medium",
+      "requirements": [
+        "Payment providers must submit daily transaction reports to Bank Indonesia's Payment System Reporting System (Sistem Pelaporan Sistem Pembayaran) by 10:00 WIB on the following business day.",
+        "Monthly statistical reports must include transaction volumes, values, success rates, failure rates, and average processing times, segmented by payment channel and transaction type.",
+        "Providers must implement real-time reporting capabilities for large-value transactions exceeding IDR 100,000,000, with transaction details transmitted to BI within 15 minutes of settlement.",
+        "Quarterly reports on system availability, incident statistics, and SLA compliance must be submitted to Bank Indonesia within 30 days after each quarter end.",
+        "Providers must maintain transaction records for a minimum of 10 years, with the ability to retrieve and produce records upon request by Bank Indonesia within 3 business days."
+      ]
+    },
+    {
+      "id": "pbi-23-2021-s5",
+      "section_number": "5",
+      "title": "AML/CFT Compliance (Kepatuhan APU/PPT)",
+      "description": "Establishes Anti-Money Laundering and Counter-Financing of Terrorism requirements for payment system providers, aligned with FATF Recommendations and Indonesian Law No. 8 of 2010 on Prevention and Eradication of Money Laundering. Covers customer due diligence, transaction monitoring, and suspicious transaction reporting.",
+      "risk_level": "high",
+      "requirements": [
+        "Payment providers must implement Customer Due Diligence (CDD) procedures including identity verification using government-issued identification, with Enhanced Due Diligence (EDD) for high-risk customers and transactions above IDR 100,000,000.",
+        "Electronic Know Your Customer (e-KYC) processes must be validated against Dukcapil (Direktorat Jenderal Kependudukan dan Pencatatan Sipil) databases and must include liveness detection for biometric verification.",
+        "Transaction monitoring systems must screen all transactions against PPATK (Pusat Pelaporan dan Analisis Transaksi Keuangan) sanctions lists, UN Security Council consolidated lists, and OFAC SDN lists in real-time.",
+        "Suspicious Transaction Reports (Laporan Transaksi Keuangan Mencurigakan / LTKM) must be filed with PPATK within 3 business days of detection, including detailed transaction narratives and supporting documentation.",
+        "Payment providers must conduct periodic AML/CFT risk assessments at minimum annually, with enhanced monitoring controls for identified high-risk corridors, products, and customer segments.",
+        "All staff involved in payment operations must complete AML/CFT training within 30 days of hiring and annual refresher training thereafter, with records maintained for regulatory inspection."
+      ]
+    }
+  ]
+}

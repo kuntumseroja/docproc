@@ -1,0 +1,57 @@
+{
+  "id": "hr-employment-contracts",
+  "name": "Employment Contract Processing",
+  "version": "1.0",
+  "category": "hr-core",
+  "description": "Extract and validate employment contract terms, ensuring compliance with Indonesian labor law (UU Cipta Kerja, UU 13/2003) and banking sector regulations.",
+  "document_types": [
+    "PKWT (Fixed-Term Employment Agreement)",
+    "PKWTT (Permanent Employment Agreement)",
+    "Contract Amendment/Addendum",
+    "Non-Disclosure Agreement",
+    "Non-Compete Agreement",
+    "Probation Evaluation Letter",
+    "Offer Letter"
+  ],
+  "extraction_schema": {
+    "fields": [
+      {"name": "contract_number", "type": "string", "required": true, "source": "Contract"},
+      {"name": "contract_type", "type": "string", "required": true, "source": "Contract", "enum": ["PKWT", "PKWTT", "Amendment", "NDA", "Non-Compete"]},
+      {"name": "employee_name", "type": "string", "required": true, "source": "Contract"},
+      {"name": "employee_nik", "type": "string", "required": true, "source": "Contract"},
+      {"name": "position_title", "type": "string", "required": true, "source": "Contract"},
+      {"name": "department", "type": "string", "required": true, "source": "Contract"},
+      {"name": "start_date", "type": "date", "required": true, "source": "Contract"},
+      {"name": "end_date", "type": "date", "required": false, "source": "Contract", "description": "Required for PKWT, null for PKWTT"},
+      {"name": "probation_period", "type": "string", "required": false, "source": "Contract", "description": "Max 3 months for PKWTT; not allowed for PKWT"},
+      {"name": "base_salary", "type": "number", "required": true, "source": "Contract"},
+      {"name": "allowances", "type": "object", "required": false, "source": "Contract"},
+      {"name": "working_hours", "type": "string", "required": true, "source": "Contract"},
+      {"name": "leave_entitlement", "type": "number", "required": true, "source": "Contract", "description": "Annual leave days"},
+      {"name": "notice_period", "type": "string", "required": true, "source": "Contract"},
+      {"name": "non_compete_duration", "type": "string", "required": false, "source": "NDA/Non-Compete"},
+      {"name": "confidentiality_scope", "type": "string", "required": false, "source": "NDA"},
+      {"name": "signing_date", "type": "date", "required": true, "source": "Contract"},
+      {"name": "signatory_company", "type": "string", "required": true, "source": "Contract"},
+      {"name": "signatory_employee", "type": "string", "required": true, "source": "Contract"}
+    ]
+  },
+  "validation_rules": [
+    {"rule": "pkwt_max_duration", "description": "PKWT cannot exceed 5 years total (UU Cipta Kerja)", "type": "date_range", "max_years": 5},
+    {"rule": "pkwt_no_probation", "description": "PKWT contracts must NOT include probation period", "type": "conditional_null", "condition": "contract_type == 'PKWT'", "field": "probation_period"},
+    {"rule": "pkwtt_probation_max", "description": "PKWTT probation cannot exceed 3 months", "type": "max_duration", "field": "probation_period", "max_months": 3},
+    {"rule": "salary_above_umr", "description": "Base salary must meet or exceed regional minimum wage (UMR/UMK)", "type": "threshold", "field": "base_salary"},
+    {"rule": "minimum_leave", "description": "Annual leave must be at least 12 days (UU 13/2003 Art. 79)", "type": "minimum", "field": "leave_entitlement", "min_value": 12},
+    {"rule": "working_hours_compliance", "description": "Max 40 hours/week (7hrs/day x 6 days or 8hrs/day x 5 days)", "type": "hours_check"},
+    {"rule": "contract_signed_before_start", "description": "Contract must be signed on or before start date", "type": "date_comparison", "operator": "<="},
+    {"rule": "dual_signature", "description": "Both company and employee signatures must be present", "type": "completeness_check", "fields": ["signatory_company", "signatory_employee"]}
+  ],
+  "action_triggers": [
+    {"trigger": "pkwt_expiring_60_days", "action": "send_renewal_notice", "target": "hr_manager", "description": "Notify HR 60 days before PKWT expiry for renewal decision"},
+    {"trigger": "pkwt_expiring_30_days", "action": "send_notice_employee", "target": "employee", "description": "Notify employee 30 days before contract expiry"},
+    {"trigger": "probation_ending", "action": "trigger_evaluation", "target": "line_manager", "description": "Trigger probation evaluation 2 weeks before end"},
+    {"trigger": "all_valid", "action": "store_contract", "target": "document_management", "description": "Archive validated contract in DMS"},
+    {"trigger": "compliance_violation", "action": "alert_legal", "target": "legal_team", "description": "Alert legal team on labor law violations"}
+  ],
+  "nl_prompt": "Extract all terms from this employment contract. Identify whether it is a PKWT (fixed-term) or PKWTT (permanent) agreement. Extract employee name, NIK, position, department, contract dates, salary and allowances, working hours, leave entitlement, and notice period. For PKWT contracts, verify the total duration does not exceed 5 years and that no probation period is included. For PKWTT, check that probation does not exceed 3 months. Verify salary meets minimum wage requirements. Confirm both parties have signed."
+}

@@ -1,0 +1,129 @@
+{
+  "id": "pojk-6-2022",
+  "name": "POJK No.6/POJK.03/2022",
+  "title": "IT Risk Management for Commercial Banks",
+  "title_id": "Manajemen Risiko Teknologi Informasi oleh Bank Umum",
+  "issuer": "Otoritas Jasa Keuangan (OJK)",
+  "country": "Indonesia",
+  "category": "banking",
+  "effective_date": "2022-08-01",
+  "language": "en",
+  "version": "1.0",
+  "last_updated": "2024-12-01",
+  "sections": [
+    {
+      "id": "pojk-6-2022-s1",
+      "section_number": "1",
+      "title": "IT Governance (Tata Kelola TI)",
+      "description": "Establishes the framework for IT governance within commercial banks, including the roles and responsibilities of the Board of Directors (Direksi) and Board of Commissioners (Dewan Komisaris) in overseeing IT strategy, policies, and risk management. Banks must ensure that IT governance is integrated into the overall corporate governance structure.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks must establish a dedicated IT Steering Committee (Komite Pengarah TI) chaired by a member of the Board of Directors responsible for IT strategy and oversight.",
+        "The Board of Directors must approve the IT Strategic Plan (Rencana Strategis TI) which aligns with the bank's overall business strategy and is reviewed at minimum annually.",
+        "Banks must appoint a Chief Information Officer (CIO) or equivalent senior officer with direct reporting to the Board of Directors for IT-related matters.",
+        "IT governance policies must define clear roles, responsibilities, and accountability structures for IT decision-making across all organizational levels.",
+        "Banks must conduct annual IT governance maturity assessments and report findings to OJK within 30 days of completion.",
+        "The IT governance framework must include mechanisms for escalation, conflict resolution, and alignment between business units and IT functions."
+      ]
+    },
+    {
+      "id": "pojk-6-2022-s2",
+      "section_number": "2",
+      "title": "IT Risk Management Framework (Kerangka Manajemen Risiko TI)",
+      "description": "Defines the comprehensive IT risk management framework that banks must implement, covering risk identification, assessment, mitigation, monitoring, and reporting processes. The framework must be proportional to the bank's size, complexity, and risk profile.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks must establish a formal IT risk management framework that covers identification, assessment, mitigation, monitoring, and reporting of IT risks across all business lines.",
+        "IT risk assessments must be conducted at minimum semi-annually, and additionally whenever significant changes occur in IT infrastructure, applications, or business processes.",
+        "Banks must maintain a comprehensive IT risk register (Daftar Risiko TI) that is updated quarterly and reviewed by the IT Risk Management Committee.",
+        "Risk appetite and risk tolerance levels for IT risks must be formally defined, approved by the Board of Directors, and communicated to all relevant stakeholders.",
+        "Banks must implement Key Risk Indicators (KRI) for IT operations and report threshold breaches to senior management within 24 hours of detection."
+      ]
+    },
+    {
+      "id": "pojk-6-2022-s3",
+      "section_number": "3",
+      "title": "IT Security (Keamanan TI)",
+      "description": "Specifies the security controls and measures that banks must implement to protect IT assets, systems, and data from unauthorized access, modification, disclosure, and destruction. Covers physical security, logical access controls, network security, and application security.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks must implement multi-factor authentication (MFA) for all access to critical systems, including core banking, payment systems, and customer data repositories.",
+        "Access control policies must follow the principle of least privilege (hak akses minimum) with quarterly access reviews and immediate revocation upon role changes or termination.",
+        "Banks must deploy intrusion detection and prevention systems (IDS/IPS) on all network segments handling sensitive data, with 24/7 monitoring capability.",
+        "All sensitive data must be encrypted both at rest (AES-256 or equivalent) and in transit (TLS 1.2 or higher) across all communication channels.",
+        "Banks must conduct vulnerability assessments monthly and penetration testing at minimum annually, performed by independent qualified assessors.",
+        "Security patches for critical vulnerabilities must be applied within 14 days of release, and within 30 days for high-severity vulnerabilities."
+      ]
+    },
+    {
+      "id": "pojk-6-2022-s4",
+      "section_number": "4",
+      "title": "Data Protection (Perlindungan Data)",
+      "description": "Outlines requirements for protecting customer data and bank information assets throughout their lifecycle, including data classification, handling, storage, transmission, retention, and disposal. Banks must comply with Indonesian data protection regulations including UU PDP.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks must implement a data classification scheme with at minimum four levels: Public (Publik), Internal (Internal), Confidential (Rahasia), and Highly Confidential (Sangat Rahasia).",
+        "Customer personal data (data pribadi nasabah) must be stored within Indonesian territory unless explicit regulatory approval is obtained for cross-border data transfer.",
+        "Banks must implement data loss prevention (DLP) controls to detect and prevent unauthorized transmission of classified data through email, web, removable media, and cloud services.",
+        "Data retention policies must be formally documented, specifying minimum retention periods of 5 years for transaction data and 10 years for customer identification records.",
+        "Banks must maintain comprehensive audit trails for all access to and modifications of customer data, with logs retained for a minimum of 5 years."
+      ]
+    },
+    {
+      "id": "pojk-6-2022-s5",
+      "section_number": "5",
+      "title": "Business Continuity Management (Manajemen Kelangsungan Bisnis)",
+      "description": "Requires banks to establish and maintain business continuity and disaster recovery capabilities for IT systems and services. Includes requirements for BCP/DRP development, testing, and maintenance to ensure continuity of critical banking operations.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks must establish a Business Continuity Plan (BCP) and Disaster Recovery Plan (DRP) for all critical IT systems with maximum Recovery Time Objective (RTO) of 2 hours and Recovery Point Objective (RPO) of 1 hour for core banking systems.",
+        "BCP/DRP testing must be conducted at minimum semi-annually, including full-scale failover exercises for critical systems at least once per year.",
+        "Banks must maintain a secondary data center (Pusat Data Cadangan) at a geographically separate location with a minimum distance of 60 kilometers from the primary data center.",
+        "Crisis communication procedures must be established with predefined escalation paths, contact lists, and communication templates for various disaster scenarios.",
+        "Post-incident reviews must be conducted within 14 days of any BCP/DRP activation, with findings documented and corrective actions tracked to completion."
+      ]
+    },
+    {
+      "id": "pojk-6-2022-s6",
+      "section_number": "6",
+      "title": "IT Outsourcing (Alih Daya TI)",
+      "description": "Governs the outsourcing of IT functions and services by banks, including requirements for vendor assessment, contract management, performance monitoring, and risk management of outsourced IT activities. Banks remain fully responsible for outsourced IT operations.",
+      "risk_level": "medium",
+      "requirements": [
+        "Banks must conduct thorough due diligence on IT service providers before engagement, including financial stability, technical capability, security posture, and regulatory compliance assessments.",
+        "IT outsourcing contracts must include provisions for OJK's right to audit (hak audit), data access, SLA definitions, exit strategies, and compliance with Indonesian data protection laws.",
+        "Banks must notify OJK at least 30 days prior to outsourcing critical IT functions, including core banking systems, payment processing, and customer data management.",
+        "Service Level Agreements (SLAs) must define measurable performance metrics with minimum uptime of 99.9% for critical systems, including penalties for non-compliance.",
+        "Banks must maintain sufficient in-house expertise to oversee and manage outsourced IT functions, and must have documented exit strategies for all critical outsourcing arrangements."
+      ]
+    },
+    {
+      "id": "pojk-6-2022-s7",
+      "section_number": "7",
+      "title": "Cybersecurity (Keamanan Siber)",
+      "description": "Establishes cybersecurity requirements for banks including threat intelligence, security operations, incident management, and cyber resilience. Banks must implement a defense-in-depth approach to protect against evolving cyber threats targeting the financial sector.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks must establish a Security Operations Center (SOC) with 24/7 monitoring capability, either in-house or through a qualified managed security service provider (MSSP).",
+        "Banks must participate in the financial sector's cyber threat intelligence sharing forum (Forum Berbagi Intelijen Ancaman Siber) coordinated by OJK and Bank Indonesia.",
+        "Cybersecurity awareness training must be conducted for all employees at minimum annually, with specialized training for IT and security personnel conducted quarterly.",
+        "Banks must implement advanced threat detection capabilities including behavioral analytics, anomaly detection, and threat hunting programs for critical systems.",
+        "Banks must conduct red team exercises at minimum annually to test the effectiveness of cybersecurity controls and incident response procedures."
+      ]
+    },
+    {
+      "id": "pojk-6-2022-s8",
+      "section_number": "8",
+      "title": "Incident Reporting (Pelaporan Insiden)",
+      "description": "Defines the requirements for detecting, classifying, responding to, and reporting IT security incidents to OJK and relevant stakeholders. Includes timelines, formats, and escalation procedures for various incident severity levels.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks must report significant IT security incidents to OJK within 1 hour of detection for critical incidents (Level 1), within 24 hours for major incidents (Level 2), and within 3 business days for moderate incidents (Level 3).",
+        "Incident reports must include: incident description, affected systems, estimated impact, root cause analysis, containment measures taken, and remediation plan with timeline.",
+        "Banks must maintain an incident response team (Tim Tanggap Insiden) with clearly defined roles, responsibilities, and authority levels for incident classification and escalation.",
+        "Post-incident analysis reports must be submitted to OJK within 14 days of incident resolution, including lessons learned and preventive measures implemented.",
+        "Banks must maintain an incident database with trend analysis capabilities, and report quarterly incident statistics to the Board of Directors and OJK."
+      ]
+    }
+  ]
+}

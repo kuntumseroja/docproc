@@ -1,0 +1,52 @@
+{
+  "version": "1.0",
+  "description": "Maps banking roles to required certifications per OJK regulations",
+  "roles": {
+    "relationship_manager": {
+      "title": "Relationship Manager",
+      "required_certifications": ["BSMR Level 1", "WMI"],
+      "recommended_certifications": ["CFA"]
+    },
+    "risk_manager": {
+      "title": "Risk Manager",
+      "required_certifications": ["BSMR Level 3"],
+      "minimum_bsmr_level": 3,
+      "recommended_certifications": ["FRM"]
+    },
+    "branch_manager": {
+      "title": "Branch Manager",
+      "required_certifications": ["BSMR Level 2"],
+      "minimum_bsmr_level": 2
+    },
+    "compliance_officer": {
+      "title": "Compliance Officer",
+      "required_certifications": ["BSMR Level 2", "OJK Fit & Proper"],
+      "minimum_bsmr_level": 2
+    },
+    "treasury_dealer": {
+      "title": "Treasury Dealer",
+      "required_certifications": ["BSMR Level 3"],
+      "minimum_bsmr_level": 3,
+      "recommended_certifications": ["CFA", "FRM"]
+    },
+    "insurance_sales": {
+      "title": "Insurance Sales Agent",
+      "required_certifications": ["AAJI"]
+    },
+    "wealth_advisor": {
+      "title": "Wealth Management Advisor",
+      "required_certifications": ["WMI", "BSMR Level 1"],
+      "recommended_certifications": ["CFA"]
+    },
+    "credit_analyst": {
+      "title": "Credit Analyst",
+      "required_certifications": ["BSMR Level 1"],
+      "recommended_certifications": ["BSMR Level 2"]
+    },
+    "director": {
+      "title": "Director / Board Member",
+      "required_certifications": ["BSMR Level 5", "OJK Fit & Proper"],
+      "minimum_bsmr_level": 5
+    }
+  }
+}

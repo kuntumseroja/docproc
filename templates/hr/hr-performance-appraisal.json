@@ -1,0 +1,56 @@
+{
+  "id": "hr-performance-appraisal",
+  "name": "Performance Appraisal",
+  "version": "1.0",
+  "category": "hr-operations",
+  "description": "Process performance review documents, extract KPI scores, competency ratings, and generate recommendations for promotion, bonus, and development plans.",
+  "document_types": [
+    "Annual Performance Review Form",
+    "Mid-Year Review Form",
+    "KPI Scorecard",
+    "360-Degree Feedback Report",
+    "Self-Assessment Form",
+    "PIP (Performance Improvement Plan)",
+    "Promotion Recommendation Form"
+  ],
+  "extraction_schema": {
+    "fields": [
+      {"name": "employee_id", "type": "string", "required": true, "source": "Review Form"},
+      {"name": "employee_name", "type": "string", "required": true, "source": "Review Form"},
+      {"name": "review_period", "type": "string", "required": true, "source": "Review Form"},
+      {"name": "reviewer_name", "type": "string", "required": true, "source": "Review Form"},
+      {"name": "department", "type": "string", "required": true, "source": "Review Form"},
+      {"name": "position", "type": "string", "required": true, "source": "Review Form"},
+      {"name": "kpi_scores", "type": "array", "required": true, "source": "KPI Scorecard", "description": "Array of {kpi_name, target, actual, score, weight}"},
+      {"name": "overall_kpi_score", "type": "number", "required": true, "source": "KPI Scorecard"},
+      {"name": "competency_ratings", "type": "array", "required": false, "source": "Review Form", "description": "Array of {competency, rating (1-5)}"},
+      {"name": "overall_competency_score", "type": "number", "required": false, "source": "Review Form"},
+      {"name": "final_rating", "type": "string", "required": true, "source": "Review Form", "enum": ["Exceptional", "Exceeds Expectations", "Meets Expectations", "Needs Improvement", "Unsatisfactory"]},
+      {"name": "strengths", "type": "string", "required": false, "source": "Review Form"},
+      {"name": "areas_for_improvement", "type": "string", "required": false, "source": "Review Form"},
+      {"name": "development_plan", "type": "string", "required": false, "source": "Review Form"},
+      {"name": "promotion_recommended", "type": "boolean", "required": false, "source": "Review Form"},
+      {"name": "bonus_percentage", "type": "number", "required": false, "source": "Review Form"},
+      {"name": "pip_required", "type": "boolean", "required": false, "source": "Review Form"},
+      {"name": "employee_comments", "type": "string", "required": false, "source": "Self-Assessment"},
+      {"name": "employee_signature_date", "type": "date", "required": true, "source": "Review Form"},
+      {"name": "reviewer_signature_date", "type": "date", "required": true, "source": "Review Form"}
+    ]
+  },
+  "validation_rules": [
+    {"rule": "kpi_weight_total", "description": "KPI weights must sum to 100%", "type": "sum_check", "field": "kpi_scores.weight", "expected_sum": 100},
+    {"rule": "score_range", "description": "All scores must be within 1-5 range", "type": "range_check", "min": 1, "max": 5},
+    {"rule": "rating_consistency", "description": "Final rating must align with overall KPI score", "type": "mapping_check"},
+    {"rule": "pip_trigger", "description": "PIP required if final rating is Needs Improvement or Unsatisfactory", "type": "conditional_required"},
+    {"rule": "both_signatures", "description": "Both employee and reviewer must sign", "type": "completeness_check"},
+    {"rule": "review_period_complete", "description": "Review must cover the full period", "type": "period_check"}
+  ],
+  "action_triggers": [
+    {"trigger": "review_completed", "action": "store_in_hr_file", "target": "employee_record", "description": "Archive completed review in employee HR file"},
+    {"trigger": "promotion_recommended", "action": "route_to_hr_committee", "target": "talent_committee", "description": "Route promotion recommendations to talent committee"},
+    {"trigger": "pip_required", "action": "create_pip", "target": "line_manager", "description": "Auto-create PIP template for underperforming employees"},
+    {"trigger": "exceptional_rating", "action": "notify_talent_pool", "target": "talent_management", "description": "Add exceptional performers to high-potential talent pool"},
+    {"trigger": "review_cycle_complete", "action": "generate_analytics", "target": "hr_analytics", "description": "Generate department-wide performance analytics"}
+  ],
+  "nl_prompt": "Extract performance review data from this appraisal document. Identify the employee, reviewer, review period, and department. Extract all KPI scores with their targets, actuals, scores, and weights - verify weights sum to 100%. Extract competency ratings. Determine the final rating. Flag if a PIP is needed for low performers. Extract development plans, strengths, and improvement areas. Check that both employee and reviewer have signed."
+}

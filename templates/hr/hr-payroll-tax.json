@@ -1,0 +1,61 @@
+{
+  "id": "hr-payroll-tax",
+  "name": "Payroll & Tax Processing",
+  "version": "1.0",
+  "category": "hr-operations",
+  "description": "Process payroll documents, calculate PPh 21 income tax, validate BPJS contributions, and reconcile payroll data for banking employees.",
+  "document_types": [
+    "Slip Gaji (Payslip)",
+    "SPT 1721 (Annual Tax Return)",
+    "Bukti Potong PPh 21 (Tax Withholding Certificate)",
+    "BPJS Ketenagakerjaan Statement",
+    "BPJS Kesehatan Statement",
+    "Payroll Reconciliation Report",
+    "Overtime Authorization Form",
+    "Bonus/THR Calculation Sheet"
+  ],
+  "extraction_schema": {
+    "fields": [
+      {"name": "employee_id", "type": "string", "required": true, "source": "Payslip"},
+      {"name": "employee_name", "type": "string", "required": true, "source": "Payslip"},
+      {"name": "npwp", "type": "string", "required": true, "source": "Payslip/Tax Form"},
+      {"name": "tax_status", "type": "string", "required": true, "source": "Payslip", "enum": ["TK/0", "TK/1", "TK/2", "TK/3", "K/0", "K/1", "K/2", "K/3", "K/I/0", "K/I/1", "K/I/2", "K/I/3"], "description": "PTKP status code"},
+      {"name": "base_salary", "type": "number", "required": true, "source": "Payslip"},
+      {"name": "position_allowance", "type": "number", "required": false, "source": "Payslip"},
+      {"name": "transport_allowance", "type": "number", "required": false, "source": "Payslip"},
+      {"name": "meal_allowance", "type": "number", "required": false, "source": "Payslip"},
+      {"name": "overtime_hours", "type": "number", "required": false, "source": "Payslip"},
+      {"name": "overtime_amount", "type": "number", "required": false, "source": "Payslip"},
+      {"name": "gross_income", "type": "number", "required": true, "source": "Payslip"},
+      {"name": "pph21_deduction", "type": "number", "required": true, "source": "Payslip"},
+      {"name": "bpjs_tk_employee", "type": "number", "required": true, "source": "Payslip", "description": "BPJS Ketenagakerjaan employee contribution"},
+      {"name": "bpjs_tk_employer", "type": "number", "required": true, "source": "Payslip", "description": "BPJS Ketenagakerjaan employer contribution"},
+      {"name": "bpjs_kes_employee", "type": "number", "required": true, "source": "Payslip", "description": "BPJS Kesehatan employee contribution (1%)"},
+      {"name": "bpjs_kes_employer", "type": "number", "required": true, "source": "Payslip", "description": "BPJS Kesehatan employer contribution (4%)"},
+      {"name": "other_deductions", "type": "number", "required": false, "source": "Payslip"},
+      {"name": "net_salary", "type": "number", "required": true, "source": "Payslip"},
+      {"name": "pay_period", "type": "string", "required": true, "source": "Payslip"},
+      {"name": "payment_date", "type": "date", "required": true, "source": "Payslip"},
+      {"name": "thr_amount", "type": "number", "required": false, "source": "THR Sheet", "description": "Tunjangan Hari Raya (religious holiday bonus)"},
+      {"name": "annual_taxable_income", "type": "number", "required": false, "source": "SPT 1721"}
+    ]
+  },
+  "validation_rules": [
+    {"rule": "pph21_calculation", "description": "PPh 21 must match progressive tax brackets: 5% (0-60M), 15% (60-250M), 25% (250-500M), 30% (500M-5B), 35% (>5B)", "type": "tax_calculation"},
+    {"rule": "bpjs_tk_rates", "description": "BPJS TK employee: JHT 2%, JP 1%; employer: JHT 3.7%, JKK 0.24-1.74%, JKM 0.3%, JP 2%", "type": "rate_check"},
+    {"rule": "bpjs_kes_rates", "description": "BPJS Kesehatan: employee 1%, employer 4% of gross salary", "type": "rate_check"},
+    {"rule": "gross_income_sum", "description": "Gross income must equal sum of all income components", "type": "arithmetic_check"},
+    {"rule": "net_salary_calculation", "description": "Net salary = gross income - all deductions", "type": "arithmetic_check"},
+    {"rule": "overtime_rate", "description": "Overtime rate: 1.5x first hour, 2x subsequent hours (weekday); 2x first 8hrs, 3x/4x beyond (weekend)", "type": "rate_calculation"},
+    {"rule": "thr_minimum", "description": "THR must be at least 1 month salary for 12+ months tenure", "type": "threshold"},
+    {"rule": "salary_above_umr", "description": "Base salary must meet regional minimum wage", "type": "threshold"}
+  ],
+  "action_triggers": [
+    {"trigger": "calculation_mismatch", "action": "flag_for_review", "target": "payroll_team", "description": "Flag payslip for review when calculations don't match"},
+    {"trigger": "tax_filing_due", "action": "send_reminder", "target": "finance_team", "description": "Remind finance team of SPT filing deadlines"},
+    {"trigger": "bpjs_discrepancy", "action": "alert_hr", "target": "hr_compensation", "description": "Alert HR on BPJS contribution discrepancies"},
+    {"trigger": "payroll_validated", "action": "approve_payment", "target": "finance_manager", "description": "Auto-approve payroll batch when all validations pass"},
+    {"trigger": "annual_summary", "action": "generate_bukti_potong", "target": "tax_team", "description": "Auto-generate Bukti Potong PPh 21 at year-end"}
+  ],
+  "nl_prompt": "Extract all payroll components from this payslip or tax document. Identify base salary, all allowances (position, transport, meal), overtime hours and amount, gross income, and all deductions (PPh 21 tax, BPJS Ketenagakerjaan, BPJS Kesehatan, other deductions). Calculate and verify net salary. For tax documents, extract NPWP, PTKP status, and annual taxable income. Verify PPh 21 calculation matches Indonesia's progressive tax brackets. Check BPJS contribution rates are correct."
+}

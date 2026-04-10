@@ -1,0 +1,208 @@
+{
+  "version": "1.0",
+  "last_updated": "2024-12-01",
+  "description": "Master index of compliance regulations for the DocProc knowledge base. Used by the compliance validation agent and regulation lookup service.",
+  "regulations": [
+    {
+      "id": "pojk-6-2022",
+      "name": "POJK No.6/POJK.03/2022",
+      "title": "IT Risk Management for Commercial Banks",
+      "title_id": "Manajemen Risiko Teknologi Informasi oleh Bank Umum",
+      "issuer": "OJK",
+      "country": "Indonesia",
+      "category": "banking",
+      "file": "pojk_6_2022.json",
+      "sections_count": 8,
+      "effective_date": "2022-08-01",
+      "tags": ["it-governance", "risk-management", "cybersecurity", "data-protection", "business-continuity", "outsourcing", "incident-reporting"]
+    },
+    {
+      "id": "pojk-11-2022",
+      "name": "POJK No.11/POJK.03/2022",
+      "title": "Digital Banking Operations",
+      "title_id": "Penyelenggaraan Teknologi Informasi oleh Bank Umum — Layanan Perbankan Digital",
+      "issuer": "OJK",
+      "country": "Indonesia",
+      "category": "banking",
+      "file": "pojk_11_2022.json",
+      "sections_count": 6,
+      "effective_date": "2022-10-01",
+      "tags": ["digital-banking", "customer-data", "api-security", "cloud-computing", "channel-security", "product-risk"]
+    },
+    {
+      "id": "pbi-23-2021",
+      "name": "PBI No.23/6/PBI/2021",
+      "title": "Payment System",
+      "title_id": "Sistem Pembayaran",
+      "issuer": "Bank Indonesia",
+      "country": "Indonesia",
+      "category": "payment_system",
+      "file": "pbi_23_2021.json",
+      "sections_count": 5,
+      "effective_date": "2021-07-01",
+      "tags": ["payment-system", "consumer-protection", "aml-cft", "transaction-reporting", "data-security"]
+    },
+    {
+      "id": "nist-csf-2-0",
+      "name": "NIST Cybersecurity Framework 2.0",
+      "title": "Framework for Improving Critical Infrastructure Cybersecurity",
+      "issuer": "NIST",
+      "country": "United States",
+      "category": "cybersecurity",
+      "file": "nist_csf_2_0.json",
+      "sections_count": 6,
+      "effective_date": "2024-02-26",
+      "tags": ["govern", "identify", "protect", "detect", "respond", "recover", "critical-infrastructure"]
+    },
+    {
+      "id": "iso-27001-2022",
+      "name": "ISO/IEC 27001:2022",
+      "title": "Information Security Management Systems — Requirements",
+      "issuer": "ISO/IEC",
+      "country": "International",
+      "category": "information_security",
+      "file": "iso_27001_2022.json",
+      "sections_count": 4,
+      "effective_date": "2022-10-25",
+      "tags": ["organizational-controls", "people-controls", "physical-controls", "technological-controls", "isms", "annex-a"]
+    },
+    {
+      "id": "gdpr",
+      "name": "GDPR",
+      "title": "General Data Protection Regulation",
+      "issuer": "European Union",
+      "country": "EU",
+      "category": "data_privacy",
+      "file": "gdpr.json",
+      "sections_count": 5,
+      "effective_date": "2018-05-25",
+      "tags": ["data-privacy", "consent", "data-rights", "breach-notification"]
+    },
+    {
+      "id": "hipaa",
+      "name": "HIPAA",
+      "title": "Health Insurance Portability and Accountability Act",
+      "issuer": "U.S. Department of Health and Human Services",
+      "country": "United States",
+      "category": "healthcare",
+      "file": "hipaa.json",
+      "sections_count": 4,
+      "effective_date": "1996-08-21",
+      "tags": ["healthcare", "phi", "privacy-rule", "security-rule"]
+    },
+    {
+      "id": "sox",
+      "name": "SOX",
+      "title": "Sarbanes-Oxley Act",
+      "issuer": "U.S. Securities and Exchange Commission",
+      "country": "United States",
+      "category": "financial_reporting",
+      "file": "sox.json",
+      "sections_count": 4,
+      "effective_date": "2002-07-30",
+      "tags": ["financial-reporting", "internal-controls", "audit", "corporate-governance"]
+    },
+    {
+      "id": "pojk-51-2017",
+      "name": "POJK No.51/POJK.03/2017",
+      "title": "Sustainable Finance Implementation",
+      "title_id": "Penerapan Keuangan Berkelanjutan bagi Lembaga Jasa Keuangan, Emiten, dan Perusahaan Publik",
+      "issuer": "OJK",
+      "country": "Indonesia",
+      "category": "esg_sustainability",
+      "file": "pojk_51_2017.json",
+      "sections_count": 8,
+      "effective_date": "2017-07-27",
+      "tags": ["sustainable-finance", "esg", "rakb", "environmental-risk", "social-risk", "financial-inclusion", "green-financing", "sustainability-reporting"]
+    },
+    {
+      "id": "sasb-fn-cb",
+      "name": "SASB Commercial Banks (FN-CB)",
+      "title": "SASB Standards — Commercial Banks",
+      "title_id": null,
+      "issuer": "SASB/ISSB",
+      "country": "International",
+      "category": "esg_sustainability",
+      "file": "sasb_fn_cb.json",
+      "sections_count": 6,
+      "effective_date": "2023-08-01",
+      "tags": ["sasb", "data-security", "financial-inclusion", "esg-credit", "financed-emissions", "business-ethics", "systemic-risk"]
+    },
+    {
+      "id": "issb-s1",
+      "name": "IFRS S1",
+      "title": "General Requirements for Disclosure of Sustainability-related Financial Information",
+      "title_id": null,
+      "issuer": "ISSB/IFRS Foundation",
+      "country": "International",
+      "category": "esg_sustainability",
+      "file": "issb_s1.json",
+      "sections_count": 4,
+      "effective_date": "2024-01-01",
+      "tags": ["issb", "sustainability-disclosure", "governance", "strategy", "risk-management", "metrics-targets", "sasb-alignment"]
+    },
+    {
+      "id": "issb-s2",
+      "name": "IFRS S2",
+      "title": "Climate-related Disclosures",
+      "title_id": null,
+      "issuer": "ISSB/IFRS Foundation",
+      "country": "International",
+      "category": "esg_sustainability",
+      "file": "issb_s2.json",
+      "sections_count": 6,
+      "effective_date": "2024-01-01",
+      "tags": ["issb", "climate", "ghg-emissions", "scope-1", "scope-2", "scope-3", "financed-emissions", "tcfd", "net-zero", "scenario-analysis"]
+    }
+  ],
+  "categories": [
+    {
+      "id": "banking",
+      "name": "Banking Regulations",
+      "description": "Regulations governing commercial bank operations, IT risk, and digital banking services",
+      "applicable_countries": ["Indonesia"]
+    },
+    {
+      "id": "payment_system",
+      "name": "Payment System Regulations",
+      "description": "Regulations governing payment system providers, consumer protection, and AML/CFT compliance",
+      "applicable_countries": ["Indonesia"]
+    },
+    {
+      "id": "cybersecurity",
+      "name": "Cybersecurity Frameworks",
+      "description": "Industry frameworks and standards for cybersecurity risk management and resilience",
+      "applicable_countries": ["United States", "International"]
+    },
+    {
+      "id": "information_security",
+      "name": "Information Security Standards",
+      "description": "International standards for information security management systems and controls",
+      "applicable_countries": ["International"]
+    },
+    {
+      "id": "data_privacy",
+      "name": "Data Privacy Regulations",
+      "description": "Regulations governing the protection and processing of personal data",
+      "applicable_countries": ["EU"]
+    },
+    {
+      "id": "healthcare",
+      "name": "Healthcare Regulations",
+      "description": "Regulations governing the protection of health information and patient privacy",
+      "applicable_countries": ["United States"]
+    },
+    {
+      "id": "financial_reporting",
+      "name": "Financial Reporting Regulations",
+      "description": "Regulations governing corporate financial reporting, internal controls, and audit requirements",
+      "applicable_countries": ["United States"]
+    },
+    {
+      "id": "esg_sustainability",
+      "name": "ESG & Sustainability Standards",
+      "description": "Regulations and standards governing environmental, social, and governance disclosures, sustainable finance, climate-related reporting, and ESG integration in financial services",
+      "applicable_countries": ["Indonesia", "International"]
+    }
+  ]
+}

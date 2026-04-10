@@ -1,0 +1,108 @@
+// DocProc global styles
+
+// ── Typography ────────────────────────────────────────────
+body {
+  font-family: 'IBM Plex Sans', 'Calibri Light', system-ui, sans-serif;
+  font-weight: 300;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'IBM Plex Sans', 'Calibri Light', system-ui, sans-serif;
+  font-weight: 400;
+}
+
+// ── Background gradient ───────────────────────────────────
+.docproc-app {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #FFFFFF 0%, #EDF5FF 100%);
+}
+
+// ── Content area ──────────────────────────────────────────
+.docproc-content {
+  padding: 2rem;
+  margin-left: 256px;
+  margin-top: 48px;
+  min-height: calc(100vh - 48px);
+}
+
+// ── Cards ─────────────────────────────────────────────────
+.docproc-card {
+  background: #F4F4F4;
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+// ── Stat callouts ─────────────────────────────────────────
+.docproc-stat {
+  background: #FFFFFF;
+  border-left: 4px solid #4589FF;
+  border-radius: 4px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+
+  &__value {
+    font-size: 2rem;
+    font-weight: 400;
+    color: #161616;
+    line-height: 1.2;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 300;
+    color: #525252;
+    margin-top: 0.25rem;
+  }
+}
+
+// ── Header gradient ───────────────────────────────────────
+.cds--header {
+  background: linear-gradient(90deg, #4589FF 0%, #78A9FF 50%, #A6C8FF 100%) !important;
+  border-bottom: none !important;
+}
+
+.cds--header__name {
+  color: #161616 !important;
+  font-weight: 600 !important;
+}
+
+.cds--header__nav .cds--header__menu-item {
+  color: #161616 !important;
+}
+
+.cds--header__action {
+  color: #161616 !important;
+
+  svg {
+    fill: #161616 !important;
+  }
+}
+
+.cds--header__action:hover {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+// ── Sidebar ───────────────────────────────────────────────
+.cds--side-nav {
+  background: #FFFFFF !important;
+  border-right: 1px solid #E0E0E0;
+}
+
+.cds--side-nav__link:hover {
+  background: #EDF5FF !important;
+}
+
+.cds--side-nav__link--current {
+  background: #EDF5FF !important;
+  border-left: 3px solid #4589FF;
+}
+
+// ── Modal override ────────────────────────────────────────
+.cds--modal-container {
+  border-radius: 8px;
+}

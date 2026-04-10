@@ -1,0 +1,54 @@
+{
+  "id": "hr-leave-benefits",
+  "name": "Leave & Benefits Claims",
+  "version": "1.0",
+  "category": "hr-operations",
+  "description": "Process employee leave applications, medical claims, and benefits reimbursements. Validates entitlements per UU 13/2003 and company policy.",
+  "document_types": [
+    "Leave Application Form",
+    "Medical Certificate (Surat Keterangan Dokter)",
+    "Hospital Invoice/Receipt",
+    "Insurance Claim Form",
+    "BPJS Claim Form",
+    "Maternity/Paternity Leave Certificate",
+    "Bereavement Notice",
+    "Marriage Certificate"
+  ],
+  "extraction_schema": {
+    "fields": [
+      {"name": "employee_id", "type": "string", "required": true, "source": "Leave Form"},
+      {"name": "employee_name", "type": "string", "required": true, "source": "Leave Form"},
+      {"name": "leave_type", "type": "string", "required": true, "source": "Leave Form", "enum": ["Annual", "Sick", "Maternity", "Paternity", "Bereavement", "Marriage", "Hajj/Religious", "Unpaid"]},
+      {"name": "start_date", "type": "date", "required": true, "source": "Leave Form"},
+      {"name": "end_date", "type": "date", "required": true, "source": "Leave Form"},
+      {"name": "total_days", "type": "number", "required": true, "source": "Leave Form"},
+      {"name": "reason", "type": "string", "required": true, "source": "Leave Form"},
+      {"name": "medical_diagnosis", "type": "string", "required": false, "source": "Medical Certificate"},
+      {"name": "doctor_name", "type": "string", "required": false, "source": "Medical Certificate"},
+      {"name": "hospital_name", "type": "string", "required": false, "source": "Medical Certificate/Invoice"},
+      {"name": "claim_amount", "type": "number", "required": false, "source": "Invoice/Receipt"},
+      {"name": "claim_type", "type": "string", "required": false, "source": "Claim Form", "enum": ["Medical", "Dental", "Optical", "Maternity", "Hospitalization"]},
+      {"name": "supporting_document_type", "type": "string", "required": false, "source": "Attachment"},
+      {"name": "approver_name", "type": "string", "required": true, "source": "Leave Form"},
+      {"name": "approval_status", "type": "string", "required": false, "source": "Leave Form", "enum": ["Pending", "Approved", "Rejected"]}
+    ]
+  },
+  "validation_rules": [
+    {"rule": "annual_leave_balance", "description": "Annual leave cannot exceed remaining balance (min 12 days/year per UU 13/2003)", "type": "balance_check"},
+    {"rule": "sick_leave_medical_cert", "description": "Sick leave >2 consecutive days requires medical certificate", "type": "conditional_required", "condition": "leave_type == 'Sick' && total_days > 2"},
+    {"rule": "maternity_duration", "description": "Maternity leave is 3 months (1.5 before + 1.5 after birth)", "type": "duration_check", "max_days": 90},
+    {"rule": "paternity_duration", "description": "Paternity leave is 2 days per UU 13/2003", "type": "duration_check", "max_days": 2},
+    {"rule": "bereavement_duration", "description": "Bereavement: 2 days (spouse/child/parent), 1 day (other family)", "type": "conditional_duration"},
+    {"rule": "claim_within_policy", "description": "Claim amount must not exceed annual benefit limit", "type": "threshold"},
+    {"rule": "no_overlapping_leave", "description": "Leave dates must not overlap with existing approved leave", "type": "overlap_check"},
+    {"rule": "advance_notice", "description": "Annual leave requires 14-day advance notice (except emergency)", "type": "date_comparison"}
+  ],
+  "action_triggers": [
+    {"trigger": "leave_submitted", "action": "notify_approver", "target": "line_manager", "description": "Send approval request to line manager"},
+    {"trigger": "leave_approved", "action": "update_calendar", "target": "team_calendar", "description": "Update team calendar and attendance system"},
+    {"trigger": "sick_leave_extended", "action": "alert_hr", "target": "hr_officer", "description": "Alert HR when sick leave exceeds 5 consecutive days"},
+    {"trigger": "claim_submitted", "action": "route_to_finance", "target": "finance_team", "description": "Route validated claims to finance for reimbursement"},
+    {"trigger": "balance_low", "action": "notify_employee", "target": "employee", "description": "Notify employee when leave balance drops below 3 days"}
+  ],
+  "nl_prompt": "Process this leave application or benefits claim. Extract the leave type, requested dates, total days, and reason. For sick leave over 2 days, verify a medical certificate is attached. For medical claims, extract the hospital name, diagnosis, claim amount, and claim type. Check the employee's remaining leave balance. Validate the leave duration against Indonesian labor law entitlements. Flag any overlapping leave or policy violations."
+}

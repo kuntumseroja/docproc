@@ -1,0 +1,101 @@
+{
+  "id": "pojk-11-2022",
+  "name": "POJK No.11/POJK.03/2022",
+  "title": "Digital Banking Operations",
+  "title_id": "Penyelenggaraan Teknologi Informasi oleh Bank Umum — Layanan Perbankan Digital",
+  "issuer": "Otoritas Jasa Keuangan (OJK)",
+  "country": "Indonesia",
+  "category": "banking",
+  "effective_date": "2022-10-01",
+  "language": "en",
+  "version": "1.0",
+  "last_updated": "2024-12-01",
+  "sections": [
+    {
+      "id": "pojk-11-2022-s1",
+      "section_number": "1",
+      "title": "Digital Banking Governance (Tata Kelola Perbankan Digital)",
+      "description": "Establishes the governance framework for digital banking services, including organizational structure, oversight mechanisms, and strategic planning requirements. Banks offering digital services must ensure adequate governance proportional to the scale and complexity of their digital operations.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks must establish a Digital Banking Committee (Komite Perbankan Digital) or assign digital banking oversight to an existing committee with clear terms of reference and regular reporting to the Board of Directors.",
+        "A comprehensive Digital Banking Strategy (Strategi Perbankan Digital) must be developed, approved by the Board of Directors, and reviewed at minimum annually to reflect evolving market conditions and technology trends.",
+        "Banks must designate a senior officer responsible for digital banking operations with authority over product development, technology decisions, and risk management for digital channels.",
+        "Digital banking governance must include formal product approval processes requiring risk assessment, security review, and regulatory compliance verification before launch of any new digital product or feature.",
+        "Banks must establish customer complaint handling mechanisms specific to digital banking channels with defined resolution timelines of 5 business days for standard complaints and 2 business days for service outage complaints."
+      ]
+    },
+    {
+      "id": "pojk-11-2022-s2",
+      "section_number": "2",
+      "title": "Customer Data Protection (Perlindungan Data Nasabah)",
+      "description": "Specifies the requirements for protecting customer data in digital banking operations, including consent management, data minimization, privacy by design, and compliance with Undang-Undang Perlindungan Data Pribadi (UU PDP). Banks must ensure transparency in data collection and usage practices.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks must obtain explicit, informed consent (persetujuan eksplisit) from customers before collecting, processing, or sharing personal data, with clear disclosures in Bahasa Indonesia about data usage purposes.",
+        "Data minimization principles must be applied — banks shall only collect customer data that is directly necessary for the specific digital banking service being provided.",
+        "Banks must implement Privacy by Design (PbD) principles in all digital banking product development, including data protection impact assessments (DPIA) for new products handling sensitive customer data.",
+        "Customers must be provided with accessible mechanisms to view, correct, export, and request deletion of their personal data through the digital banking platform within regulatory retention limits.",
+        "Banks must implement data anonymization or pseudonymization techniques when using customer data for analytics, AI/ML model training, or product development purposes.",
+        "Cross-border transfer of customer data must comply with UU PDP requirements, including ensuring the receiving jurisdiction provides adequate data protection standards."
+      ]
+    },
+    {
+      "id": "pojk-11-2022-s3",
+      "section_number": "3",
+      "title": "Digital Channel Security (Keamanan Kanal Digital)",
+      "description": "Defines the security requirements for all digital banking channels including mobile applications, internet banking, and other electronic interfaces. Covers authentication, session management, device security, and transaction authorization controls.",
+      "risk_level": "high",
+      "requirements": [
+        "Multi-factor authentication (MFA) must be implemented for all digital banking transactions above IDR 1,000,000, with adaptive authentication mechanisms for lower-value transactions based on risk scoring.",
+        "Session management must include automatic timeout after 5 minutes of inactivity for mobile banking and 10 minutes for internet banking, with secure session token handling and prevention of concurrent sessions.",
+        "Banks must implement device binding and device fingerprinting for mobile banking applications, with step-up authentication required when customers access services from new or unrecognized devices.",
+        "Transaction signing using digital signatures or one-time passwords (OTP) must be required for all fund transfers, bill payments, and account modification operations.",
+        "Banks must implement real-time transaction monitoring with anomaly detection capabilities to identify and flag suspicious activities for additional verification or blocking.",
+        "All digital banking applications must undergo security testing including SAST, DAST, and manual penetration testing before each release, with critical findings remediated prior to deployment."
+      ]
+    },
+    {
+      "id": "pojk-11-2022-s4",
+      "section_number": "4",
+      "title": "API Security (Keamanan API)",
+      "description": "Governs the security of Application Programming Interfaces (APIs) used in digital banking services, including Open Banking APIs, third-party integrations, and internal service APIs. Requirements cover API authentication, authorization, rate limiting, and monitoring.",
+      "risk_level": "high",
+      "requirements": [
+        "All external-facing APIs must implement OAuth 2.0 with OpenID Connect for authentication and authorization, with access tokens having a maximum validity of 30 minutes for sensitive operations.",
+        "API gateway must enforce rate limiting, throttling, and request validation to prevent denial of service attacks and API abuse, with limits proportional to partner agreements and risk profiles.",
+        "Banks must maintain a comprehensive API inventory (Inventaris API) documenting all internal and external APIs, their data classifications, consumer applications, and security controls applied.",
+        "API communications must be encrypted using TLS 1.2 or higher with mutual TLS (mTLS) required for bank-to-bank and bank-to-fintech API integrations.",
+        "Banks must implement API versioning, deprecation policies, and backward compatibility management to ensure orderly transitions and prevent security gaps during API lifecycle changes."
+      ]
+    },
+    {
+      "id": "pojk-11-2022-s5",
+      "section_number": "5",
+      "title": "Cloud Computing (Komputasi Awan)",
+      "description": "Establishes requirements for banks using cloud computing services for digital banking operations. Covers cloud strategy, risk assessment, provider selection, data sovereignty, and ongoing monitoring of cloud-hosted services.",
+      "risk_level": "medium",
+      "requirements": [
+        "Banks must conduct a comprehensive cloud risk assessment before migrating any workload, considering data classification, regulatory requirements, vendor lock-in risks, and shared responsibility model implications.",
+        "Customer data classified as Confidential (Rahasia) or above must be hosted within Indonesian territory, either in domestic cloud regions or on-premise data centers, unless explicit OJK approval is obtained.",
+        "Banks must ensure cloud service agreements include provisions for data portability, data deletion verification, OJK audit rights, incident notification within 1 hour, and compliance with Indonesian regulations.",
+        "Multi-cloud or hybrid cloud architectures must be evaluated to avoid single-provider dependency, with documented exit strategies and data migration plans for each cloud provider.",
+        "Banks must implement cloud security posture management (CSPM) tools and conduct quarterly cloud configuration reviews to detect misconfigurations and compliance drift."
+      ]
+    },
+    {
+      "id": "pojk-11-2022-s6",
+      "section_number": "6",
+      "title": "Digital Product Risk Assessment (Penilaian Risiko Produk Digital)",
+      "description": "Requires banks to conduct thorough risk assessments for all digital banking products and services, covering operational, technology, cyber, compliance, and reputational risks. Assessment must occur before product launch and periodically throughout the product lifecycle.",
+      "risk_level": "medium",
+      "requirements": [
+        "Banks must conduct a pre-launch risk assessment (Penilaian Risiko Pra-Peluncuran) for every new digital product, covering technology risk, operational risk, cyber risk, compliance risk, and customer impact analysis.",
+        "Post-launch monitoring must track product performance against predefined risk indicators for at least 6 months, with monthly reporting to the Digital Banking Committee.",
+        "Banks must implement a sandbox testing environment (Lingkungan Uji Coba) for digital product development and testing, isolated from production systems and customer data.",
+        "AI and machine learning models used in digital banking products for credit scoring, fraud detection, or customer profiling must undergo bias testing, explainability review, and OJK notification before deployment.",
+        "Banks must maintain a digital product risk register (Daftar Risiko Produk Digital) that is reviewed quarterly and includes risk ratings, control effectiveness, and remediation tracking for each active digital product."
+      ]
+    }
+  ]
+}

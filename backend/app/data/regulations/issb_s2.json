@@ -1,0 +1,103 @@
+{
+  "id": "issb-s2",
+  "name": "IFRS S2",
+  "title": "Climate-related Disclosures",
+  "title_id": null,
+  "issuer": "ISSB/IFRS Foundation",
+  "country": "International",
+  "category": "esg_sustainability",
+  "effective_date": "2024-01-01",
+  "language": "en",
+  "version": "1.0",
+  "last_updated": "2024-12-01",
+  "sections": [
+    {
+      "id": "issb-s2-s1",
+      "section_number": "1",
+      "title": "Climate Governance",
+      "description": "Requires disclosure of governance processes, controls, and procedures used to monitor, manage, and oversee climate-related risks and opportunities. Covers board-level oversight of climate strategy, management roles in climate risk assessment, and climate competency within governance bodies.",
+      "risk_level": "high",
+      "requirements": [
+        "Entities must disclose the governance body or individual responsible for oversight of climate-related risks and opportunities, including how climate expertise is represented at the board level.",
+        "Management roles responsible for assessing and managing climate-related risks and opportunities must be described, including reporting lines to the board and frequency of climate-related briefings.",
+        "How the board considers climate-related risks and opportunities when overseeing entity strategy, risk management policies, and annual budgets must be disclosed.",
+        "Climate competency requirements for board members and senior management must be described, including training programs, external advisory arrangements, and skill assessments.",
+        "The processes by which the board monitors progress against climate-related targets and transition plans must be disclosed, including escalation procedures for material deviations."
+      ]
+    },
+    {
+      "id": "issb-s2-s2",
+      "section_number": "2",
+      "title": "Climate Strategy",
+      "description": "Requires disclosure of climate-related risks and opportunities affecting business strategy, including transition plans, scenario analysis using multiple temperature pathways, and quantification of financial effects from climate change on the entity's financial position and performance.",
+      "risk_level": "high",
+      "requirements": [
+        "Entities must disclose climate-related transition plans, including key actions, timelines, resource allocation, and how the plan aligns with the entity's overall business strategy.",
+        "Scenario analysis must be conducted using at minimum a 1.5°C pathway and a high-warming scenario (e.g., 4°C), with results disclosed including assumptions, time horizons, and methodological choices.",
+        "The current and anticipated financial effects of climate-related risks and opportunities on financial position, financial performance, and cash flows must be quantified.",
+        "How climate-related risks and opportunities have influenced the entity's strategy, decision-making, and capital allocation must be described, including any changes to business model or product mix.",
+        "The resilience of the entity's strategy to climate-related changes, developments, and uncertainties must be assessed and disclosed, including adaptive capacity and strategic flexibility.",
+        "Entities must describe the dependencies on natural resources, energy sources, and supply chain elements that are vulnerable to climate-related disruptions."
+      ]
+    },
+    {
+      "id": "issb-s2-s3",
+      "section_number": "3",
+      "title": "Climate Risk Management",
+      "description": "Requires disclosure of processes used to identify, assess, prioritize, and manage climate-related risks, covering both physical risks (flooding, heat stress, extreme weather) and transition risks (policy changes, technology shifts, market dynamics). Includes integration with enterprise-wide risk management.",
+      "risk_level": "high",
+      "requirements": [
+        "Entities must disclose processes for identifying physical climate risks, including acute risks (flooding, storms, wildfires) and chronic risks (sea-level rise, heat stress, water scarcity), with geographic and asset-level specificity.",
+        "Processes for identifying and assessing transition risks must be described, including policy and regulatory changes, technology shifts, market dynamics, and reputational risks related to climate performance.",
+        "The prioritization methodology for climate risks must be disclosed, including criteria for determining materiality, likelihood, magnitude, and time horizon of potential impacts.",
+        "How climate-related risk management processes are integrated into the entity's overall enterprise risk management framework must be described, including governance linkages and reporting mechanisms.",
+        "Entities must disclose how climate risks identified in the assessment process inform strategic planning, capital allocation, and operational decision-making."
+      ]
+    },
+    {
+      "id": "issb-s2-s4",
+      "section_number": "4",
+      "title": "GHG Emissions",
+      "description": "Requires disclosure of greenhouse gas emissions across all scopes, including Scope 1 direct emissions, Scope 2 indirect energy emissions, and Scope 3 value chain emissions. IFRS S2 mandates Scope 3 disclosure, with measurement methodology and emission factors clearly documented.",
+      "risk_level": "high",
+      "requirements": [
+        "Entities must disclose absolute gross Scope 1 greenhouse gas emissions in metric tons of CO2 equivalent, disaggregated by the consolidated accounting group and associates/joint ventures.",
+        "Scope 2 indirect energy emissions must be disclosed using both the location-based and market-based methods, with reconciliation where figures differ materially.",
+        "Scope 3 value chain emissions must be disclosed, covering all material categories from the GHG Protocol Corporate Value Chain Standard, with category-level disaggregation.",
+        "The measurement methodology must be disclosed, including emission factors used, data sources, calculation approaches, and alignment with the GHG Protocol Corporate Standard.",
+        "Entities must disclose the percentage of emissions measured using verified data versus estimated data, and describe approaches to improve data quality over time.",
+        "GHG emission intensity ratios (e.g., emissions per unit of revenue or production) must be reported to enable cross-entity comparison and trend analysis."
+      ]
+    },
+    {
+      "id": "issb-s2-s5",
+      "section_number": "5",
+      "title": "Financed Emissions (Financial Institutions)",
+      "description": "Specific requirements for financial institutions to measure and disclose emissions associated with their lending, investment, and underwriting portfolios. Requires alignment with PCAF methodology, disaggregation by asset class, and disclosure of portfolio coverage percentages.",
+      "risk_level": "high",
+      "requirements": [
+        "Financial institutions must measure and disclose absolute financed emissions associated with their lending and investment portfolios, expressed in metric tons of CO2 equivalent.",
+        "The Partnership for Carbon Accounting Financials (PCAF) methodology must be used for measuring financed emissions, with PCAF data quality scores disclosed for each asset class.",
+        "Financed emissions must be disaggregated by asset class (corporate loans, project finance, mortgages, listed equity, corporate bonds, sovereign debt) with separate disclosure for each material class.",
+        "Portfolio coverage percentage must be disclosed, indicating the proportion of the total portfolio for which financed emissions have been calculated, with plans for expanding coverage.",
+        "Financial institutions must disclose the emission intensity of their portfolios (e.g., tCO2e per million dollars invested/lent) and track trends against portfolio decarbonization targets.",
+        "Data limitations, estimation approaches, and plans for improving financed emissions measurement quality must be transparently disclosed."
+      ]
+    },
+    {
+      "id": "issb-s2-s6",
+      "section_number": "6",
+      "title": "Climate Targets & Transition",
+      "description": "Requires disclosure of climate-related targets set by the entity, including net-zero commitments, interim milestones, use of carbon credits, alignment with science-based targets, and the decarbonization pathway adopted. Covers both operational and financed emissions targets for financial institutions.",
+      "risk_level": "high",
+      "requirements": [
+        "Entities must disclose net-zero targets including the target year, scope of emissions covered, baseline year and emissions level, and interim milestone targets (e.g., 2030, 2040).",
+        "The use of carbon credits or offsets in achieving climate targets must be disclosed, including the type, certification standard, volume, and the entity's policy on crediting versus direct abatement.",
+        "Alignment with science-based targets must be disclosed, including whether targets have been validated by the Science Based Targets initiative (SBTi) and the temperature pathway used.",
+        "The decarbonization pathway must be described, including planned actions, technology dependencies, capital expenditure requirements, and key assumptions underlying the trajectory.",
+        "Progress against each climate target must be reported quantitatively, including absolute emissions reductions achieved, changes in emissions intensity, and explanations for any shortfalls.",
+        "Entities must disclose how climate targets are integrated into executive remuneration, performance management, and capital allocation decisions to ensure accountability."
+      ]
+    }
+  ]
+}

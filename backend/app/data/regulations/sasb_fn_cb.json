@@ -1,0 +1,98 @@
+{
+  "id": "sasb-fn-cb",
+  "name": "SASB Commercial Banks (FN-CB)",
+  "title": "SASB Standards — Commercial Banks",
+  "title_id": null,
+  "issuer": "SASB/ISSB",
+  "country": "International",
+  "category": "esg_sustainability",
+  "effective_date": "2023-08-01",
+  "language": "en",
+  "version": "1.0",
+  "last_updated": "2024-12-01",
+  "sections": [
+    {
+      "id": "sasb-fn-cb-s1",
+      "section_number": "1",
+      "title": "Data Security (FN-CB-230a)",
+      "description": "Addresses data security risks faced by commercial banks, including the frequency and severity of data breaches, exposure of personally identifiable information (PII), and the bank's overall approach to identifying, managing, and mitigating cybersecurity risks across its operations.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks must disclose the total number of data breaches experienced during the reporting period, categorized by type (unauthorized access, malware, insider threat, physical breach).",
+        "The percentage of data breaches involving personally identifiable information (PII) must be reported, including the number of affected customers and accounts.",
+        "Banks must describe their approach to identifying and addressing data security risks, including governance structures, risk assessment processes, and third-party security management.",
+        "Cybersecurity investment as a percentage of total IT spending must be tracked and disclosed, demonstrating adequate resource allocation to data protection.",
+        "Mean time to detect (MTTD) and mean time to respond (MTTR) for security incidents must be measured and reported as indicators of security operations effectiveness."
+      ]
+    },
+    {
+      "id": "sasb-fn-cb-s2",
+      "section_number": "2",
+      "title": "Financial Inclusion & Capacity Building (FN-CB-240a)",
+      "description": "Measures the bank's contribution to financial inclusion through community development lending, financial literacy initiatives, and expanding access to banking services for unbanked and underbanked populations.",
+      "risk_level": "medium",
+      "requirements": [
+        "Banks must disclose the number and dollar amount of loans provided for community development purposes, including affordable housing, small business, and community facility financing.",
+        "Financial literacy and capacity-building initiatives must be reported, including the number of programs conducted, participants reached, and geographic coverage.",
+        "The number and percentage of accounts held by previously unbanked or underbanked customers must be tracked and reported, demonstrating progress in financial inclusion.",
+        "Banks must report on lending activities in low-to-moderate income (LMI) census tracts as a proportion of total lending, including CRA (Community Reinvestment Act) performance ratings where applicable.",
+        "Partnerships with community development financial institutions (CDFIs) and non-profit organizations for financial inclusion must be disclosed with measurable outcomes."
+      ]
+    },
+    {
+      "id": "sasb-fn-cb-s3",
+      "section_number": "3",
+      "title": "ESG Integration in Credit Analysis (FN-CB-410a)",
+      "description": "Evaluates how banks incorporate environmental, social, and governance factors into their credit analysis and lending decisions, including the identification and management of ESG-related credit risks across the commercial lending portfolio.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks must disclose commercial and industrial credit exposure by industry, identifying sectors with significant environmental or social risk profiles.",
+        "The approach to incorporating ESG factors into credit analysis must be described, including specific criteria, scoring methodologies, and decision thresholds used.",
+        "ESG-related credit risk concentration by sector must be monitored and reported, including exposure to carbon-intensive industries and sectors vulnerable to climate transition.",
+        "Banks must disclose whether ESG due diligence is applied consistently across all commercial lending products or limited to specific segments, with rationale for scope decisions.",
+        "Training programs for credit analysts on ESG risk identification and assessment must be documented, including frequency, coverage, and competency evaluation."
+      ]
+    },
+    {
+      "id": "sasb-fn-cb-s4",
+      "section_number": "4",
+      "title": "Financed Emissions (FN-CB-410b)",
+      "description": "Requires banks to measure and disclose the greenhouse gas emissions associated with their lending and investment portfolios (financed emissions), covering Scope 1, Scope 2, and Scope 3 emissions of borrowers and investee companies.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks must disclose absolute gross financed emissions (Scope 1 and Scope 2) associated with their lending and investment activities, measured in metric tons of CO2 equivalent.",
+        "Scope 3 financed emissions from the value chains of borrowers must be estimated and disclosed where data is available, with clear methodology and data quality descriptions.",
+        "Financed emissions must be disaggregated by industry sector, asset class, and geography to identify concentration risks and transition exposure.",
+        "The methodology used for calculating financed emissions must be disclosed, including attribution factors, data sources, estimation approaches, and alignment with PCAF standards.",
+        "Year-over-year trends in financed emissions intensity (emissions per unit of lending) must be reported, demonstrating progress toward portfolio decarbonization targets."
+      ]
+    },
+    {
+      "id": "sasb-fn-cb-s5",
+      "section_number": "5",
+      "title": "Business Ethics (FN-CB-510a)",
+      "description": "Addresses ethical conduct and legal compliance in commercial banking operations, including monetary losses from legal proceedings, anti-corruption measures, and whistleblower protection policies.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks must disclose total monetary losses incurred during the reporting period as a result of legal proceedings associated with fraud, insider trading, anti-trust, anti-competitive behavior, market manipulation, malpractice, or other financial industry laws or regulations.",
+        "Whistleblower policies and mechanisms must be described, including protections against retaliation, channels for anonymous reporting, and investigation procedures.",
+        "The number of confirmed incidents of corruption and bribery must be disclosed, along with remediation actions taken and policy enhancements implemented.",
+        "Employee ethics training completion rates must be reported, including coverage of anti-money laundering (AML), anti-bribery, and conflicts of interest policies."
+      ]
+    },
+    {
+      "id": "sasb-fn-cb-s6",
+      "section_number": "6",
+      "title": "Systemic Risk Management (FN-CB-550a)",
+      "description": "Evaluates the bank's contribution to and management of systemic risk within the financial system, including its global systemically important bank (G-SIB) designation, capital adequacy under stress scenarios, and integration of systemic risk considerations into strategic planning.",
+      "risk_level": "high",
+      "requirements": [
+        "Banks designated as G-SIBs must disclose their G-SIB score and bucket classification, including the underlying indicators (size, interconnectedness, substitutability, complexity, cross-jurisdictional activity).",
+        "Description of how results from supervisory stress tests (e.g., CCAR, EBA) are incorporated into capital planning, risk appetite setting, and strategic decision-making must be provided.",
+        "Banks must disclose their approach to managing systemic risk, including participation in macro-prudential oversight, interbank exposure management, and resolution planning.",
+        "Capital adequacy ratios under both baseline and stressed scenarios must be reported, demonstrating sufficient buffers to absorb systemic shocks without requiring public support.",
+        "Banks must describe their recovery and resolution plans, including triggers for activation, key recovery actions, and coordination mechanisms with regulatory authorities."
+      ]
+    }
+  ]
+}

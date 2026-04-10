@@ -1,0 +1,58 @@
+{
+  "id": "hr-disciplinary-exit",
+  "name": "Disciplinary & Exit Processing",
+  "version": "1.0",
+  "category": "hr-operations",
+  "description": "Process disciplinary action documents, resignation letters, termination documents, and exit clearance. Calculates severance per UU Cipta Kerja and UU 13/2003.",
+  "document_types": [
+    "Warning Letter (SP1/SP2/SP3)",
+    "Resignation Letter",
+    "Termination Letter",
+    "Mutual Separation Agreement (PHK)",
+    "Exit Interview Form",
+    "Clearance Form",
+    "Final Settlement Calculation",
+    "Reference/Experience Letter"
+  ],
+  "extraction_schema": {
+    "fields": [
+      {"name": "employee_id", "type": "string", "required": true, "source": "Letter/Form"},
+      {"name": "employee_name", "type": "string", "required": true, "source": "Letter/Form"},
+      {"name": "action_type", "type": "string", "required": true, "source": "Letter", "enum": ["SP1 (Warning 1)", "SP2 (Warning 2)", "SP3 (Final Warning)", "Resignation", "Termination", "Mutual Separation", "Retirement", "Contract End"]},
+      {"name": "action_date", "type": "date", "required": true, "source": "Letter"},
+      {"name": "effective_date", "type": "date", "required": true, "source": "Letter"},
+      {"name": "reason", "type": "string", "required": true, "source": "Letter"},
+      {"name": "violation_category", "type": "string", "required": false, "source": "Warning Letter", "enum": ["Attendance", "Performance", "Conduct", "Policy Violation", "Fraud", "Negligence"]},
+      {"name": "previous_warnings", "type": "array", "required": false, "source": "HR Records", "description": "Previous warning letters with dates"},
+      {"name": "years_of_service", "type": "number", "required": true, "source": "Derived"},
+      {"name": "last_salary", "type": "number", "required": true, "source": "HR Records"},
+      {"name": "severance_entitlement", "type": "number", "required": false, "source": "Calculated", "description": "Uang Pesangon per UU Cipta Kerja"},
+      {"name": "long_service_pay", "type": "number", "required": false, "source": "Calculated", "description": "Uang Penghargaan Masa Kerja"},
+      {"name": "compensation_pay", "type": "number", "required": false, "source": "Calculated", "description": "Uang Penggantian Hak"},
+      {"name": "total_settlement", "type": "number", "required": true, "source": "Settlement Calculation"},
+      {"name": "exit_interview_feedback", "type": "string", "required": false, "source": "Exit Interview"},
+      {"name": "clearance_status", "type": "object", "required": false, "source": "Clearance Form", "description": "Department-by-department clearance checklist"},
+      {"name": "asset_return_status", "type": "string", "required": false, "source": "Clearance Form"},
+      {"name": "last_working_day", "type": "date", "required": true, "source": "Letter"}
+    ]
+  },
+  "validation_rules": [
+    {"rule": "warning_sequence", "description": "Warnings must follow SP1 > SP2 > SP3 (except gross misconduct)", "type": "sequence_check"},
+    {"rule": "sp_validity_period", "description": "Each warning valid for 6 months", "type": "date_range", "max_months": 6},
+    {"rule": "severance_calculation", "description": "Severance per UU Cipta Kerja: 1 month per year (max 9)", "type": "formula_check"},
+    {"rule": "long_service_calculation", "description": "UPMK: 2mo (3-6yr), 3mo (6-9yr), 4mo (9-12yr), etc.", "type": "formula_check"},
+    {"rule": "notice_period", "description": "Resignation requires minimum 30 days notice", "type": "date_comparison"},
+    {"rule": "clearance_complete", "description": "All dept clearances must be obtained before final settlement", "type": "completeness_check"},
+    {"rule": "access_revoked", "description": "IT access must be revoked by last working day", "type": "checklist_check"},
+    {"rule": "no_outstanding_loans", "description": "Employee must settle all outstanding loans/advances", "type": "balance_check"}
+  ],
+  "action_triggers": [
+    {"trigger": "warning_issued", "action": "update_hr_record", "target": "employee_record", "description": "Record warning in disciplinary history"},
+    {"trigger": "termination_initiated", "action": "calculate_severance", "target": "compensation_team", "description": "Auto-calculate severance entitlement"},
+    {"trigger": "resignation_received", "action": "initiate_clearance", "target": "all_departments", "description": "Send clearance form to all departments"},
+    {"trigger": "clearance_complete", "action": "process_final_settlement", "target": "finance", "description": "Trigger final settlement payment"},
+    {"trigger": "exit_complete", "action": "revoke_access", "target": "it_security", "description": "Revoke all system access"},
+    {"trigger": "exit_complete", "action": "generate_experience_letter", "target": "hr_officer", "description": "Generate experience/reference letter"}
+  ],
+  "nl_prompt": "Process this disciplinary or exit document. For warning letters, identify the warning level (SP1/SP2/SP3), violation category, and date. Verify the warning sequence is valid. For resignation or termination, extract the reason, effective date, last working day, and years of service. Calculate severance entitlement using UU Cipta Kerja formula: Uang Pesangon (1 month per year, max 9), Uang Penghargaan Masa Kerja, and Uang Penggantian Hak. Check all department clearances are obtained and outstanding loans are settled."
+}

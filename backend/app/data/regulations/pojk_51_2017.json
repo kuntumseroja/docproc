@@ -1,0 +1,128 @@
+{
+  "id": "pojk-51-2017",
+  "name": "POJK No.51/POJK.03/2017",
+  "title": "Sustainable Finance Implementation",
+  "title_id": "Penerapan Keuangan Berkelanjutan bagi Lembaga Jasa Keuangan, Emiten, dan Perusahaan Publik",
+  "issuer": "Otoritas Jasa Keuangan (OJK)",
+  "country": "Indonesia",
+  "category": "esg_sustainability",
+  "effective_date": "2017-07-27",
+  "language": "en",
+  "version": "1.0",
+  "last_updated": "2024-12-01",
+  "sections": [
+    {
+      "id": "pojk-51-2017-s1",
+      "section_number": "1",
+      "title": "Responsible Investment (Investasi Bertanggung Jawab)",
+      "description": "Establishes principles for integrating environmental, social, and governance (ESG) factors into investment decision-making processes. Financial institutions must adopt responsible investment practices that consider long-term sustainability impacts alongside financial returns.",
+      "risk_level": "high",
+      "requirements": [
+        "Financial institutions must integrate ESG criteria into their investment analysis and decision-making frameworks, with documented assessment methodology for each investment proposal.",
+        "Negative screening processes must be implemented to exclude investments in activities that cause significant environmental degradation, human rights violations, or governance failures.",
+        "Impact assessments must be conducted for all new investments exceeding IDR 50 billion, evaluating potential environmental and social consequences over the investment lifecycle.",
+        "Investment portfolios must be periodically reviewed (at minimum annually) against ESG performance benchmarks, with findings reported to the Board of Directors.",
+        "Financial institutions must establish clear ESG investment guidelines that define acceptable risk thresholds for environmental, social, and governance factors."
+      ]
+    },
+    {
+      "id": "pojk-51-2017-s2",
+      "section_number": "2",
+      "title": "Sustainable Business Strategy (Strategi Bisnis Berkelanjutan)",
+      "description": "Requires financial institutions to develop and implement long-term sustainability roadmaps that integrate environmental and social considerations into core business strategy. Includes requirements for the Rencana Aksi Keuangan Berkelanjutan (RAKB) action plan and board-level oversight of sustainability commitments.",
+      "risk_level": "high",
+      "requirements": [
+        "Financial institutions must develop a Rencana Aksi Keuangan Berkelanjutan (RAKB) — a sustainable finance action plan — covering a minimum 5-year horizon, submitted to OJK annually.",
+        "The Board of Directors must formally approve the sustainability strategy and designate a senior officer responsible for overseeing its implementation across all business units.",
+        "Long-term sustainability targets must be established with measurable KPIs covering environmental footprint reduction, social impact, and governance improvements.",
+        "Annual progress reviews of the RAKB must be conducted by the Board of Directors, with corrective actions documented and submitted to OJK within 30 days of review.",
+        "The sustainability strategy must align with national development priorities including the Sustainable Development Goals (SDGs) and Indonesia's climate commitments."
+      ]
+    },
+    {
+      "id": "pojk-51-2017-s3",
+      "section_number": "3",
+      "title": "Social & Environmental Risk Management (Manajemen Risiko Sosial & Lingkungan)",
+      "description": "Mandates the integration of social and environmental risk factors into the overall risk management framework of financial institutions. Covers environmental risk assessment in lending decisions, social impact analysis, and compliance with AMDAL (Environmental Impact Assessment) requirements.",
+      "risk_level": "high",
+      "requirements": [
+        "Financial institutions must incorporate environmental and social risk assessments into their credit analysis and lending approval processes for all commercial and corporate loans.",
+        "Borrowers in high-risk sectors (mining, palm oil, forestry, construction) must provide valid AMDAL (Analisis Mengenai Dampak Lingkungan) documentation as a condition for loan approval.",
+        "Social impact analysis must be conducted for financing activities that may affect local communities, indigenous peoples, or labor conditions, with mitigation plans documented.",
+        "Environmental risk exposure must be monitored at the portfolio level, with concentration limits established for high-risk sectors and reported to the Board quarterly.",
+        "Financial institutions must maintain a watchlist of borrowers with adverse environmental or social incidents, with enhanced due diligence applied to these accounts.",
+        "Stress testing scenarios must include environmental risk factors such as climate change impacts, regulatory changes, and resource scarcity affecting portfolio quality."
+      ]
+    },
+    {
+      "id": "pojk-51-2017-s4",
+      "section_number": "4",
+      "title": "Good Governance (Tata Kelola yang Baik)",
+      "description": "Establishes governance requirements for sustainability practices within financial institutions, including board-level accountability, organizational structure, and transparency in sustainability-related decision-making and reporting.",
+      "risk_level": "medium",
+      "requirements": [
+        "Financial institutions must establish a sustainability governance structure with clear roles, responsibilities, and reporting lines from operational units to the Board of Directors.",
+        "The Board of Directors bears ultimate accountability for sustainability performance and must include sustainability topics as a standing agenda item in board meetings at minimum quarterly.",
+        "A dedicated sustainability committee or unit must be established, staffed with qualified personnel, and empowered to influence business decisions across all divisions.",
+        "Transparency reporting on sustainability governance practices must be included in the annual report, covering governance structure, decision-making processes, and conflict of interest management.",
+        "Internal audit functions must include sustainability governance as part of their annual audit plan, with findings reported directly to the Board of Commissioners."
+      ]
+    },
+    {
+      "id": "pojk-51-2017-s5",
+      "section_number": "5",
+      "title": "Informative Communication (Komunikasi Informatif)",
+      "description": "Requires financial institutions to publish comprehensive sustainability reports and maintain transparent communication with stakeholders regarding sustainability performance, risks, and opportunities. Encourages alignment with international reporting frameworks.",
+      "risk_level": "medium",
+      "requirements": [
+        "Financial institutions must publish an annual Sustainability Report (Laporan Keberlanjutan) as either a standalone document or integrated within the annual report, submitted to OJK.",
+        "Sustainability reports must disclose material ESG topics, performance metrics, targets, and progress, covering at minimum the reporting year and one prior comparative period.",
+        "Stakeholder engagement processes must be documented, including identification of key stakeholder groups, engagement methods, and how stakeholder feedback influences business decisions.",
+        "Financial institutions are encouraged to align sustainability reporting with internationally recognized frameworks such as GRI Standards, TCFD recommendations, or SASB standards.",
+        "Material environmental and social incidents must be disclosed in sustainability reports, including root cause analysis, remediation actions, and prevention measures implemented."
+      ]
+    },
+    {
+      "id": "pojk-51-2017-s6",
+      "section_number": "6",
+      "title": "Inclusiveness (Inklusivitas)",
+      "description": "Promotes financial inclusion as a core component of sustainable finance, requiring institutions to expand access to financial services for underserved populations, micro, small, and medium enterprises (MSMEs), and communities with limited banking access.",
+      "risk_level": "medium",
+      "requirements": [
+        "Financial institutions must establish measurable financial inclusion targets covering MSME financing, microfinance access, and services for underserved geographic areas.",
+        "Products and services must be designed to meet the needs of unbanked and underbanked populations, including simplified account opening, mobile banking, and agent banking services.",
+        "MSME financing portfolios must be tracked separately with targets for year-over-year growth, and progress must be reported to OJK as part of the RAKB reporting.",
+        "Financial literacy programs must be conducted in collaboration with communities, targeting at minimum 4 programs per year reaching underserved populations.",
+        "Accessibility standards must be implemented to ensure financial services are available to persons with disabilities and elderly customers across digital and physical channels."
+      ]
+    },
+    {
+      "id": "pojk-51-2017-s7",
+      "section_number": "7",
+      "title": "Priority Sector Development (Pengembangan Sektor Unggulan)",
+      "description": "Directs financial institutions to increase financing for sustainable business activities across 12 identified priority sectors, including renewable energy, sustainable agriculture, and green infrastructure. Establishes portfolio targets for green and sustainable financing.",
+      "risk_level": "medium",
+      "requirements": [
+        "Financial institutions must establish portfolio allocation targets for green financing across OJK's 12 sustainable business activity categories, with annual growth targets.",
+        "Renewable energy financing must be prioritized, including solar, wind, geothermal, and hydroelectric projects, with dedicated product offerings and competitive terms.",
+        "Sustainable agriculture and forestry financing programs must be developed, supporting practices that reduce deforestation, promote biodiversity, and improve land use efficiency.",
+        "Green building and sustainable infrastructure financing must be offered with preferential terms for projects meeting recognized green certification standards (e.g., Greenship).",
+        "Financial institutions must track and report the proportion of their total portfolio allocated to sustainable business categories, with targets for progressive annual increases.",
+        "Due diligence procedures for priority sector financing must verify the genuine sustainability credentials of projects, preventing greenwashing in portfolio classification."
+      ]
+    },
+    {
+      "id": "pojk-51-2017-s8",
+      "section_number": "8",
+      "title": "Coordination & Collaboration (Koordinasi & Kolaborasi)",
+      "description": "Encourages multi-stakeholder partnerships and collaborative initiatives to advance sustainable finance objectives across the Indonesian financial sector. Includes participation in industry forums, knowledge sharing, and coordinated action on sustainability challenges.",
+      "risk_level": "low",
+      "requirements": [
+        "Financial institutions must actively participate in industry-level sustainable finance initiatives, working groups, and forums organized by OJK or industry associations.",
+        "Knowledge sharing mechanisms must be established to disseminate best practices in sustainable finance implementation across peer institutions and industry stakeholders.",
+        "Collaborative partnerships with civil society organizations, academic institutions, and multilateral agencies must be pursued to strengthen sustainability capabilities.",
+        "Financial institutions must engage with borrowers and investee companies to build their sustainability capacity, including providing guidance on ESG performance improvement."
+      ]
+    }
+  ]
+}

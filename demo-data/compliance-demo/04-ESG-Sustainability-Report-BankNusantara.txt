@@ -1,0 +1,231 @@
+================================================================================
+              PT BANK NUSANTARA HIJAU Tbk
+              SUSTAINABILITY REPORT FY2025
+              "Growing Green, Banking for Tomorrow"
+================================================================================
+
+DOCUMENT TYPE       : Annual Sustainability Report (Excerpt)
+REPORTING PERIOD    : 1 January 2025 - 31 December 2025
+REPORTING STANDARDS : GRI Standards 2021, POJK 51/POJK.03/2017, TCFD
+STOCK EXCHANGE      : Indonesia Stock Exchange (IDX: BNHJ)
+SECTOR              : Banking / Financial Services
+
+--------------------------------------------------------------------------------
+1. COMPANY OVERVIEW
+--------------------------------------------------------------------------------
+
+PT Bank Nusantara Hijau Tbk ("the Bank" or "BNH") is a publicly listed
+commercial bank headquartered in Jakarta, Indonesia. Established in 1987, the
+Bank provides retail banking, corporate lending, trade finance, and wealth
+management services across 34 provinces through 485 branch offices.
+
+  Total Assets          : IDR 850 trillion
+  Total Loans           : IDR 620 trillion
+  Total Deposits        : IDR 710 trillion
+  CASA Ratio            : 68%
+  Net Interest Margin   : 5.1%
+  Return on Equity      : 18.7%
+  Capital Adequacy Ratio: 22.4%
+  Total Employees       : 25,000 (51% women, 49% men)
+  SRI-KEHATI Index      : Constituent since 2021
+  MSCI ESG Rating       : BBB (upgraded from BB in 2024)
+
+--------------------------------------------------------------------------------
+2. SUSTAINABILITY GOVERNANCE
+--------------------------------------------------------------------------------
+
+The Bank has appointed a Chief Sustainability Officer (CSO) since January 2024.
+The CSO reports to the Chief Financial Officer (CFO) and presents sustainability
+updates to the Board of Commissioners on a semi-annual basis.
+
+A Sustainability Committee, chaired by the CFO, meets quarterly to review ESG
+performance indicators and approve sustainability initiatives. Committee
+membership includes representatives from Risk, Compliance, Treasury, and
+Corporate Communications.
+
+Note: The Board of Directors has not established a dedicated Board-level ESG
+committee. ESG oversight is embedded within the existing Risk Monitoring
+Committee agenda.
+
+--------------------------------------------------------------------------------
+3. SUSTAINABLE FINANCE PORTFOLIO
+--------------------------------------------------------------------------------
+
+The Bank has grown its sustainable financing portfolio significantly:
+
+  Category                        FY2025 (IDR T)    FY2024 (IDR T)    Growth
+  -----------------------------------------------------------------------
+  Green Financing (KUBL)              58.0              47.2          +22.9%
+  MSME Financing                      87.0              78.5          +10.8%
+  -----------------------------------------------------------------------
+  Total Sustainable Portfolio        145.0             125.7          +15.4%
+  % of Total Loans                   23.4%             21.3%
+
+  Green Bond Issuance (cumulative)  : IDR 3.5 trillion
+  Green Bond Framework              : Aligned with ICMA Green Bond Principles
+  Second Party Opinion              : Sustainalytics (Vigeo Eiris)
+
+ESG integration in credit assessment is applied to all corporate and commercial
+loans exceeding IDR 50 billion. For loans below this threshold, standard credit
+risk assessment applies without dedicated ESG screening.
+
+--------------------------------------------------------------------------------
+4. ENVIRONMENTAL PERFORMANCE
+--------------------------------------------------------------------------------
+
+4.1 Operational Emissions (Scope 1 + Scope 2)
+
+  Metric                          FY2025          FY2024        Change
+  -------------------------------------------------------------------
+  Scope 1 (Direct)                8,500 tCO2eq    8,800 tCO2eq   -3.4%
+  Scope 2 (Electricity)         34,000 tCO2eq   36,050 tCO2eq   -5.7%
+  -------------------------------------------------------------------
+  Total Scope 1+2               42,500 tCO2eq   44,850 tCO2eq   -5.2%
+
+  Energy Intensity              : 15.2 GJ / Rp billion revenue
+  Renewable Energy Share        : 12% (solar panels on 38 branch offices)
+  Water Consumption             : 1.2 million cubic meters (-3.1% YoY)
+  Paper Consumption             : 1,850 tons (-8.5% YoY via digitization)
+
+4.2 Financed Emissions
+
+The Bank has commenced calculation of financed emissions for its corporate
+lending portfolio using a proprietary methodology. Initial results indicate:
+
+  Corporate Lending Portfolio     : IDR 285 trillion (assessed)
+  Financed Emissions (estimated)  : 4.2 million tCO2eq
+  Coverage                        : 65% of eligible corporate exposures
+  Methodology                     : Internal estimation model (sector-based)
+
+Note: PCAF (Partnership for Carbon Accounting Financials) methodology has not
+yet been adopted. Full portfolio coverage including retail and SME segments is
+planned for FY2027.
+
+4.3 Climate Scenario Analysis
+
+The Bank conducted a preliminary climate scenario analysis covering its top 50
+corporate exposures by outstanding balance under a 2 degrees C warming pathway
+(IEA SDS). Results suggest moderate transition risk concentration in palm oil
+(12% of corporate book) and coal mining (3.2% of corporate book).
+
+Analysis under 1.5 degrees C and 4 degrees C scenarios has not been performed.
+Climate stress testing of the loan portfolio has not been conducted.
+
+The Bank has not set science-based targets (SBT) and has not made a formal
+net-zero commitment. Internal discussions are underway with a target to announce
+a decarbonization roadmap by FY2028.
+
+--------------------------------------------------------------------------------
+5. SOCIAL PERFORMANCE
+--------------------------------------------------------------------------------
+
+5.1 Financial Inclusion
+
+  Financial Literacy Programs       : 150,000 participants across 200 events
+  Branchless Banking Agents (Laku)  : 12,500 agents in rural areas
+  Digital Account Openings          : 2.1 million new accounts (mobile app)
+
+5.2 Human Capital
+
+  Total Employees                   : 25,000
+  Gender Diversity                  : 51% women / 49% men
+  Women in Senior Management        : 28%
+  Average Training Hours            : 120 hours/employee/year
+  Employee Engagement Score         : 82% (Gallup Q12)
+  Voluntary Turnover                : 6.8%
+  Occupational Health Incidents     : 12 (zero fatalities)
+
+5.3 Customer Experience
+
+  Customer Complaints Received      : 48,200
+  Complaints Resolved               : 48,104 (99.8% resolution rate)
+  Average Resolution Time           : 4.2 working days
+  Net Promoter Score (NPS)          : +42
+
+5.4 Community Investment
+
+  Total CSR Expenditure             : IDR 285 billion
+  Education Programs                : IDR 120 billion (scholarships, labs)
+  Environmental Conservation        : IDR 85 billion (mangrove, coral reef)
+  Health & Disaster Relief          : IDR 80 billion
+
+--------------------------------------------------------------------------------
+6. GOVERNANCE & RISK MANAGEMENT
+--------------------------------------------------------------------------------
+
+6.1 ESG Risk Integration
+
+ESG risk factors are integrated into the Bank's Enterprise Risk Management (ERM)
+framework at the credit origination stage for corporate and commercial loans
+exceeding IDR 50 billion. Sector-specific exclusion policies cover:
+  - Weapons manufacturing
+  - Tobacco production
+  - Illegal logging and mining
+
+For retail, consumer, and SME segments (representing 54% of total loans), ESG
+risk screening has not been implemented.
+
+6.2 Regulatory Compliance
+
+The Bank complies with OJK Regulation No. 51/POJK.03/2017 on Sustainable
+Finance. However, the Bank has not yet filed its Rencana Aksi Keuangan
+Berkelanjutan (RAKB / Sustainable Finance Action Plan) with OJK for the
+FY2025-2027 period. Preparation of the RAKB is in progress with an expected
+submission in Q3 2026.
+
+6.3 Data Privacy & Security
+
+The Bank maintains ISO 27001 certification for its core banking systems. During
+the reporting period, the Bank invested IDR 450 billion in cybersecurity
+infrastructure upgrades.
+
+6.4 Whistleblower Mechanism
+
+The Bank operates a general whistleblower hotline managed by Internal Audit.
+There is no dedicated reporting channel for ESG-related violations or
+sustainability misconduct.
+
+6.5 Stakeholder Engagement
+
+The Bank engages with stakeholders through its Annual General Meeting, quarterly
+investor calls, and annual sustainability report publication. A formal
+materiality assessment involving external stakeholder consultation has not been
+conducted. Material topics are determined internally by the Sustainability
+Committee.
+
+--------------------------------------------------------------------------------
+7. ASSURANCE & VERIFICATION
+--------------------------------------------------------------------------------
+
+Financial statements are audited by KAP Tanudiredja, Wibisana, Rintis & Rekan
+(PwC Indonesia). Sustainability data presented in this report has NOT been
+subject to independent limited or reasonable assurance. The Bank intends to
+engage a third-party assurance provider for FY2026 sustainability disclosures.
+
+--------------------------------------------------------------------------------
+8. TCFD ALIGNMENT SUMMARY
+--------------------------------------------------------------------------------
+
+  TCFD Pillar           Status          Notes
+  -------------------------------------------------------------------
+  Governance            Disclosed       CSO appointed; reports to CFO
+  Strategy              Disclosed       Sustainable finance targets set
+  Risk Management       Partial         ESG in credit for >IDR 50B only
+  Metrics & Targets     Partial         Scope 1+2 only; no SBT/net-zero
+
+--------------------------------------------------------------------------------
+9. KEY SUSTAINABILITY TARGETS FY2026
+--------------------------------------------------------------------------------
+
+  - Grow sustainable finance portfolio to IDR 175 trillion (28% of loans)
+  - Reduce Scope 1+2 emissions by additional 7%
+  - Achieve 30% renewable energy share across branch offices
+  - Implement PCAF methodology for financed emissions
+  - File RAKB with OJK
+  - Conduct 1.5 degrees C and 4 degrees C climate scenario analysis
+  - Obtain independent assurance for sustainability report
+
+================================================================================
+                         END OF SUSTAINABILITY REPORT EXCERPT
+         PT Bank Nusantara Hijau Tbk | Sustainability Division | March 2026
+================================================================================

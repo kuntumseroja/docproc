@@ -1,0 +1,55 @@
+{
+  "id": "hr-background-verification",
+  "name": "Background Verification",
+  "version": "1.0",
+  "category": "hr-core",
+  "description": "Process and verify background check documents for banking employees. Includes criminal records, reference checks, education verification, and financial standing per OJK requirements.",
+  "document_types": [
+    "SKCK (Police Clearance Certificate)",
+    "BI/OJK SLIK Check (Credit History)",
+    "Reference Letter from Previous Employer",
+    "Education Verification Report",
+    "Professional Reference Check Form",
+    "Internal Investigation Report",
+    "Sanctions/PEP Screening Report"
+  ],
+  "extraction_schema": {
+    "fields": [
+      {"name": "candidate_name", "type": "string", "required": true, "source": "All Documents"},
+      {"name": "candidate_nik", "type": "string", "required": true, "source": "SKCK/SLIK"},
+      {"name": "skck_status", "type": "string", "required": true, "source": "SKCK", "enum": ["Clear", "Record Found", "Pending"]},
+      {"name": "skck_issue_date", "type": "date", "required": true, "source": "SKCK"},
+      {"name": "skck_issuing_authority", "type": "string", "required": true, "source": "SKCK"},
+      {"name": "credit_score", "type": "string", "required": true, "source": "SLIK", "enum": ["Kolektibilitas 1", "Kolektibilitas 2", "Kolektibilitas 3", "Kolektibilitas 4", "Kolektibilitas 5"]},
+      {"name": "outstanding_debts", "type": "number", "required": false, "source": "SLIK"},
+      {"name": "previous_employer", "type": "string", "required": true, "source": "Reference Letter"},
+      {"name": "employment_period", "type": "string", "required": true, "source": "Reference Letter"},
+      {"name": "reason_for_leaving", "type": "string", "required": true, "source": "Reference Letter"},
+      {"name": "performance_rating", "type": "string", "required": false, "source": "Reference Letter"},
+      {"name": "rehire_eligible", "type": "boolean", "required": false, "source": "Reference Letter"},
+      {"name": "education_verified", "type": "boolean", "required": true, "source": "Education Verification"},
+      {"name": "degree_authentic", "type": "boolean", "required": true, "source": "Education Verification"},
+      {"name": "sanctions_match", "type": "boolean", "required": true, "source": "Sanctions Screening", "description": "PEP/Sanctions list match"},
+      {"name": "pep_status", "type": "boolean", "required": true, "source": "Sanctions Screening"},
+      {"name": "overall_risk_rating", "type": "string", "required": true, "source": "Derived", "enum": ["Low", "Medium", "High", "Critical"]}
+    ]
+  },
+  "validation_rules": [
+    {"rule": "skck_clear", "description": "SKCK must show Clear status for banking positions", "type": "enum_check", "field": "skck_status", "allowed": ["Clear"]},
+    {"rule": "credit_collectibility", "description": "Credit score must be Kolektibilitas 1 or 2", "type": "enum_check", "field": "credit_score", "allowed": ["Kolektibilitas 1", "Kolektibilitas 2"]},
+    {"rule": "no_sanctions_match", "description": "No matches on sanctions/PEP lists", "type": "boolean_check", "field": "sanctions_match", "expected": false},
+    {"rule": "education_authentic", "description": "Education credentials must be verified as authentic", "type": "boolean_check", "field": "degree_authentic", "expected": true},
+    {"rule": "skck_freshness", "description": "SKCK must be issued within last 6 months", "type": "date_range", "field": "skck_issue_date", "max_age_months": 6},
+    {"rule": "reference_positive", "description": "Previous employer reference should not indicate termination for cause", "type": "keyword_exclusion", "field": "reason_for_leaving", "excluded": ["terminated", "fired", "dismissed", "dipecat"]},
+    {"rule": "risk_threshold", "description": "Overall risk rating must not be Critical", "type": "enum_exclusion", "field": "overall_risk_rating", "excluded": ["Critical"]}
+  ],
+  "action_triggers": [
+    {"trigger": "all_clear", "action": "approve_hiring", "target": "hr_manager", "description": "Auto-approve candidate when all checks pass"},
+    {"trigger": "high_risk", "action": "escalate_review", "target": "compliance_committee", "description": "Escalate to compliance committee for high-risk candidates"},
+    {"trigger": "critical_risk", "action": "reject_candidate", "target": "hr_manager", "description": "Auto-flag for rejection on critical risk findings"},
+    {"trigger": "sanctions_match", "action": "regulatory_report", "target": "compliance_officer", "description": "Mandatory reporting for sanctions list matches"},
+    {"trigger": "education_fraud", "action": "alert_legal", "target": "legal_team", "description": "Alert legal team on fraudulent education credentials"},
+    {"trigger": "verification_complete", "action": "generate_report", "target": "hr_file", "description": "Generate comprehensive background check report"}
+  ],
+  "nl_prompt": "Process background verification documents for this banking employee candidate. Extract SKCK status and verify it is clear with no criminal records. Check BI/SLIK credit history and extract the collectibility rating - must be Kolektibilitas 1 or 2. Review reference letters for employment period, reason for leaving, and rehire eligibility. Verify education credentials are authentic. Check sanctions and PEP screening results. Calculate an overall risk rating (Low/Medium/High/Critical) based on all findings. Flag any concerns immediately."
+}

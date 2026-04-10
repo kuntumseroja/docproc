@@ -1,0 +1,35 @@
+{
+  "id": "hipaa",
+  "name": "HIPAA",
+  "title": "Health Insurance Portability and Accountability Act",
+  "issuer": "U.S. Department of Health and Human Services",
+  "country": "US",
+  "category": "Healthcare",
+  "effective_date": "1996-08-21",
+  "sections": [
+    {
+      "id": "hipaa-privacy",
+      "title": "Privacy Rule - Use and Disclosure of PHI",
+      "description": "Covered entities must not use or disclose protected health information (PHI) except as permitted or required. Minimum necessary standard applies: only the minimum amount of PHI necessary to accomplish the intended purpose should be used or disclosed. Patients have the right to access and request amendments to their health records.",
+      "keywords": ["PHI", "protected health information", "privacy", "minimum necessary", "patient rights"]
+    },
+    {
+      "id": "hipaa-security",
+      "title": "Security Rule - Administrative, Physical, and Technical Safeguards",
+      "description": "Covered entities must implement administrative safeguards (security management, workforce training, contingency plans), physical safeguards (facility access controls, workstation security, device controls), and technical safeguards (access control, audit controls, integrity controls, transmission security) to protect electronic PHI.",
+      "keywords": ["ePHI", "security", "safeguards", "access control", "encryption", "audit"]
+    },
+    {
+      "id": "hipaa-breach",
+      "title": "Breach Notification Rule",
+      "description": "Covered entities must notify affected individuals, the Secretary of HHS, and in some cases the media, following a breach of unsecured protected health information. Notification must be made without unreasonable delay and no later than 60 days from discovery of the breach.",
+      "keywords": ["breach", "notification", "unsecured PHI", "reporting"]
+    },
+    {
+      "id": "hipaa-enforcement",
+      "title": "Enforcement Rule - Penalties and Compliance",
+      "description": "Civil monetary penalties range from $100 to $50,000 per violation, with an annual maximum of $1.5 million for identical provisions. Criminal penalties can include fines up to $250,000 and imprisonment up to 10 years for offences committed with intent to sell or use PHI for personal gain.",
+      "keywords": ["penalties", "enforcement", "fines", "compliance", "violations"]
+    }
+  ]
+}

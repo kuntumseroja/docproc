@@ -1,0 +1,33 @@
+// DocProc custom Carbon theme overrides
+// Primary: #4589FF (IBM Blue 50 — Light Soft Blue)
+// Background: White #FFFFFF → Light Blue gradient #EDF5FF
+// Surface: #F4F4F4 (Gray 10)
+
+@use '@carbon/react/scss/themes';
+@use '@carbon/react/scss/theme' with (
+  $theme: map-merge(
+    themes.$white,
+    (
+      interactive: #4589FF,
+      primary: #4589FF,
+      primary-hover: #3D7AE8,
+      link-primary: #4589FF,
+      link-primary-hover: #3D7AE8,
+      brand-01: #4589FF,
+      brand-02: #EDF5FF,
+      brand-03: #4589FF,
+      background: #FFFFFF,
+      background-brand: #4589FF,
+      layer-01: #F4F4F4,
+      layer-02: #FFFFFF,
+      field-01: #F4F4F4,
+      field-02: #FFFFFF,
+      border-subtle-01: #E0E0E0,
+      focus: #4589FF,
+      interactive-01: #4589FF,
+      interactive-02: #4589FF,
+      highlight: #D0E2FF,
+      toggle-off: #8D8D8D,
+    )
+  )
+);

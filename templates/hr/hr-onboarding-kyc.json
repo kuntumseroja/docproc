@@ -1,0 +1,58 @@
+{
+  "id": "hr-onboarding-kyc",
+  "name": "Employee Onboarding KYC",
+  "version": "1.0",
+  "category": "hr-core",
+  "description": "Automated identity verification and document collection for new employee onboarding in banking. Compliant with OJK and Bank Indonesia regulations.",
+  "document_types": [
+    "KTP (National ID Card)",
+    "NPWP (Tax ID)",
+    "SKCK (Police Clearance)",
+    "Ijazah (Education Certificate)",
+    "Kartu Keluarga (Family Card)",
+    "Passport",
+    "Reference Letter",
+    "Medical Certificate"
+  ],
+  "extraction_schema": {
+    "fields": [
+      {"name": "employee_name", "type": "string", "required": true, "source": "KTP", "description": "Full legal name as on KTP"},
+      {"name": "nik", "type": "string", "required": true, "source": "KTP", "validation": "nik_16_digit", "description": "16-digit NIK from KTP"},
+      {"name": "place_date_of_birth", "type": "string", "required": true, "source": "KTP"},
+      {"name": "address", "type": "string", "required": true, "source": "KTP"},
+      {"name": "religion", "type": "string", "required": false, "source": "KTP"},
+      {"name": "marital_status", "type": "string", "required": true, "source": "KTP"},
+      {"name": "occupation", "type": "string", "required": false, "source": "KTP"},
+      {"name": "nationality", "type": "string", "required": true, "source": "KTP"},
+      {"name": "ktp_expiry", "type": "date", "required": true, "source": "KTP"},
+      {"name": "npwp_number", "type": "string", "required": true, "source": "NPWP", "validation": "npwp_format"},
+      {"name": "tax_registration_date", "type": "date", "required": false, "source": "NPWP"},
+      {"name": "skck_number", "type": "string", "required": true, "source": "SKCK"},
+      {"name": "skck_issue_date", "type": "date", "required": true, "source": "SKCK"},
+      {"name": "skck_expiry_date", "type": "date", "required": true, "source": "SKCK", "validation": "not_expired"},
+      {"name": "education_level", "type": "string", "required": true, "source": "Ijazah"},
+      {"name": "institution_name", "type": "string", "required": true, "source": "Ijazah"},
+      {"name": "graduation_date", "type": "date", "required": true, "source": "Ijazah"},
+      {"name": "gpa", "type": "number", "required": false, "source": "Ijazah"},
+      {"name": "blood_type", "type": "string", "required": false, "source": "Medical Certificate"},
+      {"name": "medical_fitness", "type": "string", "required": true, "source": "Medical Certificate", "validation": "must_be_fit"}
+    ]
+  },
+  "validation_rules": [
+    {"rule": "nik_format", "description": "NIK must be exactly 16 digits", "pattern": "^\\d{16}$"},
+    {"rule": "npwp_format", "description": "NPWP must match XX.XXX.XXX.X-XXX.XXX format", "pattern": "^\\d{2}\\.\\d{3}\\.\\d{3}\\.\\d-\\d{3}\\.\\d{3}$"},
+    {"rule": "skck_validity", "description": "SKCK must not be expired (valid for 6 months from issue)", "type": "date_range", "max_age_months": 6},
+    {"rule": "age_minimum", "description": "Employee must be at least 18 years old", "type": "calculated", "field": "place_date_of_birth", "min_age": 18},
+    {"rule": "education_minimum", "description": "Minimum S1 (Bachelor) for officer-level positions", "type": "enum_check", "field": "education_level", "allowed": ["S1", "S2", "S3"]},
+    {"rule": "name_consistency", "description": "Employee name must match across all documents", "type": "cross_document", "fields": ["employee_name"]},
+    {"rule": "medical_clearance", "description": "Medical certificate must indicate Fit or Sehat", "type": "keyword_check", "field": "medical_fitness", "keywords": ["fit", "sehat", "layak"]}
+  ],
+  "action_triggers": [
+    {"trigger": "all_valid", "action": "create_employee_record", "target": "HRIS", "description": "Auto-create employee record in HRIS when all documents pass validation"},
+    {"trigger": "all_valid", "action": "send_notification", "target": "hr_manager", "template": "onboarding_complete", "description": "Notify HR manager that onboarding docs are verified"},
+    {"trigger": "validation_failed", "action": "send_notification", "target": "hr_officer", "template": "docs_need_review", "description": "Alert HR officer about failed validations"},
+    {"trigger": "skck_expiring_soon", "action": "send_reminder", "target": "employee", "days_before": 30, "description": "Remind employee to renew SKCK before expiry"},
+    {"trigger": "document_missing", "action": "send_checklist", "target": "employee", "description": "Send remaining document checklist to new employee"}
+  ],
+  "nl_prompt": "Extract all identity and personal information from new employee onboarding documents. For KTP, extract full name, NIK (16-digit national ID number), place and date of birth, address, marital status, and expiry date. For NPWP, extract the tax ID number. For SKCK, extract the certificate number, issue date, and expiry date - flag if expired. For education certificates, extract degree level, institution name, graduation date, and GPA. Verify that the employee name matches across all documents. Flag any discrepancies."
+}

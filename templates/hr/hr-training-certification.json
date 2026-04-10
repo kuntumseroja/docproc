@@ -1,0 +1,51 @@
+{
+  "id": "hr-training-certification",
+  "name": "Training & Certification",
+  "version": "1.0",
+  "category": "hr-operations",
+  "description": "Process training completion certificates, track CPD hours, and validate mandatory compliance training for banking staff.",
+  "document_types": [
+    "Training Completion Certificate",
+    "CPD Record/Log",
+    "E-Learning Completion Report",
+    "Workshop/Seminar Attendance",
+    "Mandatory Compliance Training Record",
+    "Anti-Money Laundering (AML) Training Certificate",
+    "Fraud Prevention Training Certificate",
+    "External Training Invoice/Receipt"
+  ],
+  "extraction_schema": {
+    "fields": [
+      {"name": "employee_id", "type": "string", "required": true, "source": "Certificate/Record"},
+      {"name": "employee_name", "type": "string", "required": true, "source": "Certificate/Record"},
+      {"name": "training_title", "type": "string", "required": true, "source": "Certificate"},
+      {"name": "training_category", "type": "string", "required": true, "source": "Certificate", "enum": ["Mandatory Compliance", "Technical Skills", "Leadership", "Soft Skills", "Product Knowledge", "Regulatory", "Safety"]},
+      {"name": "provider", "type": "string", "required": true, "source": "Certificate"},
+      {"name": "completion_date", "type": "date", "required": true, "source": "Certificate"},
+      {"name": "cpd_hours", "type": "number", "required": false, "source": "Certificate"},
+      {"name": "score", "type": "number", "required": false, "source": "Certificate"},
+      {"name": "passing_score", "type": "number", "required": false, "source": "Certificate"},
+      {"name": "certificate_number", "type": "string", "required": false, "source": "Certificate"},
+      {"name": "expiry_date", "type": "date", "required": false, "source": "Certificate"},
+      {"name": "is_mandatory", "type": "boolean", "required": true, "source": "Derived"},
+      {"name": "training_cost", "type": "number", "required": false, "source": "Invoice"},
+      {"name": "budget_code", "type": "string", "required": false, "source": "Invoice"}
+    ]
+  },
+  "validation_rules": [
+    {"rule": "aml_annual_requirement", "description": "AML training must be completed annually", "type": "recency_check", "max_months": 12},
+    {"rule": "fraud_prevention_annual", "description": "Fraud prevention training required annually", "type": "recency_check", "max_months": 12},
+    {"rule": "minimum_cpd_hours", "description": "Employee must accumulate minimum CPD hours per year", "type": "accumulation_check"},
+    {"rule": "score_passing", "description": "Training score must meet or exceed passing score", "type": "comparison", "operator": ">="},
+    {"rule": "budget_within_limit", "description": "External training cost must not exceed annual budget", "type": "budget_check"},
+    {"rule": "mandatory_completion", "description": "All mandatory training must be completed within prescribed period", "type": "completeness_check"}
+  ],
+  "action_triggers": [
+    {"trigger": "training_completed", "action": "update_learning_record", "target": "LMS", "description": "Update Learning Management System record"},
+    {"trigger": "mandatory_overdue", "action": "escalate_to_manager", "target": "line_manager", "description": "Escalate overdue mandatory training to line manager"},
+    {"trigger": "mandatory_overdue_30_days", "action": "alert_compliance", "target": "compliance_officer", "description": "Alert compliance if mandatory training overdue >30 days"},
+    {"trigger": "cpd_threshold_reached", "action": "generate_summary", "target": "employee", "description": "Notify employee when annual CPD target is met"},
+    {"trigger": "certificate_expiring", "action": "send_renewal_reminder", "target": "employee", "description": "Remind employee to renew expiring certifications"}
+  ],
+  "nl_prompt": "Extract training and certification details from this document. Identify the training title, category, provider, completion date, and CPD hours earned. For scored assessments, extract the score and passing threshold. Determine if this is mandatory compliance training (AML, fraud prevention, regulatory). Check when the employee last completed mandatory training - flag if overdue. Track accumulated CPD hours against annual requirements."
+}

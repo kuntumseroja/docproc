@@ -254,10 +254,10 @@ ok "Production .env generated (passwords auto-generated)"
 log "Building Docker images (this may take a few minutes)..."
 
 cd "$DEPLOY_DIR"
-sudo -u "$DEPLOY_USER" docker compose -f deploy/docker-compose.prod.yml build
+sudo -u "$DEPLOY_USER" docker compose --env-file .env -f deploy/docker-compose.prod.yml build
 
 log "Starting services..."
-sudo -u "$DEPLOY_USER" docker compose -f deploy/docker-compose.prod.yml up -d
+sudo -u "$DEPLOY_USER" docker compose --env-file .env -f deploy/docker-compose.prod.yml up -d
 
 ok "All services started"
 
@@ -291,7 +291,7 @@ elif [ -n "$EMAIL" ]; then
     apt-get install -y -qq certbot
 
     # Stop nginx temporarily for standalone cert
-    sudo -u "$DEPLOY_USER" docker compose -f deploy/docker-compose.prod.yml stop nginx
+    sudo -u "$DEPLOY_USER" docker compose --env-file .env -f deploy/docker-compose.prod.yml stop nginx
 
     certbot certonly --standalone \
         --non-interactive \
@@ -371,7 +371,7 @@ CRONEOF
     fi
 
     # Restart nginx with SSL
-    sudo -u "$DEPLOY_USER" docker compose -f deploy/docker-compose.prod.yml up -d nginx
+    sudo -u "$DEPLOY_USER" docker compose --env-file .env -f deploy/docker-compose.prod.yml up -d nginx
 else
     log "Step 7/7: Skipping SSL (no email provided)"
 fi
@@ -393,20 +393,21 @@ cat > /usr/local/bin/docproc << 'MGMTEOF'
 DEPLOY_DIR="/opt/docproc"
 cd "$DEPLOY_DIR"
 
+DC="docker compose --env-file .env -f deploy/docker-compose.prod.yml"
 case "${1:-help}" in
-    up|start)     docker compose -f deploy/docker-compose.prod.yml up -d ;;
-    down|stop)    docker compose -f deploy/docker-compose.prod.yml down ;;
-    restart)      docker compose -f deploy/docker-compose.prod.yml restart ${2:-} ;;
-    logs)         docker compose -f deploy/docker-compose.prod.yml logs -f ${2:-} ;;
-    ps|status)    docker compose -f deploy/docker-compose.prod.yml ps ;;
-    build)        docker compose -f deploy/docker-compose.prod.yml build ${2:-} ;;
+    up|start)     $DC up -d ;;
+    down|stop)    $DC down ;;
+    restart)      $DC restart ${2:-} ;;
+    logs)         $DC logs -f ${2:-} ;;
+    ps|status)    $DC ps ;;
+    build)        $DC build ${2:-} ;;
     update)
         git pull
-        docker compose -f deploy/docker-compose.prod.yml build
-        docker compose -f deploy/docker-compose.prod.yml up -d
+        $DC build
+        $DC up -d
         ;;
-    shell)        docker compose -f deploy/docker-compose.prod.yml exec backend bash ;;
-    dbshell)      docker compose -f deploy/docker-compose.prod.yml exec postgres psql -U docproc docproc ;;
+    shell)        $DC exec backend bash ;;
+    dbshell)      $DC exec postgres psql -U docproc docproc ;;
     env)          cat .env ;;
     *)
         echo ""

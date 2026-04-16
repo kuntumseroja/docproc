@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY backend/ .
 COPY agents/ ./agents/
+COPY templates/ ./templates/
 
 EXPOSE 8000
 

@@ -25,6 +25,7 @@ router = APIRouter(prefix="/roles", tags=["roles"])
 
 _CANDIDATE_PATHS = [
     Path(__file__).resolve().parents[4] / "templates" / "hr" / "data" / "role-skill-matrix.json",
+    Path("/app/templates/hr/data/role-skill-matrix.json"),  # Docker path
     Path("templates/hr/data/role-skill-matrix.json"),
     Path("../templates/hr/data/role-skill-matrix.json"),
 ]

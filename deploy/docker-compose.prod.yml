@@ -21,17 +21,15 @@ services:
     env_file:
       - ../.env
     environment:
+      # Override only Docker-internal service URLs (different from .env localhost defaults)
       - DATABASE_URL=postgresql+asyncpg://docproc:${POSTGRES_PASSWORD:-docproc}@postgres:5432/docproc
       - REDIS_URL=redis://:${REDIS_PASSWORD:-redis123}@redis:6379/0
       - MINIO_ENDPOINT=minio:9000
       - DEBUG=false
-      - LLM_PROVIDER=${LLM_PROVIDER:-anthropic}
-      - LLM_MODEL=${LLM_MODEL:-}
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
-      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
-      - MISTRAL_API_KEY=${MISTRAL_API_KEY:-}
-      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
-      - CORS_ORIGINS=${CORS_ORIGINS:-["http://localhost:3000"]}
+      # NOTE: LLM keys, LLM_PROVIDER, LLM_MODEL, SECRET_KEY, CORS_ORIGINS
+      # are loaded from .env via env_file above. Do NOT re-declare them here
+      # as ${VAR:-} reads from the HOST shell, not from .env, and will override
+      # with empty values.
     depends_on:
       postgres:
         condition: service_healthy

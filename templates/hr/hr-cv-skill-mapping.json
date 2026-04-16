@@ -1,0 +1,79 @@
+{
+  "id": "hr-cv-skill-mapping",
+  "name": "CV/Resume Skill Mapping",
+  "version": "1.0",
+  "category": "hr-core",
+  "description": "Process CVs and resumes to extract candidate profile, skills, education, experience, and certifications. Automatically maps extracted skills against role-specific competency requirements to produce a fit score and gap analysis for hiring decisions.",
+  "document_types": [
+    "CV/Resume (PDF)",
+    "CV/Resume (Word)",
+    "CV/Resume (Image/Scan)",
+    "LinkedIn Profile Export",
+    "Portfolio/Project Summary"
+  ],
+  "extraction_schema": {
+    "fields": [
+      {"name": "candidate_name", "type": "string", "required": true, "source": "CV/Resume", "description": "Full name of the candidate"},
+      {"name": "email", "type": "string", "required": true, "source": "CV/Resume", "description": "Email address"},
+      {"name": "phone", "type": "string", "required": false, "source": "CV/Resume", "description": "Phone number"},
+      {"name": "location", "type": "string", "required": false, "source": "CV/Resume", "description": "City/Country of residence"},
+      {"name": "linkedin_url", "type": "string", "required": false, "source": "CV/Resume", "description": "LinkedIn profile URL"},
+      {"name": "professional_summary", "type": "string", "required": false, "source": "CV/Resume", "description": "Professional summary or objective statement"},
+      {"name": "total_years_experience", "type": "number", "required": true, "source": "Derived", "description": "Total years of professional experience calculated from work history"},
+      {"name": "current_job_title", "type": "string", "required": false, "source": "CV/Resume", "description": "Most recent / current job title"},
+      {"name": "current_company", "type": "string", "required": false, "source": "CV/Resume", "description": "Most recent / current employer"},
+      {"name": "education_level", "type": "string", "required": true, "source": "CV/Resume", "description": "Highest education level", "enum": ["SMA/SMK", "D3/Diploma", "S1/Bachelor", "S2/Master", "S3/Doctorate", "Professional Certification"]},
+      {"name": "education_institution", "type": "string", "required": false, "source": "CV/Resume", "description": "Name of educational institution for highest degree"},
+      {"name": "education_major", "type": "string", "required": false, "source": "CV/Resume", "description": "Field of study / major"},
+      {"name": "graduation_year", "type": "number", "required": false, "source": "CV/Resume", "description": "Year of graduation"},
+      {"name": "gpa", "type": "number", "required": false, "source": "CV/Resume", "description": "GPA or IPK if mentioned"},
+      {"name": "technical_skills", "type": "list", "required": true, "source": "CV/Resume", "description": "List of technical/hard skills extracted from CV"},
+      {"name": "soft_skills", "type": "list", "required": false, "source": "CV/Resume", "description": "List of soft skills (communication, leadership, etc.)"},
+      {"name": "programming_languages", "type": "list", "required": false, "source": "CV/Resume", "description": "Programming languages known"},
+      {"name": "tools_platforms", "type": "list", "required": false, "source": "CV/Resume", "description": "Tools, platforms, frameworks, and software proficiency"},
+      {"name": "certifications", "type": "list", "required": false, "source": "CV/Resume", "description": "Professional certifications (e.g., AWS, PMP, CFA, BSMR)"},
+      {"name": "languages_spoken", "type": "list", "required": false, "source": "CV/Resume", "description": "Languages and proficiency levels"},
+      {"name": "work_history", "type": "list", "required": true, "source": "CV/Resume", "description": "Array of work experiences: [{company, title, start_date, end_date, description}]"},
+      {"name": "industry_experience", "type": "list", "required": false, "source": "Derived", "description": "Industries the candidate has worked in (banking, fintech, consulting, etc.)"},
+      {"name": "target_role", "type": "string", "required": false, "source": "Application", "description": "The role/position the candidate is applying for"},
+      {"name": "expected_salary", "type": "number", "required": false, "source": "CV/Resume", "description": "Expected salary if mentioned"},
+      {"name": "availability", "type": "string", "required": false, "source": "CV/Resume", "description": "Notice period or availability date"}
+    ]
+  },
+  "validation_rules": [
+    {"rule": "minimum_experience", "description": "Check if candidate meets minimum years of experience for the target role", "type": "range", "field": "total_years_experience"},
+    {"rule": "education_requirement", "description": "Validate minimum education level against role requirement", "type": "enum_check", "field": "education_level"},
+    {"rule": "required_skills_match", "description": "Match candidate technical_skills against required skills for the target role", "type": "skill_match", "match_type": "required", "threshold": 0.6},
+    {"rule": "preferred_skills_match", "description": "Match candidate skills against preferred/nice-to-have skills for the target role", "type": "skill_match", "match_type": "preferred"},
+    {"rule": "certification_check", "description": "Verify if candidate holds required certifications for the role (e.g., BSMR, CFA, PMP)", "type": "certification_match"},
+    {"rule": "industry_relevance", "description": "Check if candidate has relevant industry experience for the position", "type": "keyword_check", "field": "industry_experience"},
+    {"rule": "gap_analysis", "description": "Identify missing required skills and certifications for the target role", "type": "gap_analysis"},
+    {"rule": "salary_band_check", "description": "Compare expected salary against the role's salary band if available", "type": "range", "field": "expected_salary"}
+  ],
+  "skill_matching": {
+    "description": "Scoring methodology for candidate-role fit assessment",
+    "scoring": {
+      "required_skills_weight": 0.35,
+      "preferred_skills_weight": 0.15,
+      "experience_weight": 0.20,
+      "education_weight": 0.10,
+      "certifications_weight": 0.10,
+      "industry_relevance_weight": 0.10
+    },
+    "fit_levels": [
+      {"min_score": 85, "level": "Strong Fit", "color": "green", "recommendation": "Proceed to interview"},
+      {"min_score": 70, "level": "Good Fit", "color": "blue", "recommendation": "Consider for interview, minor gaps identified"},
+      {"min_score": 50, "level": "Partial Fit", "color": "yellow", "recommendation": "Significant skill gaps — review if trainable"},
+      {"min_score": 0, "level": "Weak Fit", "color": "red", "recommendation": "Does not meet minimum requirements"}
+    ]
+  },
+  "action_triggers": [
+    {"trigger": "strong_fit", "action": "notify_recruiter", "target": "hiring_manager", "description": "Alert hiring manager of strong candidate match"},
+    {"trigger": "good_fit", "action": "add_to_shortlist", "target": "ATS", "description": "Add candidate to shortlist in Applicant Tracking System"},
+    {"trigger": "partial_fit", "action": "flag_for_review", "target": "recruiter", "description": "Flag for recruiter review with gap analysis"},
+    {"trigger": "weak_fit", "action": "send_rejection", "target": "candidate", "template": "polite_rejection", "description": "Send automated polite rejection"},
+    {"trigger": "all_processed", "action": "generate_ranking", "target": "hiring_manager", "description": "Generate ranked candidate list for the position"},
+    {"trigger": "certification_gap", "action": "check_training_budget", "target": "hr_training", "description": "Check if certification gap can be addressed through training program"}
+  ],
+  "nl_prompt": "Extract all information from this CV/resume. Identify the candidate's full name, contact details, professional summary, and total years of experience. List all technical skills, programming languages, tools/platforms, and soft skills separately. Extract the complete work history with company names, job titles, dates, and key responsibilities. Identify the highest education level, institution, major, and GPA if available. List all professional certifications with their validity dates. Determine which industries the candidate has experience in. Then compare the extracted skills against the requirements for the target role and produce a fit score with gap analysis showing which required skills or certifications are missing."
+}

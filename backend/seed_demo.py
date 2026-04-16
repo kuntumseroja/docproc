@@ -48,6 +48,7 @@ DEMO_FINANCE_ID = uuid.UUID("00000000-0000-4000-a000-000000000003")
 WF_INVOICE_ID = uuid.UUID("10000000-0000-4000-a000-000000000001")
 WF_RECEIPT_ID = uuid.UUID("10000000-0000-4000-a000-000000000002")
 WF_CONTRACT_ID = uuid.UUID("10000000-0000-4000-a000-000000000003")
+WF_CV_ID = uuid.UUID("10000000-0000-4000-a000-000000000004")
 
 # Document IDs: invoices
 DOC_INV = [uuid.UUID(f"20000000-0000-4000-a000-00000000000{i}") for i in range(1, 6)]
@@ -55,6 +56,8 @@ DOC_INV = [uuid.UUID(f"20000000-0000-4000-a000-00000000000{i}") for i in range(1
 DOC_REC = [uuid.UUID(f"30000000-0000-4000-a000-00000000000{i}") for i in range(1, 5)]
 # Document IDs: contracts
 DOC_CON = [uuid.UUID(f"40000000-0000-4000-a000-00000000000{i}") for i in range(1, 4)]
+# Document IDs: CVs
+DOC_CV = [uuid.UUID(f"50000000-0000-4000-a000-00000000000{i}") for i in range(1, 5)]
 
 
 def days_ago(n: int) -> datetime:
@@ -177,6 +180,45 @@ WORKFLOWS = [
         },
         validation_rules=None,
         action_config=None,
+        created_by=DEMO_SME_ID,
+    ),
+    Workflow(
+        id=WF_CV_ID,
+        name="CV Skill Mapping",
+        description="Extract candidate profile, skills, education, and experience from CVs/resumes. Automatically maps extracted skills against role-specific competency requirements to produce a fit score and gap analysis.",
+        status=WorkflowStatus.ACTIVE,
+        document_type="resume",
+        extraction_schema={
+            "fields": [
+                {"name": "candidate_name", "label": "Candidate Name", "field_type": "text", "required": True},
+                {"name": "email", "label": "Email", "field_type": "text", "required": True},
+                {"name": "phone", "label": "Phone", "field_type": "text", "required": False},
+                {"name": "current_job_title", "label": "Current Job Title", "field_type": "text", "required": False},
+                {"name": "current_company", "label": "Current Company", "field_type": "text", "required": False},
+                {"name": "total_years_experience", "label": "Years of Experience", "field_type": "number", "required": True},
+                {"name": "education_level", "label": "Education Level", "field_type": "text", "required": True},
+                {"name": "education_institution", "label": "Institution", "field_type": "text", "required": False},
+                {"name": "education_major", "label": "Major / Field of Study", "field_type": "text", "required": False},
+                {"name": "technical_skills", "label": "Technical Skills", "field_type": "list", "required": True},
+                {"name": "soft_skills", "label": "Soft Skills", "field_type": "list", "required": False},
+                {"name": "certifications", "label": "Certifications", "field_type": "list", "required": False},
+                {"name": "languages_spoken", "label": "Languages", "field_type": "list", "required": False},
+                {"name": "target_role", "label": "Target Role", "field_type": "text", "required": False},
+            ]
+        },
+        validation_rules={
+            "rules": [
+                {"name": "min_experience", "rule_type": "range", "description": "Minimum experience for target role", "config": {"field": "total_years_experience", "min": 1}},
+                {"name": "required_skills_match", "rule_type": "custom", "description": "Match skills against role requirements", "config": {"match_type": "required", "threshold": 0.6}},
+                {"name": "certification_check", "rule_type": "custom", "description": "Verify required certifications", "config": {"match_type": "certification"}},
+            ]
+        },
+        action_config={
+            "actions": [
+                {"name": "shortlist_candidate", "action_type": "webhook", "trigger": "on_validation_pass", "config": {"url": "https://ats.example.com/api/shortlist", "method": "POST"}},
+                {"name": "notify_hr", "action_type": "email", "trigger": "on_complete", "config": {"to": "hr@example.com", "subject": "CV processed — skill mapping complete"}},
+            ]
+        },
         created_by=DEMO_SME_ID,
     ),
 ]
@@ -366,6 +408,269 @@ CONTRACT_DOCS = [
 ]
 
 # =============================================================================
+# Documents — CVs / Resumes
+# =============================================================================
+CV_DOCS = [
+    {
+        "id": DOC_CV[0], "filename": f"{DOC_CV[0]}_cv_rina_pratiwi.pdf",
+        "original_filename": "CV_Rina_Pratiwi_Software_Engineer.pdf", "content_type": "application/pdf",
+        "file_size": 345_000, "status": DocumentStatus.COMPLETED,
+        "storage_path": f"uploads/{DOC_CV[0]}/CV_Rina_Pratiwi_Software_Engineer.pdf",
+        "ocr_text": """RINA PRATIWI
+Software Engineer
+
+Email: rina.pratiwi@email.com | Phone: +62 812-3456-7890
+Location: Jakarta, Indonesia | LinkedIn: linkedin.com/in/rinapratiwi
+
+PROFESSIONAL SUMMARY
+Experienced software engineer with 5 years of expertise in full-stack development, specializing in Python, React, and cloud-native applications. Passionate about building scalable microservices and implementing CI/CD pipelines. Proven track record of delivering high-quality products in agile teams within fintech and banking sectors.
+
+WORK EXPERIENCE
+
+Senior Software Engineer | PT Bank Digital Indonesia (BDI)
+January 2022 — Present (3 years)
+- Led development of core banking API serving 2M+ daily transactions using Python/FastAPI
+- Designed and implemented microservices architecture on AWS ECS with Docker/Kubernetes
+- Reduced API response time by 40% through Redis caching and database query optimization
+- Mentored 4 junior developers, conducted code reviews and technical design sessions
+- Implemented CI/CD pipeline using GitHub Actions, reducing deployment time from 2 hours to 15 minutes
+
+Software Engineer | Tokopedia (GoTo Group)
+July 2019 — December 2021 (2.5 years)
+- Developed e-commerce checkout and payment integration modules using Go and React
+- Built real-time notification service handling 500K+ events/day using Kafka and WebSocket
+- Contributed to migration from monolith to microservices, improving system reliability to 99.95%
+- Participated in on-call rotation, resolved production incidents within SLA targets
+
+Junior Developer | PT Startup Teknologi
+March 2018 — June 2019 (1.3 years)
+- Developed REST APIs using Django and PostgreSQL for SaaS platform
+- Built admin dashboard with React and Material UI
+- Wrote unit and integration tests achieving 85% code coverage
+
+EDUCATION
+S1 (Bachelor) Computer Science — Universitas Indonesia, 2017
+GPA: 3.72 / 4.00
+
+TECHNICAL SKILLS
+Programming: Python, JavaScript, TypeScript, Go, SQL
+Frameworks: FastAPI, React, Django, Express.js, Next.js
+Cloud & DevOps: AWS (EC2, ECS, S3, Lambda, RDS), Docker, Kubernetes, Terraform, GitHub Actions
+Databases: PostgreSQL, Redis, MongoDB, Elasticsearch
+Tools: Git, JIRA, Confluent Kafka, Datadog, Grafana, Prometheus
+
+SOFT SKILLS
+Team Leadership, Agile/Scrum, Technical Communication, Problem Solving, Mentoring
+
+CERTIFICATIONS
+- AWS Certified Solutions Architect — Associate (2023)
+- Google Cloud Professional Cloud Developer (2022)
+- Certified Kubernetes Application Developer — CKAD (2023)
+
+LANGUAGES
+- Indonesian (Native)
+- English (Professional — IELTS 7.5)
+- Japanese (Elementary — JLPT N4)""",
+        "page_count": 2, "created_at": days_ago(3),
+        "extractions": [
+            {"field_name": "candidate_name", "field_value": "Rina Pratiwi", "confidence": 0.99, "model_used": "claude-sonnet"},
+            {"field_name": "email", "field_value": "rina.pratiwi@email.com", "confidence": 0.99, "model_used": "claude-sonnet"},
+            {"field_name": "phone", "field_value": "+62 812-3456-7890", "confidence": 0.98, "model_used": "claude-sonnet"},
+            {"field_name": "current_job_title", "field_value": "Senior Software Engineer", "confidence": 0.97, "model_used": "claude-sonnet"},
+            {"field_name": "current_company", "field_value": "PT Bank Digital Indonesia (BDI)", "confidence": 0.97, "model_used": "claude-sonnet"},
+            {"field_name": "total_years_experience", "field_value": "5", "field_type": "number", "confidence": 0.95, "model_used": "claude-sonnet"},
+            {"field_name": "education_level", "field_value": "S1/Bachelor", "confidence": 0.98, "model_used": "claude-sonnet"},
+            {"field_name": "education_institution", "field_value": "Universitas Indonesia", "confidence": 0.97, "model_used": "claude-sonnet"},
+            {"field_name": "education_major", "field_value": "Computer Science", "confidence": 0.97, "model_used": "claude-sonnet"},
+            {"field_name": "technical_skills", "field_value": "Python, JavaScript, TypeScript, Go, SQL, FastAPI, React, Django, Docker, Kubernetes, AWS, Terraform, PostgreSQL, Redis, Kafka", "confidence": 0.96, "model_used": "claude-sonnet"},
+            {"field_name": "certifications", "field_value": "AWS Solutions Architect Associate, Google Cloud Professional, CKAD", "confidence": 0.97, "model_used": "claude-sonnet"},
+            {"field_name": "target_role", "field_value": "Software Engineer", "confidence": 0.90, "model_used": "claude-sonnet"},
+        ],
+    },
+    {
+        "id": DOC_CV[1], "filename": f"{DOC_CV[1]}_cv_budi_santoso.pdf",
+        "original_filename": "CV_Budi_Santoso_Risk_Analyst.pdf", "content_type": "application/pdf",
+        "file_size": 290_000, "status": DocumentStatus.COMPLETED,
+        "storage_path": f"uploads/{DOC_CV[1]}/CV_Budi_Santoso_Risk_Analyst.pdf",
+        "ocr_text": """BUDI SANTOSO
+Risk Analyst
+
+Email: budi.santoso@email.com | Phone: +62 821-9876-5432
+Location: Jakarta, Indonesia
+
+PROFESSIONAL SUMMARY
+Risk management professional with 4 years of experience in credit risk analysis, financial modeling, and regulatory compliance in the banking sector. Strong background in Basel III/IV frameworks, stress testing, and IFRS 9 implementation. Certified BSMR Level 2 with working knowledge of OJK regulations.
+
+WORK EXPERIENCE
+
+Risk Analyst | PT Bank Mandiri (Persero) Tbk
+March 2021 — Present (3 years)
+- Conduct credit risk assessment for corporate portfolio valued at IDR 45 trillion
+- Developed IFRS 9 Expected Credit Loss (ECL) model using Python and SAS
+- Performed quarterly stress testing for credit, market, and liquidity risk scenarios
+- Prepared regulatory reports for OJK including risk profile and capital adequacy
+- Collaborated with IT team to automate risk dashboard using Power BI and SQL
+
+Credit Analyst | PT Bank CIMB Niaga Tbk
+August 2019 — February 2021 (1.5 years)
+- Analyzed creditworthiness of SME borrowers using financial ratio analysis
+- Maintained credit scoring models and performed periodic model validation
+- Processed 200+ credit proposals per quarter with 95% accuracy rate
+- Supported internal audit reviews for credit risk processes
+
+EDUCATION
+S2 (Master) Finance — Universitas Gadjah Mada, 2019
+S1 (Bachelor) Economics — Universitas Airlangga, 2017
+GPA: 3.65 / 4.00
+
+TECHNICAL SKILLS
+Risk Management: Credit Risk, Market Risk, Operational Risk, Liquidity Risk
+Frameworks: Basel III/IV, IFRS 9, POJK Risk Management, Stress Testing
+Analytics: Python, R, SAS, SQL, Excel Advanced (VBA), Power BI
+Tools: Bloomberg Terminal, Moody's Analytics, SAS Enterprise Miner
+
+SOFT SKILLS
+Analytical Thinking, Attention to Detail, Regulatory Communication, Report Writing
+
+CERTIFICATIONS
+- BSMR Level 2 — Badan Sertifikasi Manajemen Risiko (2022)
+- Financial Risk Manager (FRM) Part I — GARP (2023)
+- OJK Fit & Proper — Otoritas Jasa Keuangan (2021)
+
+LANGUAGES
+- Indonesian (Native)
+- English (Professional — TOEFL iBT 95)""",
+        "page_count": 2, "created_at": days_ago(5),
+        "extractions": [
+            {"field_name": "candidate_name", "field_value": "Budi Santoso", "confidence": 0.99, "model_used": "claude-sonnet"},
+            {"field_name": "email", "field_value": "budi.santoso@email.com", "confidence": 0.99, "model_used": "claude-sonnet"},
+            {"field_name": "phone", "field_value": "+62 821-9876-5432", "confidence": 0.98, "model_used": "claude-sonnet"},
+            {"field_name": "current_job_title", "field_value": "Risk Analyst", "confidence": 0.97, "model_used": "claude-sonnet"},
+            {"field_name": "current_company", "field_value": "PT Bank Mandiri (Persero) Tbk", "confidence": 0.97, "model_used": "claude-sonnet"},
+            {"field_name": "total_years_experience", "field_value": "4", "field_type": "number", "confidence": 0.95, "model_used": "claude-sonnet"},
+            {"field_name": "education_level", "field_value": "S2/Master", "confidence": 0.98, "model_used": "claude-sonnet"},
+            {"field_name": "education_institution", "field_value": "Universitas Gadjah Mada", "confidence": 0.97, "model_used": "claude-sonnet"},
+            {"field_name": "education_major", "field_value": "Finance", "confidence": 0.97, "model_used": "claude-sonnet"},
+            {"field_name": "technical_skills", "field_value": "Credit Risk, Market Risk, Financial Modeling, Basel III/IV, IFRS 9, Stress Testing, Python, R, SAS, SQL, VBA, Power BI", "confidence": 0.96, "model_used": "claude-sonnet"},
+            {"field_name": "certifications", "field_value": "BSMR Level 2, FRM Part I, OJK Fit & Proper", "confidence": 0.98, "model_used": "claude-sonnet"},
+            {"field_name": "target_role", "field_value": "Risk Analyst (Banking)", "confidence": 0.92, "model_used": "claude-sonnet"},
+        ],
+    },
+    {
+        "id": DOC_CV[2], "filename": f"{DOC_CV[2]}_cv_maya_kusuma.pdf",
+        "original_filename": "CV_Maya_Kusuma_Data_Scientist.pdf", "content_type": "application/pdf",
+        "file_size": 310_000, "status": DocumentStatus.EXTRACTED,
+        "storage_path": f"uploads/{DOC_CV[2]}/CV_Maya_Kusuma_Data_Scientist.pdf",
+        "ocr_text": """MAYA KUSUMA
+Data Scientist
+
+Email: maya.kusuma@email.com | Phone: +62 813-5555-1234
+Location: Bandung, Indonesia | GitHub: github.com/mayakusuma
+
+PROFESSIONAL SUMMARY
+Data scientist with 3 years of experience in machine learning, NLP, and predictive analytics. Skilled in building production ML pipelines and deploying models at scale. Experience in banking and e-commerce domains with focus on fraud detection and customer analytics.
+
+WORK EXPERIENCE
+
+Data Scientist | OVO (Grab Financial Group)
+June 2022 — Present (2 years)
+- Built fraud detection ML model (XGBoost + neural network ensemble) achieving 96% precision at 0.1% FPR
+- Developed NLP-based customer complaint classification system processing 50K+ tickets/month
+- Implemented MLOps pipeline using MLflow, Airflow, and Kubernetes for model deployment
+- Created customer segmentation model driving 15% increase in targeted marketing ROI
+
+Junior Data Scientist | PT Telkom Indonesia
+January 2021 — May 2022 (1.5 years)
+- Developed churn prediction model using Random Forest and LightGBM
+- Built automated reporting dashboard using Streamlit and Python
+- Conducted A/B testing analysis for product feature experiments
+
+EDUCATION
+S1 (Bachelor) Statistics — Institut Teknologi Bandung (ITB), 2020
+GPA: 3.80 / 4.00
+
+TECHNICAL SKILLS
+ML/AI: Scikit-learn, TensorFlow, PyTorch, XGBoost, NLP (Hugging Face), Computer Vision
+Programming: Python, R, SQL, Julia
+Data: Pandas, NumPy, Apache Spark, Airflow, dbt, BigQuery, PostgreSQL
+MLOps: MLflow, Kubeflow, Docker, Kubernetes, Feature Store
+Visualization: Matplotlib, Seaborn, Plotly, Streamlit, Tableau
+
+CERTIFICATIONS
+- Google Professional Machine Learning Engineer (2023)
+- TensorFlow Developer Certificate (2022)
+- AWS Machine Learning Specialty (2023)
+
+LANGUAGES
+- Indonesian (Native)
+- English (Fluent)""",
+        "page_count": 1, "created_at": days_ago(2),
+        "extractions": [
+            {"field_name": "candidate_name", "field_value": "Maya Kusuma", "confidence": 0.99, "model_used": "claude-sonnet"},
+            {"field_name": "email", "field_value": "maya.kusuma@email.com", "confidence": 0.99, "model_used": "claude-sonnet"},
+            {"field_name": "current_job_title", "field_value": "Data Scientist", "confidence": 0.97, "model_used": "claude-sonnet"},
+            {"field_name": "current_company", "field_value": "OVO (Grab Financial Group)", "confidence": 0.96, "model_used": "claude-sonnet"},
+            {"field_name": "total_years_experience", "field_value": "3", "field_type": "number", "confidence": 0.95, "model_used": "claude-sonnet"},
+            {"field_name": "education_level", "field_value": "S1/Bachelor", "confidence": 0.98, "model_used": "claude-sonnet"},
+            {"field_name": "education_institution", "field_value": "Institut Teknologi Bandung (ITB)", "confidence": 0.97, "model_used": "claude-sonnet"},
+            {"field_name": "education_major", "field_value": "Statistics", "confidence": 0.97, "model_used": "claude-sonnet"},
+            {"field_name": "technical_skills", "field_value": "Machine Learning, NLP, Deep Learning, Python, R, SQL, TensorFlow, PyTorch, Spark, Airflow, Docker, Kubernetes, MLflow", "confidence": 0.96, "model_used": "claude-sonnet"},
+            {"field_name": "certifications", "field_value": "Google ML Engineer, TensorFlow Developer, AWS ML Specialty", "confidence": 0.97, "model_used": "claude-sonnet"},
+            {"field_name": "target_role", "field_value": "Data Scientist", "confidence": 0.91, "model_used": "claude-sonnet"},
+        ],
+    },
+    {
+        "id": DOC_CV[3], "filename": f"{DOC_CV[3]}_cv_ahmad_fresh_grad.pdf",
+        "original_filename": "CV_Ahmad_Fauzan_Fresh_Graduate.pdf", "content_type": "application/pdf",
+        "file_size": 180_000, "status": DocumentStatus.UPLOADED,
+        "storage_path": f"uploads/{DOC_CV[3]}/CV_Ahmad_Fauzan_Fresh_Graduate.pdf",
+        "ocr_text": """AHMAD FAUZAN
+Fresh Graduate — Aspiring Software Developer
+
+Email: ahmad.fauzan@email.com | Phone: +62 857-1122-3344
+Location: Yogyakarta, Indonesia | GitHub: github.com/ahmadfauzan
+
+EDUCATION
+S1 (Bachelor) Informatics Engineering — Universitas Gadjah Mada, 2024
+GPA: 3.55 / 4.00
+
+Thesis: "Development of REST API-based Student Information System using Node.js and MongoDB"
+
+INTERNSHIP EXPERIENCE
+
+Software Engineering Intern | Bukalapak
+June 2023 — December 2023 (6 months)
+- Developed backend API endpoints using Go and PostgreSQL
+- Contributed to CI/CD pipeline improvements
+- Participated in code reviews and daily standup meetings
+
+PROJECTS
+- E-commerce Web App (React, Node.js, MongoDB) — Final year capstone project
+- Weather Prediction ML Model (Python, Scikit-learn) — Data Science course project
+- Mobile Banking UI Prototype (Flutter, Dart) — Hackathon winner at UGM Tech Fest 2023
+
+TECHNICAL SKILLS
+Programming: JavaScript, Python, Go, Dart, SQL
+Frameworks: React, Node.js, Express.js, Flutter
+Tools: Git, Docker, VS Code, Postman, Linux
+Databases: PostgreSQL, MongoDB, MySQL
+
+SOFT SKILLS
+Quick Learner, Team Player, Communication
+
+CERTIFICATIONS
+- Meta Back-End Developer Professional Certificate (Coursera, 2023)
+- Google IT Automation with Python (Coursera, 2023)
+
+LANGUAGES
+- Indonesian (Native)
+- English (Intermediate)""",
+        "page_count": 1, "created_at": days_ago(1),
+        "extractions": [],
+    },
+]
+
+# =============================================================================
 # Validation Results
 # =============================================================================
 VALIDATION_RESULTS = [
@@ -422,10 +727,10 @@ async def seed():
             if "--reset" not in sys.argv:
                 return
             print("  Clearing existing demo data...")
-            await session.execute(text("DELETE FROM action_logs WHERE document_id::text LIKE '20000000%' OR document_id::text LIKE '30000000%' OR document_id::text LIKE '40000000%'"))
-            await session.execute(text("DELETE FROM validation_results WHERE document_id::text LIKE '20000000%' OR document_id::text LIKE '30000000%' OR document_id::text LIKE '40000000%'"))
-            await session.execute(text("DELETE FROM extractions WHERE document_id::text LIKE '20000000%' OR document_id::text LIKE '30000000%' OR document_id::text LIKE '40000000%'"))
-            await session.execute(text("DELETE FROM documents WHERE id::text LIKE '20000000%' OR id::text LIKE '30000000%' OR id::text LIKE '40000000%'"))
+            await session.execute(text("DELETE FROM action_logs WHERE document_id::text LIKE '20000000%' OR document_id::text LIKE '30000000%' OR document_id::text LIKE '40000000%' OR document_id::text LIKE '50000000%'"))
+            await session.execute(text("DELETE FROM validation_results WHERE document_id::text LIKE '20000000%' OR document_id::text LIKE '30000000%' OR document_id::text LIKE '40000000%' OR document_id::text LIKE '50000000%'"))
+            await session.execute(text("DELETE FROM extractions WHERE document_id::text LIKE '20000000%' OR document_id::text LIKE '30000000%' OR document_id::text LIKE '40000000%' OR document_id::text LIKE '50000000%'"))
+            await session.execute(text("DELETE FROM documents WHERE id::text LIKE '20000000%' OR id::text LIKE '30000000%' OR id::text LIKE '40000000%' OR id::text LIKE '50000000%'"))
             await session.execute(text("DELETE FROM workflows WHERE id::text LIKE '10000000%'"))
             await session.execute(text("DELETE FROM users WHERE id::text LIKE '00000000%'"))
             await session.commit()
@@ -444,7 +749,7 @@ async def seed():
         print(f"  ✓ Created {len(WORKFLOWS)} workflows")
 
         # 3. Documents + Extractions
-        all_docs = INVOICE_DOCS + RECEIPT_DOCS + CONTRACT_DOCS
+        all_docs = INVOICE_DOCS + RECEIPT_DOCS + CONTRACT_DOCS + CV_DOCS
         ext_count = 0
         for doc_data in all_docs:
             extractions = doc_data.pop("extractions")
@@ -457,6 +762,8 @@ async def seed():
                 wf_id = WF_INVOICE_ID
             elif doc_data["id"] in DOC_REC:
                 wf_id = WF_RECEIPT_ID
+            elif doc_data["id"] in DOC_CV:
+                wf_id = WF_CV_ID
             else:
                 wf_id = WF_CONTRACT_ID
 
@@ -515,8 +822,8 @@ async def seed():
     print("    Consumer:      viewer@docproc.demo  / demo1234")
     print("    Finance Mgr:   finance@docproc.demo / demo1234")
     print("")
-    print("  Workflows: 3 (Invoice, Receipt, Contract)")
-    print("  Documents: 12 (varied statuses)")
+    print("  Workflows: 4 (Invoice, Receipt, Contract, CV Skill Mapping)")
+    print("  Documents: 16 (varied statuses)")
     print("")
     print("  Demo files: ../demo-data/")
     print("    Invoices:  acme_inv_2024_001.pdf, globex_inv_9847.pdf,")
@@ -527,6 +834,10 @@ async def seed():
     print("    Contracts: saas_agreement_cloudflare.pdf,")
     print("               nda_techpartner_2024.pdf,")
     print("               maintenance_contract_2025.pdf")
+    print("    CVs:       CV_Rina_Pratiwi_Software_Engineer.pdf,")
+    print("               CV_Budi_Santoso_Risk_Analyst.pdf,")
+    print("               CV_Maya_Kusuma_Data_Scientist.pdf,")
+    print("               CV_Ahmad_Fauzan_Fresh_Graduate.pdf")
     print("  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
 
 

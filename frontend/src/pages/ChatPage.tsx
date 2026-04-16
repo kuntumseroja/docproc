@@ -7,7 +7,7 @@ import {
   Select,
   SelectItem,
 } from '@carbon/react';
-import { Send, TrashCan, Document, Ai } from '@carbon/icons-react';
+import { Send, TrashCan, Document, Ai, UserMultiple } from '@carbon/icons-react';
 import api from '../services/api';
 
 interface Message {
@@ -223,10 +223,35 @@ const ChatPage: React.FC = () => {
 
       <Tile style={{ flex: 1, overflow: 'auto', padding: 24, marginBottom: 16, minHeight: 0 }}>
         {messages.length === 0 ? (
-          <div style={{ textAlign: 'center', paddingTop: 80, color: '#525252' }}>
+          <div style={{ textAlign: 'center', paddingTop: 60, color: '#525252' }}>
             <Document size={48} style={{ marginBottom: 16, opacity: 0.3 }} />
             <h3 style={{ fontWeight: 400, marginBottom: 8 }}>Start a conversation</h3>
-            <p>Ask about your documents, extraction results, or workflows.</p>
+            <p style={{ marginBottom: 24 }}>Ask about your documents, extraction results, or workflows.</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', maxWidth: 700, margin: '0 auto' }}>
+              {[
+                { icon: '📄', text: 'Summarize all my documents' },
+                { icon: '📊', text: 'What is the total invoice amount?' },
+                { icon: '👤', text: 'Summarize Rina Pratiwi\'s CV' },
+                { icon: '🎯', text: 'Does Budi Santoso fit the Risk Analyst role?' },
+                { icon: '🔍', text: 'Compare all CV candidates and rank them' },
+                { icon: '⚡', text: 'What skills is Ahmad Fauzan missing for Software Engineer?' },
+              ].map((q, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => { setInput(q.text); }}
+                  style={{
+                    padding: '8px 16px', borderRadius: 20, border: '1px solid #e0e0e0',
+                    background: '#fff', cursor: 'pointer', fontSize: 13, color: '#161616',
+                    display: 'flex', alignItems: 'center', gap: 6,
+                    transition: 'all 0.15s',
+                  }}
+                  onMouseOver={(e) => { (e.target as HTMLElement).style.background = '#EDF5FF'; (e.target as HTMLElement).style.borderColor = '#4589ff'; }}
+                  onMouseOut={(e) => { (e.target as HTMLElement).style.background = '#fff'; (e.target as HTMLElement).style.borderColor = '#e0e0e0'; }}
+                >
+                  <span>{q.icon}</span> {q.text}
+                </button>
+              ))}
+            </div>
           </div>
         ) : (
           messages.map((msg, i) => {

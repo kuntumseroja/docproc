@@ -1,0 +1,150 @@
+{
+  "version": "1.0",
+  "description": "Maps job roles to required and preferred skills, certifications, education, and experience requirements for CV/resume skill matching",
+  "roles": {
+    "software_engineer": {
+      "title": "Software Engineer",
+      "department": "Technology",
+      "min_experience_years": 2,
+      "education_minimum": "S1/Bachelor",
+      "preferred_majors": ["Computer Science", "Information Technology", "Software Engineering", "Informatics"],
+      "required_skills": ["Programming", "Data Structures", "Algorithms", "Git", "REST API", "SQL", "Problem Solving"],
+      "preferred_skills": ["Docker", "Kubernetes", "CI/CD", "Cloud Services", "Microservices", "Unit Testing", "Agile"],
+      "programming_languages": {"required": ["Python", "JavaScript"], "preferred": ["TypeScript", "Go", "Java"]},
+      "certifications": {"required": [], "preferred": ["AWS Certified Developer", "Google Cloud Professional"]},
+      "salary_band": {"min": 8000000, "max": 25000000, "currency": "IDR"}
+    },
+    "data_engineer": {
+      "title": "Data Engineer",
+      "department": "Technology",
+      "min_experience_years": 2,
+      "education_minimum": "S1/Bachelor",
+      "preferred_majors": ["Computer Science", "Data Science", "Statistics", "Mathematics"],
+      "required_skills": ["SQL", "ETL", "Data Warehousing", "Python", "Data Modeling", "Big Data"],
+      "preferred_skills": ["Apache Spark", "Kafka", "Airflow", "dbt", "Data Lake", "Cloud Data Services", "Machine Learning"],
+      "programming_languages": {"required": ["Python", "SQL"], "preferred": ["Scala", "Java"]},
+      "certifications": {"required": [], "preferred": ["Google Professional Data Engineer", "AWS Data Analytics", "Databricks"]},
+      "salary_band": {"min": 10000000, "max": 30000000, "currency": "IDR"}
+    },
+    "data_scientist": {
+      "title": "Data Scientist",
+      "department": "Technology / Analytics",
+      "min_experience_years": 2,
+      "education_minimum": "S1/Bachelor",
+      "preferred_majors": ["Statistics", "Mathematics", "Computer Science", "Data Science", "Physics"],
+      "required_skills": ["Machine Learning", "Statistics", "Python", "Data Analysis", "Data Visualization", "SQL"],
+      "preferred_skills": ["Deep Learning", "NLP", "Computer Vision", "A/B Testing", "MLOps", "Feature Engineering", "TensorFlow", "PyTorch"],
+      "programming_languages": {"required": ["Python"], "preferred": ["R", "SQL", "Julia"]},
+      "certifications": {"required": [], "preferred": ["Google Professional ML Engineer", "AWS ML Specialty", "TensorFlow Developer"]},
+      "salary_band": {"min": 12000000, "max": 35000000, "currency": "IDR"}
+    },
+    "frontend_developer": {
+      "title": "Frontend Developer",
+      "department": "Technology",
+      "min_experience_years": 1,
+      "education_minimum": "S1/Bachelor",
+      "preferred_majors": ["Computer Science", "Information Technology", "Design"],
+      "required_skills": ["HTML", "CSS", "JavaScript", "React", "Responsive Design", "Git"],
+      "preferred_skills": ["TypeScript", "Next.js", "Vue.js", "Tailwind CSS", "Figma", "Accessibility", "Performance Optimization", "Testing"],
+      "programming_languages": {"required": ["JavaScript", "HTML", "CSS"], "preferred": ["TypeScript"]},
+      "certifications": {"required": [], "preferred": ["Meta Frontend Developer", "Google UX Design"]},
+      "salary_band": {"min": 7000000, "max": 22000000, "currency": "IDR"}
+    },
+    "devops_engineer": {
+      "title": "DevOps / SRE Engineer",
+      "department": "Technology",
+      "min_experience_years": 3,
+      "education_minimum": "S1/Bachelor",
+      "preferred_majors": ["Computer Science", "Information Technology", "Systems Engineering"],
+      "required_skills": ["Linux", "Docker", "CI/CD", "Cloud Services", "Monitoring", "Scripting", "Networking"],
+      "preferred_skills": ["Kubernetes", "Terraform", "Ansible", "Prometheus", "Grafana", "AWS", "GCP", "Azure", "Security"],
+      "programming_languages": {"required": ["Bash", "Python"], "preferred": ["Go", "YAML"]},
+      "certifications": {"required": [], "preferred": ["AWS Solutions Architect", "CKA", "Google Cloud Engineer", "HashiCorp Terraform"]},
+      "salary_band": {"min": 12000000, "max": 35000000, "currency": "IDR"}
+    },
+    "product_manager": {
+      "title": "Product Manager",
+      "department": "Product",
+      "min_experience_years": 3,
+      "education_minimum": "S1/Bachelor",
+      "preferred_majors": ["Business", "Management", "Computer Science", "Engineering", "Economics"],
+      "required_skills": ["Product Strategy", "User Research", "Agile/Scrum", "Data Analysis", "Stakeholder Management", "Roadmap Planning", "Communication"],
+      "preferred_skills": ["SQL", "A/B Testing", "Wireframing", "Figma", "JIRA", "OKRs", "Go-to-Market", "Pricing Strategy"],
+      "programming_languages": {"required": [], "preferred": ["SQL"]},
+      "certifications": {"required": [], "preferred": ["CSPO", "SAFe Product Manager", "Google Analytics"]},
+      "salary_band": {"min": 15000000, "max": 40000000, "currency": "IDR"}
+    },
+    "relationship_manager_banking": {
+      "title": "Relationship Manager (Banking)",
+      "department": "Business Banking",
+      "min_experience_years": 3,
+      "education_minimum": "S1/Bachelor",
+      "preferred_majors": ["Finance", "Economics", "Accounting", "Business Administration", "Management"],
+      "required_skills": ["Client Relationship Management", "Credit Analysis", "Financial Products Knowledge", "Sales", "Communication", "Risk Assessment"],
+      "preferred_skills": ["Wealth Management", "Trade Finance", "Treasury Products", "Cross-selling", "Portfolio Management", "Regulatory Compliance"],
+      "programming_languages": {"required": [], "preferred": []},
+      "certifications": {"required": ["BSMR Level 1"], "preferred": ["WMI", "CFA Level 1"]},
+      "salary_band": {"min": 10000000, "max": 30000000, "currency": "IDR"}
+    },
+    "risk_analyst_banking": {
+      "title": "Risk Analyst (Banking)",
+      "department": "Risk Management",
+      "min_experience_years": 2,
+      "education_minimum": "S1/Bachelor",
+      "preferred_majors": ["Finance", "Statistics", "Mathematics", "Economics", "Actuarial Science"],
+      "required_skills": ["Risk Assessment", "Credit Risk", "Financial Modeling", "Data Analysis", "Regulatory Knowledge", "Excel Advanced"],
+      "preferred_skills": ["Market Risk", "Operational Risk", "Basel III/IV", "Stress Testing", "VaR", "Python", "SQL", "IFRS 9"],
+      "programming_languages": {"required": [], "preferred": ["Python", "R", "SQL", "VBA"]},
+      "certifications": {"required": ["BSMR Level 2"], "preferred": ["FRM", "BSMR Level 3", "CFA"]},
+      "salary_band": {"min": 10000000, "max": 28000000, "currency": "IDR"}
+    },
+    "compliance_officer_banking": {
+      "title": "Compliance Officer (Banking)",
+      "department": "Compliance",
+      "min_experience_years": 3,
+      "education_minimum": "S1/Bachelor",
+      "preferred_majors": ["Law", "Finance", "Economics", "Accounting"],
+      "required_skills": ["Regulatory Compliance", "AML/KYC", "Risk Assessment", "Policy Development", "Audit", "Communication"],
+      "preferred_skills": ["OJK Regulations", "POJK", "PBI", "Sanctions Screening", "GRC Tools", "Investigation", "UU PDP"],
+      "programming_languages": {"required": [], "preferred": []},
+      "certifications": {"required": ["BSMR Level 2", "OJK Fit & Proper"], "preferred": ["CAMS", "ICA Diploma"]},
+      "salary_band": {"min": 12000000, "max": 35000000, "currency": "IDR"}
+    },
+    "ui_ux_designer": {
+      "title": "UI/UX Designer",
+      "department": "Design / Product",
+      "min_experience_years": 2,
+      "education_minimum": "S1/Bachelor",
+      "preferred_majors": ["Design", "Human-Computer Interaction", "Visual Communication", "Information Technology"],
+      "required_skills": ["UI Design", "UX Research", "Wireframing", "Prototyping", "Figma", "Design Systems", "User Testing"],
+      "preferred_skills": ["Interaction Design", "Information Architecture", "Accessibility", "Motion Design", "Design Thinking", "HTML/CSS", "Analytics"],
+      "programming_languages": {"required": [], "preferred": ["HTML", "CSS"]},
+      "certifications": {"required": [], "preferred": ["Google UX Design", "Nielsen Norman UX", "Interaction Design Foundation"]},
+      "salary_band": {"min": 8000000, "max": 25000000, "currency": "IDR"}
+    },
+    "project_manager": {
+      "title": "Project Manager",
+      "department": "PMO",
+      "min_experience_years": 3,
+      "education_minimum": "S1/Bachelor",
+      "preferred_majors": ["Management", "Engineering", "Information Technology", "Business"],
+      "required_skills": ["Project Planning", "Stakeholder Management", "Risk Management", "Agile/Scrum", "Budget Management", "Communication", "Leadership"],
+      "preferred_skills": ["PMP Methodology", "Waterfall", "JIRA", "MS Project", "Change Management", "Vendor Management", "Reporting"],
+      "programming_languages": {"required": [], "preferred": []},
+      "certifications": {"required": [], "preferred": ["PMP", "PRINCE2", "CSM", "SAFe Agilist"]},
+      "salary_band": {"min": 12000000, "max": 35000000, "currency": "IDR"}
+    },
+    "cybersecurity_analyst": {
+      "title": "Cybersecurity Analyst",
+      "department": "Information Security",
+      "min_experience_years": 2,
+      "education_minimum": "S1/Bachelor",
+      "preferred_majors": ["Computer Science", "Cybersecurity", "Information Technology", "Network Engineering"],
+      "required_skills": ["Security Monitoring", "Incident Response", "Vulnerability Assessment", "SIEM", "Network Security", "Threat Analysis"],
+      "preferred_skills": ["Penetration Testing", "Forensics", "Cloud Security", "Zero Trust", "SOC Operations", "Malware Analysis", "IAM", "GRC"],
+      "programming_languages": {"required": ["Python"], "preferred": ["Bash", "PowerShell", "Go"]},
+      "certifications": {"required": [], "preferred": ["CEH", "CompTIA Security+", "CISSP", "OSCP", "AWS Security Specialty"]},
+      "salary_band": {"min": 10000000, "max": 30000000, "currency": "IDR"}
+    }
+  }
+}

@@ -298,7 +298,7 @@ const ChatPage: React.FC = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, isTyping]);
+  }, [messages, isTyping, sending]);
 
   useEffect(() => {
     const loadModels = async () => {
@@ -402,6 +402,10 @@ const ChatPage: React.FC = () => {
       <style>{`
         @keyframes blink {
           50% { opacity: 0; }
+        }
+        @keyframes thinking-bounce {
+          0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+          40% { transform: translateY(-6px); opacity: 1; }
         }
       `}</style>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
@@ -541,6 +545,30 @@ const ChatPage: React.FC = () => {
               </div>
             );
           })
+        )}
+        {sending && (
+          <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 16 }}>
+            <div style={{
+              maxWidth: '85%',
+              padding: '16px 20px',
+              borderRadius: '16px 16px 16px 4px',
+              background: '#f4f4f4',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+            }}>
+              <span style={{ fontSize: 12, color: '#6f6f6f', display: 'block', marginBottom: 8 }}>
+                Thinking...
+              </span>
+              <div style={{ display: 'flex', gap: 6 }}>
+                {[0, 1, 2].map(i => (
+                  <span key={i} style={{
+                    width: 8, height: 8, borderRadius: '50%', background: '#4589ff',
+                    display: 'inline-block',
+                    animation: `thinking-bounce 1.4s ease-in-out ${i * 0.2}s infinite`,
+                  }} />
+                ))}
+              </div>
+            </div>
+          </div>
         )}
         <div ref={messagesEndRef} />
       </Tile>

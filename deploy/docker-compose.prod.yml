@@ -18,6 +18,8 @@ services:
       dockerfile: deploy/backend.prod.Dockerfile
     expose:
       - "8000"
+    volumes:
+      - backend_uploads:/app/uploads
     env_file:
       - ../.env
     environment:
@@ -88,3 +90,4 @@ services:
 volumes:
   pgdata:
   minio_data:
+  backend_uploads:

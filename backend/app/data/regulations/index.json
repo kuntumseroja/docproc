@@ -153,6 +153,19 @@
       "sections_count": 6,
       "effective_date": "2024-01-01",
       "tags": ["issb", "climate", "ghg-emissions", "scope-1", "scope-2", "scope-3", "financed-emissions", "tcfd", "net-zero", "scenario-analysis"]
+    },
+    {
+      "id": "uu-pdp-2022",
+      "name": "UU No. 27 Tahun 2022",
+      "title": "Personal Data Protection",
+      "title_id": "Undang-Undang Perlindungan Data Pribadi",
+      "issuer": "Pemerintah Republik Indonesia",
+      "country": "Indonesia",
+      "category": "data_privacy",
+      "file": "uu_pdp_2022.json",
+      "sections_count": 7,
+      "effective_date": "2022-10-17",
+      "tags": ["data-privacy", "personal-data", "consent", "data-subject-rights", "breach-notification", "cross-border-transfer", "dpo", "pdp"]
     }
   ],
   "categories": [
@@ -184,7 +197,7 @@
       "id": "data_privacy",
       "name": "Data Privacy Regulations",
       "description": "Regulations governing the protection and processing of personal data",
-      "applicable_countries": ["EU"]
+      "applicable_countries": ["EU", "Indonesia"]
     },
     {
       "id": "healthcare",

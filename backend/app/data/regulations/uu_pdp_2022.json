@@ -1,0 +1,123 @@
+{
+  "id": "uu-pdp-2022",
+  "name": "UU No. 27 Tahun 2022",
+  "title": "Personal Data Protection",
+  "title_id": "Undang-Undang Perlindungan Data Pribadi",
+  "issuer": "Pemerintah Republik Indonesia",
+  "country": "Indonesia",
+  "category": "data_privacy",
+  "effective_date": "2022-10-17",
+  "language": "en",
+  "version": "1.0",
+  "last_updated": "2026-04-16",
+  "sections": [
+    {
+      "id": "uu-pdp-2022-s1",
+      "section_number": "1",
+      "title": "Data Subject Rights (Hak Subjek Data Pribadi)",
+      "description": "Establishes comprehensive rights for data subjects (Subjek Data Pribadi) including the right to information, access, correction, deletion, withdrawal of consent, portability, and the right to object to automated decision-making. Based on Pasal 5-13 of UU PDP.",
+      "risk_level": "high",
+      "requirements": [
+        "Data subjects must be informed about the identity of the data controller, purpose of processing, legal basis, type of personal data collected, retention period, and their rights at the time of data collection (Pasal 5-6).",
+        "Data subjects have the right to access their personal data and obtain a copy in a commonly used, structured, and machine-readable format within 3x24 hours of request (Pasal 7-8).",
+        "Data subjects may request correction or update of inaccurate or incomplete personal data, and the data controller must process the request within 3x24 hours (Pasal 9).",
+        "Data subjects have the right to request deletion of personal data when it is no longer necessary for the purpose it was collected, consent has been withdrawn, or processing is unlawful (Pasal 10).",
+        "Data subjects may withdraw consent at any time and the withdrawal must be as easy as giving consent. The data controller must cease processing within 3x24 hours of withdrawal (Pasal 11).",
+        "Data subjects have the right to data portability — to receive and transmit their personal data to another data controller in a structured, commonly used, and machine-readable format (Pasal 12).",
+        "Data subjects have the right to object to processing based on profiling or automated decision-making that produces legal effects (Pasal 13)."
+      ]
+    },
+    {
+      "id": "uu-pdp-2022-s2",
+      "section_number": "2",
+      "title": "Data Controller Obligations (Kewajiban Pengendali Data Pribadi)",
+      "description": "Defines the obligations of data controllers (Pengendali Data Pribadi) including lawful processing, purpose limitation, data minimization, accuracy, storage limitation, security measures, record-keeping, and appointment of DPO. Based on Pasal 20-34.",
+      "risk_level": "high",
+      "requirements": [
+        "Personal data processing must have a valid legal basis: (a) consent, (b) contractual necessity, (c) legal obligation, (d) vital interests, (e) public interest, or (f) legitimate interest balanced against data subject rights (Pasal 20).",
+        "Data controllers must process personal data only for specified, explicit, and legitimate purposes, and not process data in a manner incompatible with those purposes (Pasal 21).",
+        "Data controllers must implement data minimization — collecting only personal data that is adequate, relevant, and limited to what is necessary for the processing purpose (Pasal 22).",
+        "Data controllers must ensure the accuracy of personal data and take reasonable steps to rectify or delete inaccurate data without delay (Pasal 23).",
+        "Personal data must not be stored longer than necessary for the purpose of processing. Data controllers must establish and document retention periods, and securely delete or anonymize data after the retention period (Pasal 24-25).",
+        "Data controllers must maintain records of processing activities (ROPA) including: purposes, categories of data, recipients, cross-border transfers, retention periods, and security measures (Pasal 26).",
+        "Data controllers processing personal data at scale or processing sensitive personal data must appoint a Data Protection Officer (Pejabat Pelindungan Data Pribadi) with relevant expertise (Pasal 27).",
+        "Data controllers must conduct a Data Protection Impact Assessment (AMDAL Data Pribadi) before processing that is likely to result in high risk to data subjects, including large-scale processing, profiling, or processing of sensitive data (Pasal 28)."
+      ]
+    },
+    {
+      "id": "uu-pdp-2022-s3",
+      "section_number": "3",
+      "title": "Consent Management (Pengelolaan Persetujuan)",
+      "description": "Regulates requirements for valid consent including that consent must be freely given, specific, informed, and unambiguous. Special provisions for sensitive personal data and children's data. Based on Pasal 20-21 and Pasal 4.",
+      "risk_level": "high",
+      "requirements": [
+        "Consent must be freely given, specific, informed, and constitute an unambiguous indication of the data subject's agreement (Pasal 20 ayat (2)).",
+        "The request for consent must be clearly distinguishable from other matters, presented in a clear, plain, and intelligible language (Pasal 20 ayat (3)).",
+        "Processing of sensitive personal data (data spesifik) — including health records, biometric data, genetic data, criminal records, financial data, sexual orientation, and political views — requires explicit written consent (Pasal 4 ayat (2)).",
+        "Processing of children's personal data requires verifiable parental or guardian consent. Additional safeguards must be in place for data subjects under 17 years of age (Pasal 25).",
+        "Data controllers must maintain auditable records of consent including: when consent was given, what information was provided, how consent was collected, and whether consent has been withdrawn (Pasal 26).",
+        "Consent must be as easy to withdraw as to give. The data controller must provide a clear mechanism for withdrawal and inform data subjects of their right to withdraw before consent is given (Pasal 11)."
+      ]
+    },
+    {
+      "id": "uu-pdp-2022-s4",
+      "section_number": "4",
+      "title": "Cross-Border Data Transfer (Transfer Data Pribadi Lintas Negara)",
+      "description": "Governs the transfer of personal data outside Indonesia, requiring adequate protection levels in the receiving country or appropriate safeguards. Based on Pasal 55-57.",
+      "risk_level": "high",
+      "requirements": [
+        "Transfer of personal data outside Indonesia is permitted only to countries or international organizations with equivalent or higher data protection standards as determined by the Government (Pasal 55).",
+        "In the absence of an adequacy determination, cross-border transfer may proceed with appropriate safeguards including: binding corporate rules, standard contractual clauses, or certifications approved by the supervisory body (Pasal 56).",
+        "Data controllers must conduct a transfer impact assessment before any cross-border transfer to evaluate the data protection framework of the receiving jurisdiction (Pasal 56 ayat (2)).",
+        "Data controllers must maintain documentation of all cross-border transfers including: the identity of recipients, destination country, legal basis for transfer, safeguards applied, and categories of data transferred (Pasal 57).",
+        "The supervisory body (Lembaga PDP) may prohibit specific cross-border transfers if adequate protection cannot be ensured despite safeguards (Pasal 57 ayat (3))."
+      ]
+    },
+    {
+      "id": "uu-pdp-2022-s5",
+      "section_number": "5",
+      "title": "Data Breach Notification (Pemberitahuan Kegagalan Pelindungan Data Pribadi)",
+      "description": "Establishes requirements for data breach notification to the supervisory body and affected data subjects, including timelines and content requirements. Based on Pasal 46-49.",
+      "risk_level": "critical",
+      "requirements": [
+        "In the event of a personal data breach, the data controller must notify the supervisory body (Lembaga PDP) within 3x24 hours of becoming aware of the breach (Pasal 46 ayat (1)).",
+        "Breach notification to the supervisory body must include: (a) nature of the breach, (b) personal data compromised, (c) number of data subjects affected, (d) chronology of the breach, (e) remedial actions taken, and (f) contact details of the DPO (Pasal 46 ayat (2)).",
+        "If the breach is likely to result in high risk to the rights and freedoms of data subjects, the data controller must also notify affected data subjects without undue delay (Pasal 47).",
+        "Notification to data subjects must include: (a) nature of the breach, (b) personal data compromised, (c) actions taken to address the breach, and (d) recommended measures for data subjects to mitigate risk (Pasal 47 ayat (2)).",
+        "Data controllers must maintain a breach register documenting all personal data breaches, including facts, effects, and remedial actions taken, regardless of whether the breach was notified (Pasal 48).",
+        "Data processors must notify the data controller without undue delay after becoming aware of a personal data breach that involves data they process on behalf of the controller (Pasal 49)."
+      ]
+    },
+    {
+      "id": "uu-pdp-2022-s6",
+      "section_number": "6",
+      "title": "Data Security (Keamanan Data Pribadi)",
+      "description": "Requires data controllers and processors to implement appropriate technical and organizational security measures to protect personal data from unauthorized access, disclosure, alteration, or destruction. Based on Pasal 35-39.",
+      "risk_level": "high",
+      "requirements": [
+        "Data controllers must implement appropriate technical and organizational measures to ensure a level of security appropriate to the risk, including encryption, pseudonymization, and access controls (Pasal 35 ayat (1)).",
+        "Security measures must ensure ongoing confidentiality, integrity, availability, and resilience of processing systems and services (Pasal 35 ayat (2)).",
+        "Data controllers must implement the ability to restore availability and access to personal data in a timely manner in the event of a physical or technical incident (Pasal 36).",
+        "Regular testing, assessment, and evaluation of the effectiveness of technical and organizational security measures must be conducted at minimum annually (Pasal 37).",
+        "Data controllers must implement access controls ensuring that personal data is accessible only to authorized personnel on a need-to-know basis, with audit logging of all access (Pasal 38).",
+        "Personal data must be securely deleted or anonymized when it is no longer necessary for the purpose of processing, using methods that prevent reconstruction (Pasal 39)."
+      ]
+    },
+    {
+      "id": "uu-pdp-2022-s7",
+      "section_number": "7",
+      "title": "Sanctions & Enforcement (Sanksi & Penegakan Hukum)",
+      "description": "Defines administrative and criminal sanctions for violations of data protection obligations including fines, operational suspension, and imprisonment. Based on Pasal 57-76.",
+      "risk_level": "critical",
+      "requirements": [
+        "Administrative sanctions include: (a) written warning, (b) temporary suspension of data processing activities, (c) deletion of personal data, and (d) administrative fines of up to 2% of annual revenue/income for legal entities (Pasal 57).",
+        "Criminal sanctions for unlawful collection of personal data: imprisonment of up to 5 years and/or fine of up to IDR 5 billion (Pasal 67).",
+        "Criminal sanctions for unlawful disclosure of personal data: imprisonment of up to 4 years and/or fine of up to IDR 4 billion (Pasal 68).",
+        "Criminal sanctions for unlawful use of personal data: imprisonment of up to 5 years and/or fine of up to IDR 5 billion (Pasal 69).",
+        "Criminal sanctions for creating falsified personal data for personal gain or to harm others: imprisonment of up to 6 years and/or fine of up to IDR 6 billion (Pasal 70).",
+        "Corporations (badan usaha) found guilty of data protection violations may be subject to additional penalties including revocation of business license and dissolution (Pasal 71).",
+        "The 2-year transition period applies — all data controllers and processors must comply with UU PDP by October 17, 2024 (Pasal 76)."
+      ]
+    }
+  ]
+}

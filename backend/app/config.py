@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+from dotenv import dotenv_values
 from pydantic_settings import BaseSettings
 from typing import List, Optional
 
@@ -12,6 +13,21 @@ if not _env_file.exists():
 if not _env_file.exists():
     _env_file = None  # type: ignore
 
+# ── Fix: if an OS env var is empty but .env has a value, use the .env value ──
+# This prevents empty shell exports (e.g. ANTHROPIC_API_KEY=) from overriding
+# real values in the .env file.
+_API_KEY_FIELDS = [
+    "ANTHROPIC_API_KEY", "OPENAI_API_KEY", "MISTRAL_API_KEY",
+    "SECRET_KEY", "DATABASE_URL", "REDIS_URL",
+]
+if _env_file:
+    _dotenv_vals = dotenv_values(str(_env_file))
+    for _key in _API_KEY_FIELDS:
+        _os_val = os.environ.get(_key, "")
+        _file_val = _dotenv_vals.get(_key, "")
+        if not _os_val and _file_val:
+            os.environ[_key] = _file_val
+
 
 class Settings(BaseSettings):
     APP_NAME: str = "DocProc API"
@@ -19,7 +35,7 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     # Database
-    DATABASE_URL: str = "postgresql+asyncpg://docproc:docproc@localhost:5433/docproc"
+    DATABASE_URL: str = "postgresql+asyncpg://docproc:docproc@localhost:5432/docproc"
 
     # Redis
     REDIS_URL: str = "redis://localhost:6380/0"

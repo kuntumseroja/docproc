@@ -40,6 +40,7 @@ const PROVIDER_LABELS: Record<string, string> = {
   openai: 'OpenAI (GPT)',
   ollama: 'Ollama (On-Premise)',
   mistral: 'Mistral AI',
+  deepseek: 'DeepSeek',
 };
 
 interface OCRConfig {

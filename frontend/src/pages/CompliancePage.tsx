@@ -88,6 +88,7 @@ const PROVIDER_LABELS: Record<string, string> = {
   anthropic: 'Anthropic',
   openai: 'OpenAI',
   mistral: 'Mistral',
+  deepseek: 'DeepSeek',
 };
 
 const TYPING_SPEED = 12;

@@ -23,6 +23,7 @@ const PROVIDER_LABELS: Record<string, string> = {
   anthropic: 'Anthropic API',
   openai: 'OpenAI API',
   mistral: 'Mistral API',
+  deepseek: 'DeepSeek API',
 };
 
 interface ModelInfo {

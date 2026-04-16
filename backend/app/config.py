@@ -17,7 +17,7 @@ if not _env_file.exists():
 # This prevents empty shell exports (e.g. ANTHROPIC_API_KEY=) from overriding
 # real values in the .env file.
 _API_KEY_FIELDS = [
-    "ANTHROPIC_API_KEY", "OPENAI_API_KEY", "MISTRAL_API_KEY",
+    "ANTHROPIC_API_KEY", "OPENAI_API_KEY", "MISTRAL_API_KEY", "DEEPSEEK_API_KEY",
     "SECRET_KEY", "DATABASE_URL", "REDIS_URL",
 ]
 if _env_file:
@@ -59,9 +59,11 @@ class Settings(BaseSettings):
     # LLM Provider
     LLM_PROVIDER: str = "anthropic"
     LLM_MODEL: Optional[str] = None
+    LLM_FALLBACK_PROVIDER: Optional[str] = None
     ANTHROPIC_API_KEY: Optional[str] = None
     OPENAI_API_KEY: Optional[str] = None
     MISTRAL_API_KEY: Optional[str] = None
+    DEEPSEEK_API_KEY: Optional[str] = None
     OLLAMA_BASE_URL: str = "http://localhost:11434"
 
     # CORS

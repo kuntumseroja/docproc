@@ -12,6 +12,7 @@ class ProviderType(str, Enum):
     OPENAI = "openai"
     OLLAMA = "ollama"
     MISTRAL = "mistral"
+    DEEPSEEK = "deepseek"
 
 
 @dataclass
@@ -32,6 +33,7 @@ class LLMConfig:
             ProviderType.OPENAI: "gpt-4o",
             ProviderType.OLLAMA: "llama3.1:8b",
             ProviderType.MISTRAL: "mistral-large-latest",
+            ProviderType.DEEPSEEK: "deepseek-chat",
         }
         return defaults[self.provider]
 
@@ -284,6 +286,135 @@ class MistralProvider(BaseLLMProvider):
             return {"status": "error", "provider": "mistral", "error": str(e)}
 
 
+class DeepSeekProvider(BaseLLMProvider):
+    """DeepSeek provider (OpenAI-compatible API)."""
+
+    def __init__(self, config: LLMConfig):
+        super().__init__(config)
+        import openai
+        self._client = openai.AsyncOpenAI(
+            api_key=config.api_key,
+            base_url="https://api.deepseek.com/v1",
+        )
+
+    async def chat(
+        self,
+        messages: list[dict[str, str]],
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+    ) -> LLMResponse:
+        start = time.time()
+        model = self.config.get_model()
+
+        response = await self._client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=temperature if temperature is not None else self.config.temperature,
+            max_tokens=max_tokens or self.config.max_tokens,
+        )
+        latency = (time.time() - start) * 1000
+
+        choice = response.choices[0]
+        usage = response.usage
+
+        return LLMResponse(
+            content=choice.message.content or "",
+            model=model,
+            provider=ProviderType.DEEPSEEK,
+            input_tokens=usage.prompt_tokens if usage else 0,
+            output_tokens=usage.completion_tokens if usage else 0,
+            latency_ms=latency,
+        )
+
+    async def health_check(self) -> dict[str, Any]:
+        try:
+            await self._client.chat.completions.create(
+                model=self.config.get_model(),
+                messages=[{"role": "user", "content": "ping"}],
+                max_tokens=5,
+            )
+            return {"status": "ok", "provider": "deepseek", "model": self.config.get_model()}
+        except Exception as e:
+            return {"status": "error", "provider": "deepseek", "error": str(e)}
+
+
+class FallbackProvider(BaseLLMProvider):
+    """Wraps a primary provider with automatic fallback on rate-limit errors."""
+
+    def __init__(self, primary: BaseLLMProvider, fallback: BaseLLMProvider):
+        super().__init__(primary.config)
+        self._primary = primary
+        self._fallback = fallback
+
+    @staticmethod
+    def _is_rate_limit(exc: Exception) -> bool:
+        """Check if the exception is a rate-limit / quota-exceeded error."""
+        import logging
+        logger = logging.getLogger("llm.fallback")
+
+        # Anthropic rate limit
+        try:
+            from anthropic import RateLimitError as AnthropicRateLimit
+            if isinstance(exc, AnthropicRateLimit):
+                return True
+        except ImportError:
+            pass
+
+        # OpenAI rate limit (also covers DeepSeek)
+        try:
+            from openai import RateLimitError as OpenAIRateLimit
+            if isinstance(exc, OpenAIRateLimit):
+                return True
+        except ImportError:
+            pass
+
+        # Generic HTTP 429 check
+        status = getattr(exc, "status_code", None) or getattr(exc, "status", None)
+        if status == 429:
+            return True
+
+        # Check error message for common rate-limit phrases
+        err_msg = str(exc).lower()
+        if any(phrase in err_msg for phrase in ["rate limit", "rate_limit", "quota exceeded", "too many requests"]):
+            return True
+
+        return False
+
+    async def chat(
+        self,
+        messages: list[dict[str, str]],
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+    ) -> LLMResponse:
+        import logging
+        logger = logging.getLogger("llm.fallback")
+
+        try:
+            return await self._primary.chat(messages, temperature, max_tokens)
+        except Exception as exc:
+            if self._is_rate_limit(exc):
+                logger.warning(
+                    "Primary provider %s hit rate limit, falling back to %s: %s",
+                    self._primary.provider_type.value,
+                    self._fallback.provider_type.value,
+                    exc,
+                )
+                return await self._fallback.chat(messages, temperature, max_tokens)
+            raise
+
+    async def health_check(self) -> dict[str, Any]:
+        primary_health = await self._primary.health_check()
+        fallback_health = await self._fallback.health_check()
+        return {
+            "primary": primary_health,
+            "fallback": fallback_health,
+        }
+
+    @property
+    def provider_type(self) -> ProviderType:
+        return self._primary.provider_type
+
+
 class LLMProviderFactory:
     """Factory for creating LLM provider instances."""
 
@@ -292,6 +423,15 @@ class LLMProviderFactory:
         ProviderType.OPENAI: OpenAIProvider,
         ProviderType.OLLAMA: OllamaProvider,
         ProviderType.MISTRAL: MistralProvider,
+        ProviderType.DEEPSEEK: DeepSeekProvider,
+    }
+
+    _api_key_map_fields: dict[ProviderType, str] = {
+        ProviderType.ANTHROPIC: "ANTHROPIC_API_KEY",
+        ProviderType.OPENAI: "OPENAI_API_KEY",
+        ProviderType.MISTRAL: "MISTRAL_API_KEY",
+        ProviderType.DEEPSEEK: "DEEPSEEK_API_KEY",
+        ProviderType.OLLAMA: "",
     }
 
     @classmethod
@@ -302,26 +442,47 @@ class LLMProviderFactory:
         return provider_cls(config)
 
     @classmethod
-    def from_settings(cls) -> BaseLLMProvider:
-        """Create provider from application settings."""
+    def _build_provider(cls, provider_type: ProviderType, model: str | None = None) -> BaseLLMProvider:
+        """Build a single provider instance from settings."""
         from app.config import settings
 
-        provider_type = ProviderType(settings.LLM_PROVIDER)
-
-        api_key_map = {
-            ProviderType.ANTHROPIC: settings.ANTHROPIC_API_KEY,
-            ProviderType.OPENAI: settings.OPENAI_API_KEY,
-            ProviderType.MISTRAL: settings.MISTRAL_API_KEY,
-            ProviderType.OLLAMA: None,
-        }
+        api_key_field = cls._api_key_map_fields.get(provider_type, "")
+        api_key = getattr(settings, api_key_field, None) if api_key_field else None
 
         config = LLMConfig(
             provider=provider_type,
-            model=settings.LLM_MODEL,
-            api_key=api_key_map.get(provider_type),
+            model=model,
+            api_key=api_key,
             base_url=settings.OLLAMA_BASE_URL if provider_type == ProviderType.OLLAMA else None,
         )
         return cls.create(config)
+
+    @classmethod
+    def from_settings(cls) -> BaseLLMProvider:
+        """Create provider from application settings.
+
+        If LLM_FALLBACK_PROVIDER is configured, wraps the primary provider
+        with a FallbackProvider that auto-switches on rate-limit errors.
+        """
+        from app.config import settings
+
+        provider_type = ProviderType(settings.LLM_PROVIDER)
+        primary = cls._build_provider(provider_type, settings.LLM_MODEL)
+
+        # Wrap with fallback if configured
+        fallback_name = settings.LLM_FALLBACK_PROVIDER
+        if fallback_name:
+            try:
+                fallback_type = ProviderType(fallback_name)
+                fallback_key_field = cls._api_key_map_fields.get(fallback_type, "")
+                fallback_key = getattr(settings, fallback_key_field, None) if fallback_key_field else None
+                if fallback_key or fallback_type == ProviderType.OLLAMA:
+                    fallback = cls._build_provider(fallback_type)
+                    return FallbackProvider(primary, fallback)
+            except ValueError:
+                pass  # Invalid fallback provider name — skip silently
+
+        return primary
 
 
 # Available models per provider (for UI display)
@@ -342,5 +503,9 @@ AVAILABLE_MODELS: dict[str, list[dict[str, str]]] = {
     "mistral": [
         {"id": "mistral-large-latest", "name": "Mistral Large"},
         {"id": "mistral-small-latest", "name": "Mistral Small"},
+    ],
+    "deepseek": [
+        {"id": "deepseek-chat", "name": "DeepSeek V3"},
+        {"id": "deepseek-reasoner", "name": "DeepSeek R1"},
     ],
 }

@@ -26,7 +26,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from dotenv import load_dotenv
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-load_dotenv(os.path.join(project_root, ".env"), override=True)
+# override=False so Docker-set env vars (DATABASE_URL=postgres:5432) take precedence
+load_dotenv(os.path.join(project_root, ".env"), override=False)
 
 from sqlalchemy import select, text
 from app.db.session import async_session

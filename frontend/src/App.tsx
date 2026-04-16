@@ -14,6 +14,7 @@ import DataRepositoryPage from './pages/DataRepositoryPage';
 import WorkflowDetailPage from './pages/WorkflowDetailPage';
 import DocumentDetailPage from './pages/DocumentDetailPage';
 import SettingsPage from './pages/SettingsPage';
+import RoleMatrixPage from './pages/RoleMatrixPage';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path="/compliance" element={<CompliancePage />} />
           <Route path="/documents/:documentId" element={<DocumentDetailPage />} />
           <Route path="/chat" element={<ChatPage />} />
+          <Route path="/role-matrix" element={<RoleMatrixPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

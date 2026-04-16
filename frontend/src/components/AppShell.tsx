@@ -24,6 +24,7 @@ import {
   Settings,
   Logout,
   Login,
+  SkillLevelAdvanced,
 } from '@carbon/icons-react';
 import { useAuthStore } from '../store/authStore';
 
@@ -34,6 +35,7 @@ const NAV_ITEMS = [
   { path: '/review', label: 'Review', icon: DocumentView },
   { path: '/repository', label: 'Repository', icon: DataBase },
   { path: '/compliance', label: 'Compliance', icon: Security },
+  { path: '/role-matrix', label: 'Role Matrix', icon: SkillLevelAdvanced },
   { path: '/chat', label: 'Chat', icon: Chat },
   { path: '/settings', label: 'Settings', icon: Settings },
 ];

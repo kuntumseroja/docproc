@@ -93,6 +93,7 @@ async def check_provider_health():
         (ProviderType.ANTHROPIC, settings.ANTHROPIC_API_KEY),
         (ProviderType.OPENAI, settings.OPENAI_API_KEY),
         (ProviderType.MISTRAL, settings.MISTRAL_API_KEY),
+        (ProviderType.DEEPSEEK, settings.DEEPSEEK_API_KEY),
     ]
 
     for provider_type, api_key in checks:

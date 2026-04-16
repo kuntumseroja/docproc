@@ -5,10 +5,12 @@ from pydantic_settings import BaseSettings
 from typing import List, Optional
 
 # Resolve .env from project root (one level up from backend/)
+# In Docker, env vars are injected directly so .env file is optional
 _env_file = Path(__file__).resolve().parents[2] / ".env"
 if not _env_file.exists():
-    # Fallback: check current working directory
     _env_file = Path(".env")
+if not _env_file.exists():
+    _env_file = None  # type: ignore
 
 
 class Settings(BaseSettings):
@@ -49,7 +51,10 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: List[str] = ["http://localhost:3000"]
 
-    model_config = {"env_file": str(_env_file), "env_file_encoding": "utf-8"}
+    model_config = {
+        "env_file": str(_env_file) if _env_file else None,
+        "env_file_encoding": "utf-8",
+    }
 
 
 settings = Settings()

@@ -143,27 +143,51 @@ async def process_document(
                     logger.info(f"Found file locally: {lp}")
                     break
 
-        # Run OCR if we have a file
+        # Run OCR / text extraction if we have a file
         if tmp_path and tmp_path.exists():
-            try:
-                from app.config import settings as app_settings
-                if app_settings.OCR_PROVIDER == "mistral" and app_settings.MISTRAL_API_KEY:
-                    from app.services.ocr import MistralOCREngine, TesseractOCREngine, OCRPipeline
-                    primary = MistralOCREngine(api_key=app_settings.MISTRAL_API_KEY)
-                    fallback = TesseractOCREngine()
-                    ocr_engine_used = "mistral"
-                else:
-                    from app.services.ocr import TesseractOCREngine, OCRPipeline
-                    primary = TesseractOCREngine()
-                    fallback = None
-                    ocr_engine_used = "tesseract"
+            file_ext = tmp_path.suffix.lower()
 
-                pipeline = OCRPipeline(primary, fallback)
-                ocr_results = pipeline.process_document(tmp_path)
-                ocr_text = "\n\n".join(r.text for r in ocr_results if r.text)
-                logger.info(f"OCR completed for {document_id}: {len(ocr_results)} pages, {len(ocr_text)} chars of text")
-            except Exception as e:
-                logger.warning(f"OCR processing failed: {e}")
+            # Fast path: plain text / markdown — read directly, no OCR needed
+            if file_ext in (".txt", ".md"):
+                try:
+                    ocr_text = tmp_path.read_text(encoding="utf-8", errors="replace")
+                    ocr_engine_used = "text-passthrough"
+                    logger.info(f"Text passthrough for {document_id}: {len(ocr_text)} chars")
+                except Exception as e:
+                    logger.warning(f"Text read failed: {e}")
+
+            # Fast path: .docx — extract via python-docx
+            elif file_ext == ".docx":
+                try:
+                    from docx import Document as DocxDocument
+                    docx_doc = DocxDocument(str(tmp_path))
+                    ocr_text = "\n".join(p.text for p in docx_doc.paragraphs if p.text)
+                    ocr_engine_used = "docx-passthrough"
+                    logger.info(f"DOCX passthrough for {document_id}: {len(ocr_text)} chars")
+                except Exception as e:
+                    logger.warning(f"DOCX read failed: {e}, falling back to OCR")
+
+            # OCR path: PDF + images
+            if not ocr_text:
+                try:
+                    from app.config import settings as app_settings
+                    if app_settings.OCR_PROVIDER == "mistral" and app_settings.MISTRAL_API_KEY:
+                        from app.services.ocr import MistralOCREngine, TesseractOCREngine, OCRPipeline
+                        primary = MistralOCREngine(api_key=app_settings.MISTRAL_API_KEY)
+                        fallback = TesseractOCREngine()
+                        ocr_engine_used = "mistral"
+                    else:
+                        from app.services.ocr import TesseractOCREngine, OCRPipeline
+                        primary = TesseractOCREngine()
+                        fallback = None
+                        ocr_engine_used = "tesseract"
+
+                    pipeline = OCRPipeline(primary, fallback)
+                    ocr_results = pipeline.process_document(tmp_path)
+                    ocr_text = "\n\n".join(r.text for r in ocr_results if r.text)
+                    logger.info(f"OCR completed for {document_id}: {len(ocr_results)} pages, {len(ocr_text)} chars of text")
+                except Exception as e:
+                    logger.warning(f"OCR processing failed: {e}")
 
         # Fallback: use pre-existing ocr_text from document (e.g., seeded data)
         if not ocr_text and document.ocr_text:
@@ -259,12 +283,16 @@ Return ONLY valid JSON. Example format:
 
         from app.services.llm_provider import LLMProviderFactory
         llm = LLMProviderFactory.from_settings()
+        # Scale max_tokens with field count: ~120 tokens per field for {value, confidence}
+        # pairs with descriptions. Floor at 4096, cap at 16000.
+        max_out_tokens = max(4096, min(len(field_defs) * 150 + 500, 16000))
         llm_response = await llm.chat(
             messages=[
                 {"role": "system", "content": "You are a document extraction assistant. Extract structured fields from document text. Always return valid JSON only, no markdown."},
                 {"role": "user", "content": prompt_text},
             ],
             temperature=0.0,
+            max_tokens=max_out_tokens,
         )
 
         # Parse LLM response

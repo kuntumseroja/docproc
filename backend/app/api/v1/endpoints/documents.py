@@ -36,6 +36,10 @@ ALLOWED_CONTENT_TYPES = [
     "image/png",
     "image/jpeg",
     "image/tiff",
+    "text/plain",
+    "text/markdown",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ]
 
 

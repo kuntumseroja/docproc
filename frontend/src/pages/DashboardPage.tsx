@@ -14,7 +14,7 @@ import {
   Tag,
   Loading,
 } from '@carbon/react';
-import { Document, Flow, Checkmark, WarningAlt } from '@carbon/icons-react';
+import { Document, Flow, Checkmark, WarningAlt, Security, ArrowRight } from '@carbon/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import api from '../services/api';
@@ -132,6 +132,45 @@ const DashboardPage: React.FC = () => {
           </Tile>
         ))}
       </div>
+
+      {/* Quick Start — Compliance Presets */}
+      {isAuthenticated && (
+        <div style={{ marginBottom: 32 }}>
+          <h3 style={{ fontWeight: 400, marginBottom: 12 }}>Quick Start</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
+            <ClickableTile
+              onClick={() => navigate('/compliance?regulation=uu-pdp-2022')}
+              style={{ padding: 20 }}
+            >
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <div style={{
+                  width: 40, height: 40, borderRadius: 8,
+                  background: 'linear-gradient(135deg, #4589FF 0%, #0F62FE 100%)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  <Security size={22} style={{ color: '#fff' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                    <span style={{ fontSize: 15, fontWeight: 500, color: '#161616' }}>
+                      UU PDP Compliance Check
+                    </span>
+                    <ArrowRight size={16} style={{ color: '#4589FF' }} />
+                  </div>
+                  <p style={{ fontSize: 13, color: '#525252', fontWeight: 300, lineHeight: 1.5, marginBottom: 8 }}>
+                    Check documents against UU No. 27/2022 — Indonesia's Personal Data Protection Law (7 sections)
+                  </p>
+                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                    <Tag type="blue" size="sm">Indonesia</Tag>
+                    <Tag type="purple" size="sm">Data Privacy</Tag>
+                  </div>
+                </div>
+              </div>
+            </ClickableTile>
+          </div>
+        </div>
+      )}
 
       {/* Recent Documents & Workflows */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>

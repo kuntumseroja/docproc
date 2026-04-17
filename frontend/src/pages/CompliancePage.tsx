@@ -243,6 +243,20 @@ const CompliancePage: React.FC = () => {
     loadData();
   }, []);
 
+  // ── Pre-select regulations from URL query param (e.g. ?regulation=uu-pdp-2022) ──
+
+  useEffect(() => {
+    if (regulations.length === 0) return;
+    const params = new URLSearchParams(window.location.search);
+    const regParam = params.get('regulation') || params.get('regulations');
+    if (!regParam) return;
+    const requestedIds = regParam.split(',').map(s => s.trim()).filter(Boolean);
+    const validIds = requestedIds.filter(id => regulations.some(r => r.id === id));
+    if (validIds.length > 0) {
+      setSelectedRegIds(validIds);
+    }
+  }, [regulations]);
+
   // ── Scroll chat to bottom ──────────────────────────────────
 
   useEffect(() => {
@@ -1076,10 +1090,14 @@ const CompliancePage: React.FC = () => {
         <div style={{ marginBottom: 16 }}>
           <FilterableMultiSelect
             id="regulation-select"
+            key={`reg-select-${selectedRegIds.join(',')}`}
             titleText="Regulations"
             placeholder="Search and select regulations..."
             items={regulations.map(r => ({ id: r.id, text: r.name, country: r.country }))}
             itemToString={(item: any) => item?.text || ''}
+            initialSelectedItems={regulations
+              .filter(r => selectedRegIds.includes(r.id))
+              .map(r => ({ id: r.id, text: r.name, country: r.country }))}
             onChange={({ selectedItems }: any) => setSelectedRegIds(selectedItems.map((s: any) => s.id))}
             selectionFeedback="top-after-reopen"
             disabled={loadingRegs}

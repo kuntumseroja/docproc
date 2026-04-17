@@ -80,7 +80,15 @@ const UploadPage: React.FC = () => {
     try {
       const res = await api.get('/workflows/');
       const list = res.data?.workflows || res.data || [];
-      setWorkflows(list.map((w: any) => ({ id: w.id, name: w.name })));
+      const workflowList = list.map((w: any) => ({ id: w.id, name: w.name }));
+      setWorkflows(workflowList);
+
+      // Pre-select workflow from ?workflow=<id> query param
+      const params = new URLSearchParams(window.location.search);
+      const preselect = params.get('workflow');
+      if (preselect && workflowList.some((w: any) => w.id === preselect)) {
+        setWorkflowId(preselect);
+      }
     } catch {
       // fallback
     }

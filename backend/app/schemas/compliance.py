@@ -76,6 +76,9 @@ class ComplianceChatRequest(BaseModel):
     message: str
     regulation_ids: List[str] = []
     document_id: Optional[str] = None
+    # Inline document text (client-side extracted, no DB save required)
+    document_text: Optional[str] = None
+    document_filename: Optional[str] = None
 
 
 class ComplianceChatResponse(BaseModel):

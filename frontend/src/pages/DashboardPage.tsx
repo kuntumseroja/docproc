@@ -13,6 +13,7 @@ import {
   TableContainer,
   Tag,
   Loading,
+  InlineLoading,
 } from '@carbon/react';
 import { Document, Flow, Checkmark, WarningAlt, Security, ArrowRight } from '@carbon/icons-react';
 import { useNavigate } from 'react-router-dom';
@@ -38,6 +39,7 @@ const DashboardPage: React.FC = () => {
   const [recentDocs, setRecentDocs] = useState<any[]>([]);
   const [recentWorkflows, setRecentWorkflows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [startingPdp, setStartingPdp] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -81,6 +83,25 @@ const DashboardPage: React.FC = () => {
     { label: 'Active Workflows', value: stats.active_workflows, icon: Flow, color: '#8a3ffc' },
     { label: 'Success Rate', value: `${stats.success_rate}%`, icon: WarningAlt, color: '#ff832b' },
   ];
+
+  const startPdpWorkflow = async () => {
+    if (startingPdp) return;
+    setStartingPdp(true);
+    try {
+      const res = await api.post('/workflows/from-template/uu-pdp-privacy-policy');
+      const workflowId = res.data?.id;
+      if (workflowId) {
+        navigate(`/upload?workflow=${workflowId}`);
+      } else {
+        navigate('/upload');
+      }
+    } catch {
+      // Fallback: still go to compliance page with pre-selected regulation
+      navigate('/compliance?regulation=uu-pdp-2022');
+    } finally {
+      setStartingPdp(false);
+    }
+  };
 
   const statusColor = (s: string): any => {
     switch (s) {
@@ -139,7 +160,8 @@ const DashboardPage: React.FC = () => {
           <h3 style={{ fontWeight: 400, marginBottom: 12 }}>Quick Start</h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
             <ClickableTile
-              onClick={() => navigate('/compliance?regulation=uu-pdp-2022')}
+              onClick={startPdpWorkflow}
+              disabled={startingPdp}
               style={{ padding: 20 }}
             >
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
@@ -154,16 +176,21 @@ const DashboardPage: React.FC = () => {
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
                     <span style={{ fontSize: 15, fontWeight: 500, color: '#161616' }}>
-                      UU PDP Compliance Check
+                      UU PDP Privacy Policy Review
                     </span>
-                    <ArrowRight size={16} style={{ color: '#4589FF' }} />
+                    {startingPdp ? (
+                      <InlineLoading description="" status="active" style={{ width: 'auto' }} />
+                    ) : (
+                      <ArrowRight size={16} style={{ color: '#4589FF' }} />
+                    )}
                   </div>
                   <p style={{ fontSize: 13, color: '#525252', fontWeight: 300, lineHeight: 1.5, marginBottom: 8 }}>
-                    Check documents against UU No. 27/2022 — Indonesia's Personal Data Protection Law (7 sections)
+                    Upload a privacy policy. Auto-extracts 22 mandatory PDP fields and validates against UU No. 27/2022 (10 rules covering Pasal 5-13, 20, 30, 46, 53, 55-57).
                   </p>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                     <Tag type="blue" size="sm">Indonesia</Tag>
                     <Tag type="purple" size="sm">Data Privacy</Tag>
+                    <Tag type="green" size="sm">Workflow</Tag>
                   </div>
                 </div>
               </div>

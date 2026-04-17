@@ -188,6 +188,8 @@ const CompliancePage: React.FC = () => {
 
   // File state
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  // Cached extracted document text (used by both compliance check and chat)
+  const [documentText, setDocumentText] = useState<string>('');
 
   // Compliance check
   const [checking, setChecking] = useState(false);
@@ -289,8 +291,28 @@ const CompliancePage: React.FC = () => {
   const handleFilesSelected = useCallback((newFiles: File[]) => {
     if (newFiles.length > 0) {
       setUploadedFile(newFiles[0]);
+      setDocumentText(''); // reset cache — will be (re)populated below
     }
   }, []);
+
+  // Eagerly parse doc text whenever uploadedFile changes so chat has context ready
+  useEffect(() => {
+    if (!uploadedFile) {
+      setDocumentText('');
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const text = await readFileAsText(uploadedFile);
+        if (!cancelled) setDocumentText(text);
+      } catch {
+        if (!cancelled) setDocumentText('');
+      }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uploadedFile]);
 
   // ── Compliance check ───────────────────────────────────────
 
@@ -801,6 +823,8 @@ const CompliancePage: React.FC = () => {
         message: text,
         regulation_ids: selectedRegIds,
         has_document: !!uploadedFile,
+        document_text: documentText ? documentText.slice(0, 12000) : undefined,
+        document_filename: uploadedFile?.name,
       }, { timeout: 120000 }); // 2 min timeout for LLM
 
       const assistantMsg: ChatMessage = {

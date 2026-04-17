@@ -1,0 +1,240 @@
+KEBIJAKAN PRIVASI DAN PELINDUNGAN DATA PRIBADI
+PT BANK DIGITAL NUSANTARA Tbk
+
+Berlaku efektif: 1 Maret 2025
+Terakhir diperbarui: 15 Februari 2025
+Versi: 2.1
+
+------------------------------------------------------------
+1. PENGENDALI DATA PRIBADI
+------------------------------------------------------------
+
+PT Bank Digital Nusantara Tbk ("Bank", "kami") bertindak sebagai Pengendali
+Data Pribadi sebagaimana dimaksud dalam Undang-Undang No. 27 Tahun 2022
+tentang Pelindungan Data Pribadi ("UU PDP").
+
+Alamat: Menara BDN, Jl. Jend. Sudirman Kav. 52-53, Jakarta Selatan 12190
+NPWP: 01.234.567.8-012.000
+Izin Usaha: KEP-123/D.03/2015 (Otoritas Jasa Keuangan)
+
+------------------------------------------------------------
+2. PEJABAT PELINDUNGAN DATA (DATA PROTECTION OFFICER)
+------------------------------------------------------------
+
+Sesuai Pasal 53 UU PDP, Bank telah menunjuk Pejabat Pelindungan Data
+Pribadi ("DPO") untuk mengawasi kepatuhan terhadap UU PDP.
+
+Nama DPO       : Ir. Sri Handayani, M.Kom., CIPP/E
+Email DPO      : dpo@banknusantara.co.id
+Nomor Telepon  : +62 21 5799 9000 ext. 2345
+
+------------------------------------------------------------
+3. KATEGORI DATA PRIBADI YANG DIKUMPULKAN
+------------------------------------------------------------
+
+Kami mengumpulkan kategori Data Pribadi berikut:
+
+a. Data Pribadi Umum:
+   - Nama lengkap
+   - Nomor Induk Kependudukan (NIK)
+   - Nomor Pokok Wajib Pajak (NPWP)
+   - Alamat domisili dan KTP
+   - Nomor telepon dan alamat email
+   - Tanggal dan tempat lahir
+   - Data pekerjaan dan penghasilan
+
+b. Data Pribadi yang Bersifat Spesifik (Pasal 4 ayat 2 UU PDP):
+   - Data keuangan (saldo rekening, riwayat transaksi, skor kredit)
+   - Data biometrik (sidik jari untuk autentikasi mobile banking)
+   - Data catatan kejahatan (khusus untuk KYC/AML)
+
+------------------------------------------------------------
+4. DASAR HUKUM PEMROSESAN (Pasal 20 UU PDP)
+------------------------------------------------------------
+
+Pemrosesan Data Pribadi dilakukan berdasarkan:
+
+(a) Persetujuan (consent) eksplisit dari Subjek Data untuk layanan
+    pemasaran dan komunikasi promosi;
+(b) Pelaksanaan kontrak antara Bank dan nasabah (pembukaan rekening,
+    perjanjian kredit, kartu kredit);
+(c) Kewajiban hukum Bank, termasuk pelaporan LTKT/LTKM kepada PPATK,
+    pelaporan SLIK OJK, dan pemotongan PPh 21/23;
+(d) Kepentingan sah Bank untuk deteksi fraud dan keamanan sistem.
+
+------------------------------------------------------------
+5. TUJUAN PEMROSESAN
+------------------------------------------------------------
+
+Bank memproses Data Pribadi untuk tujuan spesifik berikut:
+
+a. Verifikasi identitas nasabah (Know Your Customer / KYC);
+b. Pembukaan dan pemeliharaan rekening;
+c. Pemrosesan transaksi keuangan;
+d. Pengajuan dan penilaian kredit;
+e. Pencegahan fraud dan kejahatan keuangan (APU-PPT);
+f. Pelaporan wajib kepada regulator (OJK, BI, PPATK, DJP);
+g. Penawaran produk dan layanan (dengan persetujuan terpisah).
+
+------------------------------------------------------------
+6. HAK-HAK SUBJEK DATA (Pasal 5-13 UU PDP)
+------------------------------------------------------------
+
+Sebagai Subjek Data Pribadi, Anda memiliki hak untuk:
+
+(1) Memperoleh informasi tentang kejelasan identitas, dasar kepentingan
+    hukum, tujuan permintaan dan penggunaan Data Pribadi, serta
+    akuntabilitas pihak yang meminta Data Pribadi (Pasal 5);
+(2) Melengkapi, memperbarui, dan/atau memperbaiki kesalahan Data Pribadi
+    tentang dirinya (Pasal 6 — hak koreksi);
+(3) Mengakses dan memperoleh salinan Data Pribadi tentang dirinya
+    (Pasal 7 — hak akses);
+(4) Mengakhiri pemrosesan, menghapus, dan/atau memusnahkan Data Pribadi
+    tentang dirinya (Pasal 8 — hak penghapusan);
+(5) Menarik kembali persetujuan pemrosesan Data Pribadi tentang
+    dirinya (Pasal 9 — hak penarikan persetujuan);
+(6) Mengajukan keberatan atas tindakan pengambilan keputusan yang hanya
+    didasarkan pemrosesan secara otomatis (Pasal 10);
+(7) Menunda atau membatasi pemrosesan Data Pribadi secara proporsional
+    dengan tujuan pemrosesan (Pasal 11);
+(8) Menuntut dan menerima ganti rugi atas pelanggaran pemrosesan
+    Data Pribadi (Pasal 12);
+(9) Memperoleh dan/atau menggunakan Data Pribadinya dari Pengendali
+    dalam bentuk yang sesuai dengan struktur dan/atau format yang
+    lazim digunakan atau dapat dibaca oleh sistem elektronik
+    (Pasal 13 — hak portabilitas).
+
+Permintaan atas hak-hak tersebut dapat disampaikan melalui kanal yang
+tersedia pada Bagian 11 di bawah. Bank akan menanggapi permintaan
+paling lambat 3 x 24 jam sejak permintaan diterima.
+
+------------------------------------------------------------
+7. MEKANISME PERSETUJUAN DAN PENARIKANNYA
+------------------------------------------------------------
+
+Persetujuan diperoleh secara eksplisit melalui:
+- Tanda tangan basah pada formulir pembukaan rekening;
+- Persetujuan digital (checkbox) pada aplikasi mobile banking;
+- One Time Password (OTP) sebagai konfirmasi kedua.
+
+Penarikan persetujuan dapat dilakukan kapan saja melalui:
+- Halaman Pengaturan Privasi di aplikasi Bank Nusantara Mobile;
+- Email ke dpo@banknusantara.co.id;
+- Kunjungan langsung ke cabang dengan membawa KTP asli.
+
+Penarikan persetujuan tidak berlaku surut terhadap pemrosesan yang
+telah dilakukan dan tidak menghapus kewajiban Bank untuk menyimpan
+data tertentu berdasarkan kewajiban hukum.
+
+------------------------------------------------------------
+8. PEMBAGIAN KEPADA PIHAK KETIGA
+------------------------------------------------------------
+
+Bank dapat membagikan Data Pribadi kepada:
+
+(a) Otoritas Jasa Keuangan (OJK), Bank Indonesia, PPATK, Direktorat
+    Jenderal Pajak — berdasarkan kewajiban hukum;
+(b) Biro Kredit (SLIK OJK, Pefindo Biro Kredit) — untuk penilaian
+    kelayakan kredit;
+(c) Prosesor Data (Data Processor) — vendor teknologi cloud (AWS Jakarta
+    Region, Alibaba Cloud Jakarta), vendor KYC (Privy ID, Tilaka),
+    vendor notifikasi (Infobip Indonesia). Seluruh prosesor terikat
+    oleh Perjanjian Pemrosesan Data (Data Processing Agreement);
+(d) Afiliasi grup Bank Nusantara untuk penawaran lintas-produk
+    (dengan persetujuan terpisah).
+
+------------------------------------------------------------
+9. TRANSFER DATA LINTAS BATAS (Pasal 55-57 UU PDP)
+------------------------------------------------------------
+
+Data Pribadi pada prinsipnya disimpan di wilayah Republik Indonesia.
+Dalam hal tertentu, pemrosesan lintas batas dapat terjadi untuk:
+
+- Layanan cloud fallback (Singapore region, hanya pada kondisi
+  bencana DRP);
+- Autentikasi SWIFT untuk remitansi internasional.
+
+Safeguard yang diterapkan:
+- Perjanjian Pemrosesan Data Lintas Batas dengan Standard Contractual
+  Clauses setara GDPR Art. 46;
+- Transfer Impact Assessment (TIA) tahunan;
+- Enkripsi data saat transit (TLS 1.3) dan data at-rest (AES-256).
+
+------------------------------------------------------------
+10. JANGKA WAKTU PENYIMPANAN DATA
+------------------------------------------------------------
+
+Data Pribadi disimpan selama hubungan nasabah aktif, dengan periode
+retensi pasca-penutupan rekening sebagai berikut:
+
+- Data KYC dan transaksi: 10 tahun setelah penutupan rekening
+  (sesuai PBI 23/6/PBI/2021 dan UU APU-PPT);
+- Data perkreditan: 5 tahun setelah pelunasan;
+- Rekaman call center: 1 tahun;
+- Data pemasaran (berdasarkan persetujuan): sampai persetujuan ditarik.
+
+Setelah jangka waktu retensi berakhir, data akan dihapus secara
+permanen menggunakan metode cryptographic erasure.
+
+------------------------------------------------------------
+11. PEMBERITAHUAN INSIDEN DATA (Pasal 46 UU PDP)
+------------------------------------------------------------
+
+Dalam hal terjadi kegagalan pelindungan Data Pribadi, Bank akan
+memberitahukan secara tertulis paling lambat 3 x 24 jam kepada:
+
+(a) Subjek Data yang terdampak;
+(b) Lembaga Pelindungan Data Pribadi (Badan PDP), jika terbentuk.
+
+Pemberitahuan akan mencakup: jenis Data Pribadi yang terdampak,
+kapan dan bagaimana pelanggaran terjadi, serta upaya penanggulangan
+dan pemulihan yang telah dan akan dilakukan oleh Bank.
+
+------------------------------------------------------------
+12. LANGKAH KEAMANAN (Pasal 35 UU PDP)
+------------------------------------------------------------
+
+Bank menerapkan langkah teknis dan organisasi berikut:
+
+Teknis:
+- Enkripsi end-to-end TLS 1.3 untuk data in transit;
+- Enkripsi AES-256 untuk data at rest;
+- Tokenisasi nomor rekening dan kartu kredit;
+- Multi-factor Authentication (MFA) wajib untuk akses internal;
+- Data Loss Prevention (DLP) pada endpoint karyawan;
+- Vulnerability Assessment & Penetration Testing (VAPT) tahunan.
+
+Organisasi:
+- Information Security Management System bersertifikat ISO/IEC
+  27001:2022;
+- Pelatihan kesadaran pelindungan data untuk seluruh karyawan
+  (wajib tahunan);
+- Kebijakan Bring Your Own Device (BYOD) yang ketat;
+- Pengawasan CCTV dan access badge pada area server.
+
+------------------------------------------------------------
+13. KANAL PENGADUAN
+------------------------------------------------------------
+
+Subjek Data dapat menyampaikan keluhan atau pengaduan melalui:
+
+- Email DPO: dpo@banknusantara.co.id
+- Hotline Privasi: +62 21 5799 9000 (24/7)
+- Cabang Bank Nusantara terdekat
+- Portal Konsumen OJK: https://kontak157.ojk.go.id
+- Setelah lembaga Pelindungan Data Pribadi (Badan PDP) terbentuk,
+  pengaduan juga dapat disampaikan ke Badan tersebut.
+
+------------------------------------------------------------
+14. PERUBAHAN KEBIJAKAN
+------------------------------------------------------------
+
+Kebijakan ini dapat diubah sewaktu-waktu. Perubahan material akan
+diberitahukan kepada nasabah melalui aplikasi, email, atau SMS
+paling lambat 30 hari sebelum berlaku efektif.
+
+------------------------------------------------------------
+
+Ditandatangani,
+Direksi PT Bank Digital Nusantara Tbk
+Jakarta, 15 Februari 2025

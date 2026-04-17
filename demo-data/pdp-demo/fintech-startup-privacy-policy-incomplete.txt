@@ -1,0 +1,78 @@
+PRIVACY POLICY
+QuickPay Indonesia — Mobile Payment Application
+
+Effective: January 2025
+
+--------------------------------------------------------
+
+About Us
+
+QuickPay is a mobile payment application operated by PT QuickPay
+Teknologi Nusantara. We are committed to protecting your privacy.
+
+Our office is located in Jakarta, Indonesia.
+
+--------------------------------------------------------
+
+What Information We Collect
+
+When you use QuickPay, we collect:
+- Your name and phone number
+- Email address
+- National ID (KTP) for verification
+- Transaction history
+- Device information
+- Location data
+- Biometric data (face ID for login)
+
+--------------------------------------------------------
+
+How We Use Your Information
+
+We use your data to provide the QuickPay service, process transactions,
+prevent fraud, comply with regulations, and send you marketing
+communications about our products.
+
+--------------------------------------------------------
+
+Data Sharing
+
+We may share your data with our business partners, payment processors,
+affiliated companies, marketing partners, and when required by law.
+
+Some of our service providers are located outside Indonesia
+(in Singapore and the United States).
+
+--------------------------------------------------------
+
+Data Retention
+
+We retain your personal data for as long as necessary to provide our
+services. Transaction records are kept indefinitely for regulatory
+reasons.
+
+--------------------------------------------------------
+
+Your Choices
+
+You can update your profile information in the QuickPay app.
+You can unsubscribe from marketing emails.
+
+--------------------------------------------------------
+
+Security
+
+We use industry-standard security measures to protect your data.
+
+--------------------------------------------------------
+
+Contact Us
+
+For questions about this policy, contact us at support@quickpay.id.
+
+--------------------------------------------------------
+
+Changes to This Policy
+
+We may update this policy from time to time. Continued use of the
+app constitutes acceptance of any changes.

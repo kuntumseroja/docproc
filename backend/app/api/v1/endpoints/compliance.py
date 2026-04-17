@@ -105,9 +105,12 @@ async def chat_compliance(
 
     service = _compliance_sessions[user_id]
 
-    # Optionally load document text if document_id is provided
+    # Prefer inline document_text (client-side parsed); fall back to DB lookup
     document_text = None
-    if request.document_id:
+    if request.document_text:
+        fname = request.document_filename or "uploaded document"
+        document_text = f"Document: {fname}\n\n{request.document_text}"
+    elif request.document_id:
         result = await db.execute(
             select(Document)
             .options(selectinload(Document.extractions))

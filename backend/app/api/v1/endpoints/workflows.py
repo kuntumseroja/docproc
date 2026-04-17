@@ -1,4 +1,6 @@
 from __future__ import annotations
+import json
+from pathlib import Path
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy import select, func
@@ -13,6 +15,16 @@ from app.schemas.workflow import (
     WorkflowListResponse, NLSchemaRequest, NLSchemaResponse,
 )
 from app.services.nl_schema_parser import NLSchemaParser
+
+# Templates live in /templates at the project root.
+# In Docker the backend WORKDIR is /app, templates are copied to /app/templates.
+# Locally the backend runs from /backend, so templates are at ../templates.
+_TEMPLATES_CANDIDATES = [
+    Path("/app/templates"),
+    Path(__file__).resolve().parents[5] / "templates",  # repo root when running from source
+    Path(__file__).resolve().parents[4] / "templates",
+]
+TEMPLATES_DIR = next((p for p in _TEMPLATES_CANDIDATES if p.exists()), _TEMPLATES_CANDIDATES[0])
 
 router = APIRouter(prefix="/workflows", tags=["workflows"])
 
@@ -47,6 +59,80 @@ async def create_workflow(
         validation_rules=request.validation_rules,
         action_config=request.action_config,
         status=WorkflowStatus.DRAFT,
+        created_by=current_user.id,
+    )
+    db.add(workflow)
+    await db.commit()
+    await db.refresh(workflow)
+    return _workflow_to_response(workflow)
+
+
+def _load_template(template_id: str) -> dict:
+    """Load a workflow template JSON by id. Searches templates/**/ directories."""
+    if not TEMPLATES_DIR.exists():
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Templates directory not found: {TEMPLATES_DIR}",
+        )
+    # Search for <template_id>.json in any subdirectory of TEMPLATES_DIR
+    for candidate in TEMPLATES_DIR.rglob(f"{template_id}.json"):
+        try:
+            with candidate.open(encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to load template {template_id}: {e}",
+            )
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"Template not found: {template_id}",
+    )
+
+
+@router.post("/from-template/{template_id}", response_model=WorkflowResponse, status_code=status.HTTP_201_CREATED)
+async def create_workflow_from_template(
+    template_id: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> WorkflowResponse:
+    """Instantiate a workflow from a pre-built JSON template (e.g. uu-pdp-privacy-policy).
+
+    If the user already has a workflow from this template (matched by name), returns
+    the existing one instead of creating a duplicate.
+    """
+    template = _load_template(template_id)
+    name = template.get("name") or template_id
+    description = template.get("description")
+
+    # Dedupe: reuse existing workflow with the same name for this user
+    existing_q = await db.execute(
+        select(Workflow).where(
+            Workflow.created_by == current_user.id,
+            Workflow.name == name,
+        ).order_by(Workflow.created_at.desc())
+    )
+    existing = existing_q.scalars().first()
+    if existing:
+        return _workflow_to_response(existing)
+
+    # Map template schema to the Workflow columns (stored as JSON)
+    extraction_schema = template.get("extraction_schema")
+    validation_rules = {"rules": template.get("validation_rules", [])} if template.get("validation_rules") else None
+    action_config = {"actions": template.get("action_triggers", [])} if template.get("action_triggers") else None
+    document_type = None
+    doc_types = template.get("document_types") or []
+    if isinstance(doc_types, list) and doc_types:
+        document_type = doc_types[0]
+
+    workflow = Workflow(
+        name=name,
+        description=description,
+        document_type=document_type,
+        extraction_schema=extraction_schema,
+        validation_rules=validation_rules,
+        action_config=action_config,
+        status=WorkflowStatus.ACTIVE,  # active so it shows up in Upload dropdown
         created_by=current_user.id,
     )
     db.add(workflow)

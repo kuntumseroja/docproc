@@ -6,8 +6,8 @@ Two sample privacy-policy documents for testing the **UU PDP Privacy Policy Revi
 
 A realistic Indonesian bank privacy policy that complies with UU No. 27/2022 (UU PDP). Expected extraction and validation results:
 
-- **Extraction**: All 22 mandatory fields present.
-- **Validation**: All 10 rules should pass — DPO appointed, lawful basis listed, all 9 data-subject rights disclosed (Pasal 5-13), retention period specific (10 years, not indefinite), breach notification mentions "3x24 jam" (Pasal 46), cross-border transfer has safeguards (SCC + TIA + encryption), complaint channel disclosed.
+- **Extraction**: All 41 mandatory + best-practice fields present (controller + business registration, DPO, policy version, Bahasa Indonesia availability, data collection methods, subject categories, sensitive data, purpose/data minimization statements, legal basis, consent mechanism and withdrawal, retention per category, all 9 data subject rights, rights-request SLA and free-of-charge statement, third-party sharing and named processors, storage location, cross-border transfer with SCC+TIA, security measures, TLS 1.3 in transit, AES-256 at rest, RBAC/MFA, staff training, DPIA Q4 2024, ROPA, breach notification 3x24 jam, children data handling, marketing opt-out, complaint channels, automated-decision disclosure).
+- **Validation**: All 15 rules should pass.
 
 Use this to demonstrate a passing workflow.
 

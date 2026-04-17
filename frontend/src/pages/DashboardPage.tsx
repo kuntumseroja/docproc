@@ -185,7 +185,7 @@ const DashboardPage: React.FC = () => {
                     )}
                   </div>
                   <p style={{ fontSize: 13, color: '#525252', fontWeight: 300, lineHeight: 1.5, marginBottom: 8 }}>
-                    Upload a privacy policy. Auto-extracts 22 mandatory PDP fields and validates against UU No. 27/2022 (10 rules covering Pasal 5-13, 20, 30, 46, 53, 55-57).
+                    Upload a privacy policy. Auto-extracts 41 fields and validates against UU No. 27/2022 (15 rules covering Pasal 5-13, 16, 20, 25-26, 30, 34, 35-39, 46, 53, 55-57).
                   </p>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                     <Tag type="blue" size="sm">Indonesia</Tag>

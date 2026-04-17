@@ -105,17 +105,6 @@ async def create_workflow_from_template(
     name = template.get("name") or template_id
     description = template.get("description")
 
-    # Dedupe: reuse existing workflow with the same name for this user
-    existing_q = await db.execute(
-        select(Workflow).where(
-            Workflow.created_by == current_user.id,
-            Workflow.name == name,
-        ).order_by(Workflow.created_at.desc())
-    )
-    existing = existing_q.scalars().first()
-    if existing:
-        return _workflow_to_response(existing)
-
     # Map template schema to the Workflow columns (stored as JSON)
     extraction_schema = template.get("extraction_schema")
     validation_rules = {"rules": template.get("validation_rules", [])} if template.get("validation_rules") else None
@@ -124,6 +113,27 @@ async def create_workflow_from_template(
     doc_types = template.get("document_types") or []
     if isinstance(doc_types, list) and doc_types:
         document_type = doc_types[0]
+
+    # If this user already has a workflow from this template (matched by name),
+    # refresh it with the latest template content instead of returning stale data.
+    existing_q = await db.execute(
+        select(Workflow).where(
+            Workflow.created_by == current_user.id,
+            Workflow.name == name,
+        ).order_by(Workflow.created_at.desc())
+    )
+    existing = existing_q.scalars().first()
+    if existing:
+        existing.description = description
+        existing.document_type = document_type
+        existing.extraction_schema = extraction_schema
+        existing.validation_rules = validation_rules
+        existing.action_config = action_config
+        if existing.status == WorkflowStatus.DRAFT:
+            existing.status = WorkflowStatus.ACTIVE
+        await db.commit()
+        await db.refresh(existing)
+        return _workflow_to_response(existing)
 
     workflow = Workflow(
         name=name,

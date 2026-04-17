@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional, List
 from dataclasses import dataclass
-from .ocr import OCRPipeline, OCRResult
+from .ocr import OCRPipeline, OCRResult, OCRStatus
 import logging
 
 logger = logging.getLogger(__name__)
@@ -34,6 +34,28 @@ class DocumentProcessor:
             if file_type in [".png", ".jpg", ".jpeg", ".tiff"]:
                 preprocessed = self.ocr_pipeline.preprocess_image(document_path)
                 ocr_results = [self.ocr_pipeline.process_page(preprocessed)]
+            elif file_type in [".txt", ".md"]:
+                # Plain-text documents: read directly, no OCR needed
+                text = document_path.read_text(encoding="utf-8", errors="replace")
+                ocr_results = [OCRResult(
+                    page_number=1, text=text, confidence=1.0,
+                    status=OCRStatus.SUCCESS, engine="text-passthrough",
+                )]
+            elif file_type in [".doc", ".docx"]:
+                # Word documents: extract text via python-docx (.docx only; .doc not supported)
+                text = ""
+                try:
+                    from docx import Document as DocxDocument
+                    docx = DocxDocument(str(document_path))
+                    text = "\n".join(p.text for p in docx.paragraphs if p.text)
+                except Exception as docx_err:
+                    logger.warning(f"docx extraction failed, falling back to OCR: {docx_err}")
+                    ocr_results = self.ocr_pipeline.process_document(document_path)
+                else:
+                    ocr_results = [OCRResult(
+                        page_number=1, text=text, confidence=1.0,
+                        status=OCRStatus.SUCCESS, engine="docx-passthrough",
+                    )]
             else:
                 ocr_results = self.ocr_pipeline.process_document(document_path)
 

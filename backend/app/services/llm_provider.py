@@ -339,7 +339,7 @@ class DeepSeekProvider(BaseLLMProvider):
 
 
 class FallbackProvider(BaseLLMProvider):
-    """Wraps a primary provider with automatic fallback on rate-limit errors."""
+    """Wraps a primary provider with automatic fallback on rate-limit / quota / billing errors."""
 
     def __init__(self, primary: BaseLLMProvider, fallback: BaseLLMProvider):
         super().__init__(primary.config)
@@ -347,11 +347,12 @@ class FallbackProvider(BaseLLMProvider):
         self._fallback = fallback
 
     @staticmethod
-    def _is_rate_limit(exc: Exception) -> bool:
-        """Check if the exception is a rate-limit / quota-exceeded error."""
-        import logging
-        logger = logging.getLogger("llm.fallback")
+    def _should_fallback(exc: Exception) -> bool:
+        """Return True if the exception indicates we should retry with the fallback provider.
 
+        Covers: rate limits, quota exhaustion, insufficient credits/balance,
+        billing issues, and temporary 5xx service errors.
+        """
         # Anthropic rate limit
         try:
             from anthropic import RateLimitError as AnthropicRateLimit
@@ -368,17 +369,30 @@ class FallbackProvider(BaseLLMProvider):
         except ImportError:
             pass
 
-        # Generic HTTP 429 check
+        # HTTP status: 429 (rate limit), 402 (payment required), 529 (Anthropic overloaded)
         status = getattr(exc, "status_code", None) or getattr(exc, "status", None)
-        if status == 429:
+        if status in (429, 402, 529):
             return True
 
-        # Check error message for common rate-limit phrases
+        # Check message for billing/quota/overload phrases (case-insensitive)
         err_msg = str(exc).lower()
-        if any(phrase in err_msg for phrase in ["rate limit", "rate_limit", "quota exceeded", "too many requests"]):
+        fallback_phrases = [
+            "rate limit", "rate_limit", "too many requests",
+            "quota exceeded", "quota_exceeded", "insufficient_quota",
+            "credit balance", "credit_balance", "billing",
+            "plans & billing", "purchase credits", "upgrade",
+            "insufficient funds", "insufficient balance",
+            "overloaded", "service unavailable",
+        ]
+        if any(phrase in err_msg for phrase in fallback_phrases):
             return True
 
         return False
+
+    # Backward-compat alias
+    @classmethod
+    def _is_rate_limit(cls, exc: Exception) -> bool:
+        return cls._should_fallback(exc)
 
     async def chat(
         self,
@@ -392,9 +406,9 @@ class FallbackProvider(BaseLLMProvider):
         try:
             return await self._primary.chat(messages, temperature, max_tokens)
         except Exception as exc:
-            if self._is_rate_limit(exc):
+            if self._should_fallback(exc):
                 logger.warning(
-                    "Primary provider %s hit rate limit, falling back to %s: %s",
+                    "Primary provider %s failed (rate-limit/quota/billing), falling back to %s: %s",
                     self._primary.provider_type.value,
                     self._fallback.provider_type.value,
                     exc,

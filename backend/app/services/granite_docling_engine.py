@@ -252,7 +252,11 @@ class GraniteDoclingEngine:
                 # Try the table-data export first (cleanest)
                 if hasattr(t, "export_to_dataframe"):
                     try:
-                        df = t.export_to_dataframe()
+                        # Newer docling versions expect the doc argument; older ones don't.
+                        try:
+                            df = t.export_to_dataframe(doc)
+                        except TypeError:
+                            df = t.export_to_dataframe()
                         rows = [list(map(str, df.columns))] + [
                             [str(c) for c in r] for r in df.values.tolist()
                         ]
@@ -292,45 +296,204 @@ class GraniteDoclingEngine:
         return out
 
     def _extract_form_fields(self, doc: Any) -> List[FormFieldElement]:
+        """Pull form fields from docling's key_value_items, form_items, and field_items."""
         out: List[FormFieldElement] = []
-        # docling exposes form fields under various names depending on version
-        fields = (
-            getattr(doc, "form_fields", None)
-            or getattr(doc, "key_value_items", None)
-            or []
-        )
-        for f in fields:
+
+        # Track items already seen by self_ref so we don't double-count
+        seen_refs: set = set()
+
+        def _add_kv(key_text: Optional[str], value_text: Optional[str], page: int, handwritten: bool) -> None:
+            out.append(FormFieldElement(
+                page_number=int(page or 1),
+                label=str(key_text) if key_text else None,
+                value=str(value_text) if value_text else None,
+                is_handwritten=handwritten,
+            ))
+
+        # 1) key_value_items — pairs of {key, value} text refs
+        for kv in (getattr(doc, "key_value_items", None) or []):
             try:
-                label = getattr(f, "key", None) or getattr(f, "label", None)
-                value = getattr(f, "value", None) or getattr(f, "text", None)
-                page = getattr(f, "page", None) or getattr(f, "page_no", 1)
-                handwritten = bool(getattr(f, "handwritten", False))
-                out.append(FormFieldElement(
-                    page_number=int(page or 1),
-                    label=str(label) if label else None,
-                    value=str(value) if value else None,
-                    is_handwritten=handwritten,
-                ))
+                key_item = getattr(kv, "key", None) or getattr(kv, "graph", {}).get("key") if isinstance(getattr(kv, "graph", None), dict) else None
+                val_item = getattr(kv, "value", None) or getattr(kv, "graph", {}).get("value") if isinstance(getattr(kv, "graph", None), dict) else None
+                key_text = self._item_text(key_item, doc) if key_item is not None else None
+                val_text = self._item_text(val_item, doc) if val_item is not None else None
+                page = self._item_page(kv) or self._item_page(val_item) or 1
+                hw = self._is_handwritten(val_item) or self._is_handwritten(key_item)
+                if key_text or val_text:
+                    _add_kv(key_text, val_text, page, hw)
+                # mark refs as seen
+                for ref in (getattr(kv, "self_ref", None), getattr(key_item, "self_ref", None), getattr(val_item, "self_ref", None)):
+                    if ref:
+                        seen_refs.add(ref)
             except Exception as e:
-                logger.warning(f"form field extraction skipped: {e}")
+                logger.warning(f"key_value extraction skipped: {e}")
+
+        # 2) field_items / form_items — single fields with optional value
+        for fi in (getattr(doc, "field_items", None) or []) + (getattr(doc, "form_items", None) or []):
+            try:
+                label = getattr(fi, "label", None) or getattr(fi, "name", None)
+                value = getattr(fi, "value", None) or getattr(fi, "text", None)
+                page = self._item_page(fi) or 1
+                hw = self._is_handwritten(fi)
+                if label or value:
+                    _add_kv(label, value, page, hw)
+            except Exception as e:
+                logger.warning(f"field item extraction skipped: {e}")
+
+        # 3) Standalone HANDWRITTEN_TEXT runs that aren't already part of a kv pair
+        for t in (getattr(doc, "texts", None) or []):
+            try:
+                ref = getattr(t, "self_ref", None)
+                if ref and ref in seen_refs:
+                    continue
+                label = (getattr(t, "label", "") or "")
+                label_str = label.value if hasattr(label, "value") else str(label)
+                if label_str.lower() in ("handwritten_text", "handwritten"):
+                    page = self._item_page(t) or 1
+                    text = getattr(t, "text", None) or getattr(t, "orig", None)
+                    _add_kv(None, text, page, True)
+            except Exception as e:
+                logger.warning(f"handwritten text scan skipped: {e}")
+
         return out
 
     def _extract_signatures(self, doc: Any) -> List[SignatureElement]:
+        """Detect signatures heuristically.
+
+        Docling 2.x has no native 'signature' label. Signatures are surfaced as:
+        - text items labelled HANDWRITTEN_TEXT (most common)
+        - picture elements whose caption / nearby text contains 'sign', 'signature',
+          'signed by', 'commissioner', 'witness'
+        """
+        SIG_KEYWORDS = (
+            "sign", "signature", "signed", "signed by",
+            "commissioner", "witness", "ttd", "tanda tangan",
+            "approved by", "authorized by",
+        )
+
         out: List[SignatureElement] = []
-        sigs = getattr(doc, "signatures", None) or []
-        for s in sigs:
+
+        # Path A: HANDWRITTEN_TEXT items in doc.texts
+        for t in (getattr(doc, "texts", None) or []):
             try:
-                page = getattr(s, "page", None) or getattr(s, "page_no", 1)
-                bbox = self._read_bbox(s)
-                conf = float(getattr(s, "confidence", 0.0) or 0.0)
-                out.append(SignatureElement(
-                    page_number=int(page or 1),
-                    bbox=bbox,
-                    confidence=conf,
-                ))
+                label = getattr(t, "label", None)
+                label_str = (label.value if hasattr(label, "value") else str(label or "")).lower()
+                if label_str in ("handwritten_text", "handwritten"):
+                    page = self._item_page(t) or 1
+                    bbox = self._read_bbox_from_prov(t)
+                    out.append(SignatureElement(
+                        page_number=int(page),
+                        bbox=bbox,
+                        confidence=0.85,
+                    ))
             except Exception as e:
-                logger.warning(f"signature extraction skipped: {e}")
+                logger.warning(f"signature (handwritten text) skipped: {e}")
+
+        # Path B: pictures with signature-like caption / nearby text
+        for p in (getattr(doc, "pictures", None) or []):
+            try:
+                # Combine all reference / caption text for this picture
+                hint = " ".join(filter(None, [
+                    str(getattr(p, "caption", "") or ""),
+                    str(getattr(p, "label", "") or ""),
+                    self._neighbouring_text(doc, p),
+                ])).lower()
+                if any(kw in hint for kw in SIG_KEYWORDS):
+                    page = self._item_page(p) or 1
+                    bbox = self._read_bbox_from_prov(p)
+                    out.append(SignatureElement(
+                        page_number=int(page),
+                        bbox=bbox,
+                        confidence=0.7,
+                    ))
+            except Exception as e:
+                logger.warning(f"signature (picture) skipped: {e}")
+
         return out
+
+    # ---- Small helpers used by the extractors ------------------------------
+
+    @staticmethod
+    def _is_handwritten(item: Any) -> bool:
+        if item is None:
+            return False
+        label = getattr(item, "label", None)
+        label_str = (label.value if hasattr(label, "value") else str(label or "")).lower()
+        return label_str in ("handwritten_text", "handwritten")
+
+    @staticmethod
+    def _item_text(item: Any, doc: Any = None) -> Optional[str]:
+        if item is None:
+            return None
+        # Direct text attr
+        for attr in ("text", "orig"):
+            v = getattr(item, attr, None)
+            if v:
+                return str(v)
+        # cref → resolve via doc
+        cref = getattr(item, "cref", None) or getattr(item, "self_ref", None)
+        if cref and doc is not None:
+            try:
+                # naive cref resolve: scan doc.texts for matching self_ref
+                for t in (getattr(doc, "texts", None) or []):
+                    if getattr(t, "self_ref", None) == cref:
+                        return getattr(t, "text", None) or getattr(t, "orig", None)
+            except Exception:
+                pass
+        return None
+
+    @staticmethod
+    def _item_page(item: Any) -> Optional[int]:
+        if item is None:
+            return None
+        for attr in ("page", "page_no"):
+            v = getattr(item, attr, None)
+            if isinstance(v, int):
+                return v
+        # Page from prov
+        prov = getattr(item, "prov", None)
+        if prov:
+            try:
+                first = prov[0] if isinstance(prov, (list, tuple)) and prov else prov
+                pn = getattr(first, "page_no", None) or getattr(first, "page", None)
+                if isinstance(pn, int):
+                    return pn
+            except Exception:
+                pass
+        return None
+
+    @staticmethod
+    def _read_bbox_from_prov(item: Any) -> Optional[List[float]]:
+        prov = getattr(item, "prov", None)
+        if not prov:
+            return GraniteDoclingEngine._read_bbox(item)
+        try:
+            first = prov[0] if isinstance(prov, (list, tuple)) and prov else prov
+            bbox = getattr(first, "bbox", None)
+            if bbox is None:
+                return None
+            return GraniteDoclingEngine._read_bbox(type("X", (), {"bbox": bbox}))
+        except Exception:
+            return None
+
+    @staticmethod
+    def _neighbouring_text(doc: Any, picture: Any, max_items: int = 4) -> str:
+        """Best-effort: return text from text items on the same page as the picture."""
+        try:
+            page = GraniteDoclingEngine._item_page(picture)
+            if page is None:
+                return ""
+            chunks: List[str] = []
+            for t in (getattr(doc, "texts", None) or []):
+                if GraniteDoclingEngine._item_page(t) == page:
+                    txt = getattr(t, "text", None) or getattr(t, "orig", None)
+                    if txt:
+                        chunks.append(str(txt))
+                if len(chunks) >= max_items:
+                    break
+            return " ".join(chunks)
+        except Exception:
+            return ""
 
     def _extract_headings(self, doc: Any) -> List[str]:
         try:

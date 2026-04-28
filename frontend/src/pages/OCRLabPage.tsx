@@ -12,11 +12,6 @@ import {
   ProgressBar,
   Loading,
   CodeSnippet,
-  StructuredListWrapper,
-  StructuredListHead,
-  StructuredListRow,
-  StructuredListCell,
-  StructuredListBody,
 } from '@carbon/react';
 import {
   Document,
@@ -46,6 +41,7 @@ interface TableEl {
   rows: string[][];
   bbox?: number[] | null;
   caption?: string | null;
+  thumbnail_base64?: string | null;
 }
 
 interface ImageEl {
@@ -60,12 +56,15 @@ interface FormFieldEl {
   label?: string | null;
   value?: string | null;
   is_handwritten: boolean;
+  bbox?: number[] | null;
+  thumbnail_base64?: string | null;
 }
 
 interface SignatureEl {
   page_number: number;
   bbox?: number[] | null;
   confidence: number;
+  thumbnail_base64?: string | null;
 }
 
 interface OCRLabResult {
@@ -294,20 +293,32 @@ const OCRLabPage: React.FC = () => {
               <Tag size="sm">Page {t.page_number}</Tag>
             </div>
             {t.caption && <p style={{ color: '#6f6f6f', fontStyle: 'italic', marginBottom: 8 }}>{t.caption}</p>}
-            <div style={{ overflow: 'auto' }}>
-              <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 13 }}>
-                <tbody>
-                  {t.rows.map((row, ri) => (
-                    <tr key={ri} style={{ background: ri === 0 ? '#f4f4f4' : 'transparent' }}>
-                      {row.map((cell, ci) => (
-                        <td key={ci} style={{ border: '1px solid #e0e0e0', padding: '6px 10px' }}>
-                          {cell}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div style={{ display: 'grid', gridTemplateColumns: t.thumbnail_base64 ? 'minmax(0, 1fr) 280px' : '1fr', gap: 16, alignItems: 'start' }}>
+              <div style={{ overflow: 'auto', minWidth: 0 }}>
+                <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 13 }}>
+                  <tbody>
+                    {t.rows.map((row, ri) => (
+                      <tr key={ri} style={{ background: ri === 0 ? '#f4f4f4' : 'transparent' }}>
+                        {row.map((cell, ci) => (
+                          <td key={ci} style={{ border: '1px solid #e0e0e0', padding: '6px 10px' }}>
+                            {cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {t.thumbnail_base64 && (
+                <div>
+                  <div style={{ fontSize: 11, color: '#6f6f6f', marginBottom: 4 }}>Source crop</div>
+                  <img
+                    src={`data:image/png;base64,${t.thumbnail_base64}`}
+                    alt={`Table ${i + 1} crop`}
+                    style={{ width: '100%', borderRadius: 4, border: '1px solid #e0e0e0' }}
+                  />
+                </div>
+              )}
             </div>
           </Tile>
         ))}
@@ -349,30 +360,37 @@ const OCRLabPage: React.FC = () => {
       return <p style={{ color: '#6f6f6f', padding: 16 }}>No form fields detected.</p>;
     }
     return (
-      <StructuredListWrapper>
-        <StructuredListHead>
-          <StructuredListRow head>
-            <StructuredListCell head>Page</StructuredListCell>
-            <StructuredListCell head>Label</StructuredListCell>
-            <StructuredListCell head>Value</StructuredListCell>
-            <StructuredListCell head>Type</StructuredListCell>
-          </StructuredListRow>
-        </StructuredListHead>
-        <StructuredListBody>
-          {result.form_fields.map((f, i) => (
-            <StructuredListRow key={i}>
-              <StructuredListCell>{f.page_number}</StructuredListCell>
-              <StructuredListCell>{f.label || '—'}</StructuredListCell>
-              <StructuredListCell>{f.value || '—'}</StructuredListCell>
-              <StructuredListCell>
-                <Tag type={f.is_handwritten ? 'magenta' : 'blue'} size="sm">
-                  {f.is_handwritten ? 'Handwritten' : 'Printed'}
-                </Tag>
-              </StructuredListCell>
-            </StructuredListRow>
-          ))}
-        </StructuredListBody>
-      </StructuredListWrapper>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+        {result.form_fields.map((f, i) => (
+          <Tile key={i} style={{ padding: 12 }}>
+            {f.thumbnail_base64 ? (
+              <img
+                src={`data:image/png;base64,${f.thumbnail_base64}`}
+                alt={`Form field ${i + 1}`}
+                style={{ width: '100%', borderRadius: 4, marginBottom: 8, border: '1px solid #e0e0e0' }}
+              />
+            ) : (
+              <div style={{ height: 80, background: '#f4f4f4', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
+                <Edit size={20} style={{ color: '#a8a8a8' }} />
+              </div>
+            )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4, flexWrap: 'wrap' }}>
+              <Tag type={f.is_handwritten ? 'magenta' : 'blue'} size="sm">
+                {f.is_handwritten ? 'Handwritten' : 'Printed'}
+              </Tag>
+              <Tag type="cool-gray" size="sm">Page {f.page_number}</Tag>
+            </div>
+            {f.label && (
+              <div style={{ fontSize: 11, color: '#525252', marginBottom: 2 }}>
+                <strong>Label:</strong> {f.label}
+              </div>
+            )}
+            <div style={{ fontSize: 13, color: '#161616', wordBreak: 'break-word' }}>
+              {f.value || <span style={{ color: '#a8a8a8' }}>—</span>}
+            </div>
+          </Tile>
+        ))}
+      </div>
     );
   };
 
@@ -381,28 +399,35 @@ const OCRLabPage: React.FC = () => {
       return <p style={{ color: '#6f6f6f', padding: 16 }}>No signatures detected.</p>;
     }
     return (
-      <StructuredListWrapper>
-        <StructuredListHead>
-          <StructuredListRow head>
-            <StructuredListCell head>#</StructuredListCell>
-            <StructuredListCell head>Page</StructuredListCell>
-            <StructuredListCell head>Confidence</StructuredListCell>
-            <StructuredListCell head>Bounding box</StructuredListCell>
-          </StructuredListRow>
-        </StructuredListHead>
-        <StructuredListBody>
-          {result.signatures.map((s, i) => (
-            <StructuredListRow key={i}>
-              <StructuredListCell>{i + 1}</StructuredListCell>
-              <StructuredListCell>{s.page_number}</StructuredListCell>
-              <StructuredListCell>{(s.confidence * 100).toFixed(0)}%</StructuredListCell>
-              <StructuredListCell>
-                {s.bbox ? `[${s.bbox.map((n) => n.toFixed(0)).join(', ')}]` : '—'}
-              </StructuredListCell>
-            </StructuredListRow>
-          ))}
-        </StructuredListBody>
-      </StructuredListWrapper>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
+        {result.signatures.map((s, i) => (
+          <Tile key={i} style={{ padding: 12 }}>
+            {s.thumbnail_base64 ? (
+              <img
+                src={`data:image/png;base64,${s.thumbnail_base64}`}
+                alt={`Signature ${i + 1}`}
+                style={{ width: '100%', borderRadius: 4, marginBottom: 8, border: '1px solid #e0e0e0', background: '#fff' }}
+              />
+            ) : (
+              <div style={{ height: 100, background: '#f4f4f4', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
+                <CheckmarkOutline size={28} style={{ color: '#a8a8a8' }} />
+              </div>
+            )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4, flexWrap: 'wrap' }}>
+              <Tag type="purple" size="sm">Signature #{i + 1}</Tag>
+              <Tag type="cool-gray" size="sm">Page {s.page_number}</Tag>
+              <Tag type={s.confidence > 0.8 ? 'green' : 'warm-gray'} size="sm">
+                {(s.confidence * 100).toFixed(0)}% conf
+              </Tag>
+            </div>
+            {s.bbox && (
+              <div style={{ fontSize: 10, color: '#6f6f6f', fontFamily: 'monospace' }}>
+                bbox: [{s.bbox.map((n) => n.toFixed(0)).join(', ')}]
+              </div>
+            )}
+          </Tile>
+        ))}
+      </div>
     );
   };
 

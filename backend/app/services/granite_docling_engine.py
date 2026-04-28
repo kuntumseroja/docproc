@@ -33,6 +33,7 @@ class TableElement:
     rows: List[List[str]]
     bbox: Optional[List[float]] = None  # [x0, y0, x1, y1]
     caption: Optional[str] = None
+    thumbnail_base64: Optional[str] = None
 
 
 @dataclass
@@ -50,6 +51,8 @@ class FormFieldElement:
     label: Optional[str] = None
     value: Optional[str] = None
     is_handwritten: bool = False
+    bbox: Optional[List[float]] = None
+    thumbnail_base64: Optional[str] = None
 
 
 @dataclass
@@ -57,6 +60,7 @@ class SignatureElement:
     page_number: int
     bbox: Optional[List[float]] = None
     confidence: float = 0.0
+    thumbnail_base64: Optional[str] = None
 
 
 @dataclass
@@ -87,6 +91,7 @@ class GraniteDoclingResult:
                     "rows": t.rows,
                     "bbox": t.bbox,
                     "caption": t.caption,
+                    "thumbnail_base64": t.thumbnail_base64,
                 }
                 for t in self.tables
             ],
@@ -105,6 +110,8 @@ class GraniteDoclingResult:
                     "label": f.label,
                     "value": f.value,
                     "is_handwritten": f.is_handwritten,
+                    "bbox": f.bbox,
+                    "thumbnail_base64": f.thumbnail_base64,
                 }
                 for f in self.form_fields
             ],
@@ -113,6 +120,7 @@ class GraniteDoclingResult:
                     "page_number": s.page_number,
                     "bbox": s.bbox,
                     "confidence": s.confidence,
+                    "thumbnail_base64": s.thumbnail_base64,
                 }
                 for s in self.signatures
             ],
@@ -171,7 +179,12 @@ class GraniteDoclingEngine:
     # ---- Conversion --------------------------------------------------------
 
     def _ensure_converter(self):
-        """Lazily build the docling DocumentConverter on first use."""
+        """Lazily build the docling DocumentConverter on first use.
+
+        Configures the PDF pipeline to keep page images and picture images so
+        the engine can crop bbox regions for signatures, handwritten form
+        fields, and other detected elements.
+        """
         if self._converter is not None:
             return self._converter
         if not self.is_available():
@@ -179,8 +192,37 @@ class GraniteDoclingEngine:
                 "docling SDK not installed. Run: "
                 "pip install -r backend/requirements-granite.txt"
             )
-        from docling.document_converter import DocumentConverter  # type: ignore
-        self._converter = DocumentConverter()
+        from docling.document_converter import DocumentConverter, PdfFormatOption  # type: ignore
+        from docling.datamodel.base_models import InputFormat  # type: ignore
+        try:
+            from docling.datamodel.pipeline_options import PdfPipelineOptions  # type: ignore
+        except ImportError:
+            PdfPipelineOptions = None  # type: ignore
+
+        format_options = None
+        if PdfPipelineOptions is not None:
+            try:
+                pdf_opts = PdfPipelineOptions()
+                # Keep rendered page images so we can crop element regions
+                if hasattr(pdf_opts, "generate_page_images"):
+                    pdf_opts.generate_page_images = True
+                if hasattr(pdf_opts, "generate_picture_images"):
+                    pdf_opts.generate_picture_images = True
+                # Higher scale = sharper crops; 2.0 is a good readability/perf trade-off
+                if hasattr(pdf_opts, "images_scale"):
+                    pdf_opts.images_scale = 2.0
+                format_options = {
+                    InputFormat.PDF: PdfFormatOption(pipeline_options=pdf_opts),
+                    InputFormat.IMAGE: PdfFormatOption(pipeline_options=pdf_opts),
+                }
+            except Exception as e:
+                logger.warning(f"[granite-docling] using default pipeline options: {e}")
+                format_options = None
+
+        if format_options is not None:
+            self._converter = DocumentConverter(format_options=format_options)
+        else:
+            self._converter = DocumentConverter()
         return self._converter
 
     def process(self, file_path: Path) -> GraniteDoclingResult:
@@ -268,10 +310,17 @@ class GraniteDoclingEngine:
                     for row in cells:
                         if isinstance(row, list):
                             rows.append([str(c) for c in row])
-                page = getattr(t, "page", None) or getattr(t, "page_no", 1)
-                bbox = self._read_bbox(t)
+                page = self._item_page(t) or 1
+                bbox = self._read_bbox_from_prov(t)
                 caption = getattr(t, "caption", None) or getattr(t, "label", None)
-                out.append(TableElement(page_number=int(page or 1), rows=rows, bbox=bbox, caption=caption))
+                thumb = self._crop_region(doc, int(page), bbox)
+                out.append(TableElement(
+                    page_number=int(page),
+                    rows=rows,
+                    bbox=bbox,
+                    caption=caption,
+                    thumbnail_base64=thumb,
+                ))
             except Exception as e:
                 logger.warning(f"table extraction skipped: {e}")
         return out
@@ -302,12 +351,21 @@ class GraniteDoclingEngine:
         # Track items already seen by self_ref so we don't double-count
         seen_refs: set = set()
 
-        def _add_kv(key_text: Optional[str], value_text: Optional[str], page: int, handwritten: bool) -> None:
+        def _add_kv(
+            key_text: Optional[str],
+            value_text: Optional[str],
+            page: int,
+            handwritten: bool,
+            bbox: Optional[List[float]] = None,
+        ) -> None:
+            thumb = self._crop_region(doc, int(page or 1), bbox) if bbox else None
             out.append(FormFieldElement(
                 page_number=int(page or 1),
                 label=str(key_text) if key_text else None,
                 value=str(value_text) if value_text else None,
                 is_handwritten=handwritten,
+                bbox=bbox,
+                thumbnail_base64=thumb,
             ))
 
         # 1) key_value_items — pairs of {key, value} text refs
@@ -319,8 +377,14 @@ class GraniteDoclingEngine:
                 val_text = self._item_text(val_item, doc) if val_item is not None else None
                 page = self._item_page(kv) or self._item_page(val_item) or 1
                 hw = self._is_handwritten(val_item) or self._is_handwritten(key_item)
+                # Use the value's bbox first (more visually meaningful), fall back to key/kv
+                bbox = (
+                    self._read_bbox_from_prov(val_item)
+                    or self._read_bbox_from_prov(key_item)
+                    or self._read_bbox_from_prov(kv)
+                )
                 if key_text or val_text:
-                    _add_kv(key_text, val_text, page, hw)
+                    _add_kv(key_text, val_text, page, hw, bbox)
                 # mark refs as seen
                 for ref in (getattr(kv, "self_ref", None), getattr(key_item, "self_ref", None), getattr(val_item, "self_ref", None)):
                     if ref:
@@ -335,8 +399,9 @@ class GraniteDoclingEngine:
                 value = getattr(fi, "value", None) or getattr(fi, "text", None)
                 page = self._item_page(fi) or 1
                 hw = self._is_handwritten(fi)
+                bbox = self._read_bbox_from_prov(fi)
                 if label or value:
-                    _add_kv(label, value, page, hw)
+                    _add_kv(label, value, page, hw, bbox)
             except Exception as e:
                 logger.warning(f"field item extraction skipped: {e}")
 
@@ -351,7 +416,8 @@ class GraniteDoclingEngine:
                 if label_str.lower() in ("handwritten_text", "handwritten"):
                     page = self._item_page(t) or 1
                     text = getattr(t, "text", None) or getattr(t, "orig", None)
-                    _add_kv(None, text, page, True)
+                    bbox = self._read_bbox_from_prov(t)
+                    _add_kv(None, text, page, True, bbox)
             except Exception as e:
                 logger.warning(f"handwritten text scan skipped: {e}")
 
@@ -381,10 +447,12 @@ class GraniteDoclingEngine:
                 if label_str in ("handwritten_text", "handwritten"):
                     page = self._item_page(t) or 1
                     bbox = self._read_bbox_from_prov(t)
+                    thumb = self._crop_region(doc, int(page), bbox)
                     out.append(SignatureElement(
                         page_number=int(page),
                         bbox=bbox,
                         confidence=0.85,
+                        thumbnail_base64=thumb,
                     ))
             except Exception as e:
                 logger.warning(f"signature (handwritten text) skipped: {e}")
@@ -401,10 +469,13 @@ class GraniteDoclingEngine:
                 if any(kw in hint for kw in SIG_KEYWORDS):
                     page = self._item_page(p) or 1
                     bbox = self._read_bbox_from_prov(p)
+                    # Prefer the picture's own image bytes (sharpest); fall back to a page-region crop
+                    thumb = self._render_thumbnail(p) or self._crop_region(doc, int(page), bbox)
                     out.append(SignatureElement(
                         page_number=int(page),
                         bbox=bbox,
                         confidence=0.7,
+                        thumbnail_base64=thumb,
                     ))
             except Exception as e:
                 logger.warning(f"signature (picture) skipped: {e}")
@@ -549,6 +620,83 @@ class GraniteDoclingEngine:
             img.save(buf, format="PNG")
             return base64.b64encode(buf.getvalue()).decode("ascii")
         except Exception:
+            return None
+
+    @staticmethod
+    def _get_page_image(doc: Any, page_no: int):
+        """Return the rendered PIL.Image for the given page, or None."""
+        try:
+            pages = getattr(doc, "pages", None)
+            if pages is None:
+                return None
+            page = None
+            if isinstance(pages, dict):
+                page = pages.get(page_no) or pages.get(int(page_no))
+            elif isinstance(pages, list):
+                # 1-based page numbers from docling
+                if 0 < page_no <= len(pages):
+                    page = pages[page_no - 1]
+            if page is None:
+                return None
+            img_obj = getattr(page, "image", None)
+            if img_obj is None:
+                return None
+            # docling wraps PIL images in an ImageRef
+            for attr in ("pil_image", "image"):
+                inner = getattr(img_obj, attr, None)
+                if inner is not None:
+                    img_obj = inner
+                    break
+            try:
+                from PIL import Image  # type: ignore
+                if isinstance(img_obj, Image.Image):
+                    return img_obj
+            except Exception:
+                return None
+            return None
+        except Exception:
+            return None
+
+    @classmethod
+    def _crop_region(
+        cls,
+        doc: Any,
+        page_no: int,
+        bbox: Optional[List[float]],
+        max_size: int = 480,
+        pad: int = 6,
+    ) -> Optional[str]:
+        """Crop a bbox region from the rendered page image and return base64 PNG.
+
+        bbox is interpreted in docling's TOP-LEFT coordinate system. Falls back
+        to None when the page hasn't been rendered or bbox is missing.
+        """
+        if not bbox or len(bbox) < 4:
+            return None
+        page_img = cls._get_page_image(doc, page_no)
+        if page_img is None:
+            return None
+        try:
+            from PIL import Image  # type: ignore
+            W, H = page_img.size
+            x0, y0, x1, y1 = bbox[:4]
+            # Detect bottom-left coordinate space (some docling versions use it)
+            if y1 < y0:
+                y0, y1 = H - y1, H - y0
+            # Apply padding and clamp into image bounds
+            x0 = max(0, int(x0) - pad)
+            y0 = max(0, int(y0) - pad)
+            x1 = min(W, int(x1) + pad)
+            y1 = min(H, int(y1) + pad)
+            if x1 <= x0 or y1 <= y0:
+                return None
+            crop = page_img.crop((x0, y0, x1, y1))
+            crop.thumbnail((max_size, max_size))
+            buf = io.BytesIO()
+            crop.save(buf, format="PNG")
+            return base64.b64encode(buf.getvalue()).decode("ascii")
+        except Exception as e:
+            logger.warning(f"page crop failed: {e}")
             return None
 
     @staticmethod

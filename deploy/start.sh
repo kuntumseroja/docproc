@@ -27,6 +27,35 @@ cd "$DEPLOY_DIR" || fail "Deploy directory not found: $DEPLOY_DIR"
 
 docker info >/dev/null 2>&1 || fail "Docker is not running"
 
+# ── Free up known dev / app ports so containers can bind cleanly ───────────
+# Skip with: SKIP_PORT_CLEANUP=1 ./start.sh
+if [ "${SKIP_PORT_CLEANUP:-0}" != "1" ]; then
+    # Frontend dev (CRA / Vite), backend, MinIO console — covers stale local
+    # dev servers that sometimes survive a previous session.
+    PORTS_TO_FREE="${PORTS_TO_FREE:-3000 5173 8000 8080 9001}"
+    for p in $PORTS_TO_FREE; do
+        # Don't kill anything already owned by our docker-compose stack
+        if command -v lsof >/dev/null 2>&1; then
+            pids=$(lsof -ti ":$p" 2>/dev/null || true)
+            if [ -n "$pids" ]; then
+                # Skip if it's a docker-proxy process (managed by docker)
+                non_docker_pids=""
+                for pid in $pids; do
+                    pname=$(ps -p "$pid" -o comm= 2>/dev/null || true)
+                    case "$pname" in
+                        *docker*|*com.docker*) ;; # leave docker-proxy alone
+                        *) non_docker_pids="$non_docker_pids $pid" ;;
+                    esac
+                done
+                if [ -n "$non_docker_pids" ]; then
+                    warn "Freeing port $p (killing PIDs:$non_docker_pids)"
+                    kill -9 $non_docker_pids 2>/dev/null || true
+                fi
+            fi
+        fi
+    done
+fi
+
 echo ""
 echo "  ╔══════════════════════════════════════╗"
 echo "  ║     DocProc — Starting Services     ║"

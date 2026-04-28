@@ -43,11 +43,37 @@ done
 cd "$DEPLOY_DIR" || fail "Deploy directory not found: $DEPLOY_DIR"
 [ -f "$COMPOSE_FILE" ] || fail "Compose file not found: $COMPOSE_FILE"
 
+# ── Also free up known dev ports left behind by stray processes ────────────
+# Skip with: SKIP_PORT_CLEANUP=1 ./stop.sh
+free_dev_ports() {
+    [ "${SKIP_PORT_CLEANUP:-0}" = "1" ] && return 0
+    command -v lsof >/dev/null 2>&1 || return 0
+    PORTS_TO_FREE="${PORTS_TO_FREE:-3000 5173 8000 8080}"
+    for p in $PORTS_TO_FREE; do
+        pids=$(lsof -ti ":$p" 2>/dev/null || true)
+        [ -z "$pids" ] && continue
+        non_docker_pids=""
+        for pid in $pids; do
+            pname=$(ps -p "$pid" -o comm= 2>/dev/null || true)
+            case "$pname" in
+                *docker*|*com.docker*) ;;
+                *) non_docker_pids="$non_docker_pids $pid" ;;
+            esac
+        done
+        if [ -n "$non_docker_pids" ]; then
+            log "Freeing dev port $p (PIDs:$non_docker_pids)"
+            kill -9 $non_docker_pids 2>/dev/null || true
+        fi
+    done
+}
+
 echo ""
 echo "  ╔══════════════════════════════════════╗"
 echo "  ║     DocProc — Stopping Services     ║"
 echo "  ╚══════════════════════════════════════╝"
 echo ""
+
+free_dev_ports
 
 case "$MODE" in
     stop)

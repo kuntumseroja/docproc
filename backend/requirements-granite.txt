@@ -1,0 +1,20 @@
+# Optional dependencies for Granite-Docling multimodal OCR engine.
+#
+# Install only when you want to enable the OCR Lab / granite-docling-258M
+# engine, since these pull in PyTorch and transformers (~2-3 GB total).
+#
+# Usage:
+#   pip install -r requirements-granite.txt
+#
+# Then enable in OCR Lab UI at /ocr-lab. Existing Tesseract / Mistral
+# engines continue to work even when this package is not installed.
+
+# IBM Docling SDK — wraps granite-docling-258M and related vision models
+docling>=2.0.0
+
+# Pin torch for predictable cross-platform behavior. Comment out if you
+# want pip to pick the wheel matching your CUDA / CPU setup automatically.
+torch>=2.2.0,<3.0.0
+
+# Image processing helpers used by the inference pipeline
+pillow>=10.0.0

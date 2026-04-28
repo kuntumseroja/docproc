@@ -15,6 +15,7 @@ import WorkflowDetailPage from './pages/WorkflowDetailPage';
 import DocumentDetailPage from './pages/DocumentDetailPage';
 import SettingsPage from './pages/SettingsPage';
 import RoleMatrixPage from './pages/RoleMatrixPage';
+import OCRLabPage from './pages/OCRLabPage';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
           <Route path="/documents/:documentId" element={<DocumentDetailPage />} />
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/role-matrix" element={<RoleMatrixPage />} />
+          <Route path="/ocr-lab" element={<OCRLabPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

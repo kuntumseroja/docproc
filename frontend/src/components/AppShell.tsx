@@ -25,6 +25,7 @@ import {
   Logout,
   Login,
   SkillLevelAdvanced,
+  Ai,
 } from '@carbon/icons-react';
 import { useAuthStore } from '../store/authStore';
 
@@ -36,6 +37,7 @@ const NAV_ITEMS = [
   { path: '/repository', label: 'Repository', icon: DataBase },
   { path: '/compliance', label: 'Compliance', icon: Security },
   { path: '/role-matrix', label: 'Role Matrix', icon: SkillLevelAdvanced },
+  { path: '/ocr-lab', label: 'OCR Lab', icon: Ai, badge: 'Beta' as const },
   { path: '/chat', label: 'Chat', icon: Chat },
   { path: '/settings', label: 'Settings', icon: Settings },
 ];
@@ -107,16 +109,31 @@ const AppShell: React.FC = () => {
         isFixedNav
       >
         <SideNavItems>
-          {NAV_ITEMS.map(({ path, label, icon: Icon }) => (
-            <SideNavLink
-              key={path}
-              renderIcon={Icon}
-              onClick={() => navigate(path)}
-              isActive={location.pathname === path}
-            >
-              {label}
-            </SideNavLink>
-          ))}
+          {NAV_ITEMS.map((item) => {
+            const { path, label, icon: Icon } = item;
+            const badge = (item as any).badge as string | undefined;
+            return (
+              <SideNavLink
+                key={path}
+                renderIcon={Icon}
+                onClick={() => navigate(path)}
+                isActive={location.pathname === path}
+              >
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  {label}
+                  {badge && (
+                    <span style={{
+                      fontSize: 9, fontWeight: 600, letterSpacing: 0.5,
+                      padding: '1px 6px', borderRadius: 8,
+                      background: '#FFF1CC', color: '#8E5400',
+                    }}>
+                      {badge.toUpperCase()}
+                    </span>
+                  )}
+                </span>
+              </SideNavLink>
+            );
+          })}
         </SideNavItems>
       </SideNav>
 

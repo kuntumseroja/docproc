@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Optional, Dict, Any
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -46,7 +46,10 @@ ALLOWED_CONTENT_TYPES = [
 @router.post("/upload", response_model=DocumentUploadResponse)
 async def upload_document(
     file: UploadFile = File(...),
-    workflow_id: Optional[str] = None,
+    # Accept workflow_id from BOTH form-data (preferred) and query string (legacy).
+    # Without Form(...) FastAPI treats it as a query param only, so frontends
+    # that send it in multipart silently lose the workflow association.
+    workflow_id: Optional[str] = Form(None),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

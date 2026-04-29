@@ -34,13 +34,40 @@ warnings but don't reject the form.
 
 ## Where to source samples
 
-- A real photographed/scanned **filled** attendance form (best for demo)
-- A blank attendance form (should be rejected — no handwriting)
-- A handwritten-but-unsigned form (should be rejected — no signature)
+- A **real photographed/scanned** filled attendance form (best for APPROVED demo)
+- `security-attendance-blank.pdf` — included; demos REJECTED path
+- A handwritten-but-unsigned form (should be REJECTED — no signature)
 
-A clean blank PDF template is sufficient to demo the rejection path. Any
-filled-in security log book photo from a building lobby works for the
-approval path.
+### ⚠ About the "filled" synthetic PDF
+
+`security-attendance-filled.pdf` uses a handwriting-style font + a vector-drawn
+signature. **Granite-docling will still REJECT it** because the model is
+trained to detect real handwritten ink (varying baseline, stroke pressure,
+irregularity) — typeset cursive fonts and vector paths read as printed text
+to the model. This is a *good* property of the model: it cannot be fooled by
+typeset content.
+
+For a true APPROVED demo you need a **real photo or scan** of a filled form
+with actual ink-on-paper writing and a real signature. Quick options:
+
+- Use one of the user's existing demo images:
+  - `demo-data/form-ttd.jpeg` / `form-ttd.jpg`
+  - `demo-data/formbukaakun.jpg`
+  - `demo-data/handwrittingrenewalapplicationtosharepoint.webp`
+- Print `security-attendance-blank.pdf`, fill it in by hand, take a phone
+  photo, then upload the photo.
+- Search public datasets for "filled time sheet form scan" / "guard log book
+  scan" — most should trigger handwriting + signature detection.
+
+### Approved path — what the model needs to see
+
+For `review_status=approved`:
+1. At least one region the model classifies as a real signature (irregular
+   handwritten scribble, typically near a "Signature" / "Tanda Tangan" label).
+2. ≥ 3 handwritten field values across the form.
+
+Both come from granite-docling's multimodal detector — there is no string
+heuristic involved, so synthetic / typeset content cannot pass.
 
 ## Related templates
 

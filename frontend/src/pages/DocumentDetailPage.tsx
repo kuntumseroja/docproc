@@ -33,6 +33,48 @@ interface ActionLogEntry {
   created_at?: string;
 }
 
+interface SignatureArtifact {
+  page_number: number;
+  bbox?: number[] | null;
+  confidence: number;
+  thumbnail_base64?: string | null;
+}
+
+interface HandwrittenArtifact {
+  page_number: number;
+  label?: string | null;
+  value?: string | null;
+  bbox?: number[] | null;
+  thumbnail_base64?: string | null;
+}
+
+interface ValidationResult {
+  rule: string;
+  description: string;
+  passed: boolean;
+  severity: string;
+  detail: string;
+}
+
+interface GraniteMetadata {
+  page_count: number;
+  signature_count: number;
+  handwritten_field_count: number;
+  headings: string[];
+  signatures: SignatureArtifact[];
+  handwritten_fields: HandwrittenArtifact[];
+  markdown: string;
+}
+
+interface DocumentMetadata {
+  ocr_engine?: string;
+  model_used?: string;
+  review_status?: 'approved' | 'rejected' | string;
+  rejected_reasons?: string[];
+  validation_results?: ValidationResult[];
+  granite?: GraniteMetadata;
+}
+
 interface DocumentResult {
   document_id: string;
   file_name: string;
@@ -41,6 +83,8 @@ interface DocumentResult {
   processing_time_ms: number;
   error_message?: string;
   action_logs?: ActionLogEntry[];
+  ocr_engine?: string;
+  metadata?: DocumentMetadata | null;
 }
 
 const DocumentDetailPage: React.FC = () => {
@@ -179,6 +223,168 @@ const DocumentDetailPage: React.FC = () => {
           hideCloseButton
           style={{ marginBottom: 24 }}
         />
+      )}
+
+      {/* Form Review Panel — only shown when granite-docling produced metadata
+          (e.g. for Security Guard Attendance and similar form workflows) */}
+      {result.metadata?.granite && (
+        <div style={{ marginBottom: 24 }}>
+          {/* Approve/Reject status banner */}
+          {result.metadata.review_status === 'rejected' ? (
+            <InlineNotification
+              kind="error"
+              title="Form REJECTED"
+              subtitle={
+                (result.metadata.rejected_reasons || []).join(' · ') ||
+                'One or more rejection-severity rules failed.'
+              }
+              lowContrast
+              hideCloseButton
+              style={{ marginBottom: 16, maxWidth: '100%' }}
+            />
+          ) : result.metadata.review_status === 'approved' ? (
+            <InlineNotification
+              kind="success"
+              title="Form APPROVED"
+              subtitle={
+                `Signature detected · ${result.metadata.granite.handwritten_field_count} handwritten fields · ` +
+                `extracted with ${result.metadata.ocr_engine || 'granite-docling'}`
+              }
+              lowContrast
+              hideCloseButton
+              style={{ marginBottom: 16, maxWidth: '100%' }}
+            />
+          ) : null}
+
+          {/* Element-count cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginBottom: 16 }}>
+            {[
+              { label: 'Pages', value: result.metadata.granite.page_count, color: '#0F62FE' },
+              { label: 'Signatures', value: result.metadata.granite.signature_count, color: '#8a3ffc' },
+              { label: 'Handwritten fields', value: result.metadata.granite.handwritten_field_count, color: '#ff832b' },
+              { label: 'Headings', value: result.metadata.granite.headings.length, color: '#525252' },
+            ].map((c) => (
+              <Tile key={c.label} style={{ padding: 16 }}>
+                <div style={{ fontSize: 12, color: '#525252', marginBottom: 6 }}>{c.label}</div>
+                <div style={{ fontSize: 28, fontWeight: 300, color: c.color }}>{c.value}</div>
+              </Tile>
+            ))}
+          </div>
+
+          {/* Validation rule results */}
+          {result.metadata.validation_results && result.metadata.validation_results.length > 0 && (
+            <Tile style={{ padding: 16, marginBottom: 16 }}>
+              <h4 style={{ fontWeight: 400, marginBottom: 12 }}>Validation</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {result.metadata.validation_results.map((v, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '6px 0', borderBottom: '1px solid #f4f4f4' }}>
+                    <Tag
+                      type={v.passed ? 'green' : v.severity === 'rejection' ? 'red' : 'warm-gray'}
+                      size="sm"
+                    >
+                      {v.passed ? 'PASS' : v.severity === 'rejection' ? 'REJECT' : 'FAIL'}
+                    </Tag>
+                    <div style={{ flex: 1, fontSize: 13 }}>
+                      <div style={{ fontWeight: 500 }}>{v.rule}</div>
+                      <div style={{ color: '#525252' }}>{v.description}</div>
+                      <div style={{ color: '#6f6f6f', fontFamily: 'monospace', fontSize: 11, marginTop: 2 }}>
+                        {v.detail}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Tile>
+          )}
+
+          {/* Side-by-side: Signatures + Handwritten fields */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+            {/* Signatures */}
+            <Tile style={{ padding: 16 }}>
+              <h4 style={{ fontWeight: 400, marginBottom: 12 }}>
+                Signatures ({result.metadata.granite.signature_count})
+              </h4>
+              {result.metadata.granite.signatures.length === 0 ? (
+                <p style={{ color: '#6f6f6f', fontSize: 13 }}>No signatures detected on this form.</p>
+              ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 10 }}>
+                  {result.metadata.granite.signatures.map((s, i) => (
+                    <div key={i} style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 4, padding: 8 }}>
+                      {s.thumbnail_base64 ? (
+                        <img
+                          src={`data:image/png;base64,${s.thumbnail_base64}`}
+                          alt={`Signature ${i + 1}`}
+                          style={{ width: '100%', borderRadius: 2, marginBottom: 6 }}
+                        />
+                      ) : (
+                        <div style={{ height: 70, background: '#f4f4f4', borderRadius: 2, marginBottom: 6 }} />
+                      )}
+                      <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                        <Tag size="sm" type="purple">#{i + 1}</Tag>
+                        <Tag size="sm" type="cool-gray">P {s.page_number}</Tag>
+                        <Tag size="sm" type={s.confidence > 0.8 ? 'green' : 'warm-gray'}>
+                          {(s.confidence * 100).toFixed(0)}%
+                        </Tag>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Tile>
+
+            {/* Handwritten fields */}
+            <Tile style={{ padding: 16 }}>
+              <h4 style={{ fontWeight: 400, marginBottom: 12 }}>
+                Handwritten fields ({result.metadata.granite.handwritten_field_count})
+              </h4>
+              {result.metadata.granite.handwritten_fields.length === 0 ? (
+                <p style={{ color: '#6f6f6f', fontSize: 13 }}>No handwritten content detected.</p>
+              ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
+                  {result.metadata.granite.handwritten_fields.map((h, i) => (
+                    <div key={i} style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 4, padding: 8 }}>
+                      {h.thumbnail_base64 ? (
+                        <img
+                          src={`data:image/png;base64,${h.thumbnail_base64}`}
+                          alt={`Handwritten ${i + 1}`}
+                          style={{ width: '100%', borderRadius: 2, marginBottom: 6, border: '1px solid #f4f4f4' }}
+                        />
+                      ) : (
+                        <div style={{ height: 50, background: '#f4f4f4', borderRadius: 2, marginBottom: 6 }} />
+                      )}
+                      <div style={{ display: 'flex', gap: 4, marginBottom: 4 }}>
+                        <Tag size="sm" type="magenta">Handwritten</Tag>
+                        <Tag size="sm" type="cool-gray">P {h.page_number}</Tag>
+                      </div>
+                      {h.label && (
+                        <div style={{ fontSize: 11, color: '#525252' }}>
+                          <strong>{h.label}</strong>
+                        </div>
+                      )}
+                      <div style={{ fontSize: 13, color: '#161616', wordBreak: 'break-word', marginTop: 2 }}>
+                        {h.value || <span style={{ color: '#a8a8a8' }}>—</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Tile>
+          </div>
+
+          {/* Form text (markdown) */}
+          {result.metadata.granite.markdown && (
+            <Tile style={{ padding: 16, marginTop: 16 }}>
+              <h4 style={{ fontWeight: 400, marginBottom: 12 }}>Extracted form text</h4>
+              <pre style={{
+                whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: 12,
+                background: '#f4f4f4', padding: 12, borderRadius: 4, margin: 0,
+                maxHeight: 400, overflow: 'auto',
+              }}>
+                {result.metadata.granite.markdown}
+              </pre>
+            </Tile>
+          )}
+        </div>
       )}
 
       {/* Split view */}

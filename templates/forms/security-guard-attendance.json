@@ -1,0 +1,45 @@
+{
+  "id": "security-guard-attendance",
+  "name": "Security Guard Attendance Form Review",
+  "version": "1.0",
+  "category": "form-review",
+  "extraction_engine": "granite-docling",
+  "description": "Review filled-and-signed security guard attendance forms (Form Daftar Hadir Satpam). Uses IBM granite-docling-258M to extract printed text, detect handwritten field values, and locate the guard's signature. Documents missing the guard signature or with no handwritten content are auto-rejected.",
+  "document_types": [
+    "Security Attendance Form",
+    "Form Daftar Hadir Satpam",
+    "Security Post Log",
+    "Buku Jaga Satpam"
+  ],
+  "extraction_schema": {
+    "extraction_engine": "granite-docling",
+    "fields": [
+      {"name": "guard_name", "type": "string", "required": true, "source": "Form", "description": "Full name of the security guard on duty"},
+      {"name": "guard_id", "type": "string", "required": false, "source": "Form", "description": "Guard ID / employee number"},
+      {"name": "post_location", "type": "string", "required": true, "source": "Form", "description": "Building / post location (e.g., Gate A, Lobby, Parking)"},
+      {"name": "shift_type", "type": "string", "required": true, "source": "Form", "description": "Shift (morning / afternoon / night, or pagi / siang / malam)"},
+      {"name": "attendance_date", "type": "date", "required": true, "source": "Form", "description": "Date of duty"},
+      {"name": "check_in_time", "type": "string", "required": true, "source": "Form", "description": "Time the guard started the shift"},
+      {"name": "check_out_time", "type": "string", "required": true, "source": "Form", "description": "Time the guard ended the shift"},
+      {"name": "incidents_observed", "type": "string", "required": false, "source": "Form", "description": "Notes / incidents recorded during the shift"},
+      {"name": "supervisor_name", "type": "string", "required": false, "source": "Form", "description": "Supervisor on duty"},
+      {"name": "guard_signature_present", "type": "boolean", "required": true, "source": "Form", "description": "Whether the guard signature was detected by the multimodal model"},
+      {"name": "supervisor_signature_present", "type": "boolean", "required": false, "source": "Form", "description": "Whether a supervisor counter-signature was detected"},
+      {"name": "handwritten_field_count", "type": "number", "required": true, "source": "Form", "description": "Number of fields detected as handwritten on the form"}
+    ]
+  },
+  "validation_rules": [
+    {"rule": "guard_signature_required", "description": "Guard signature must be present on the form. Form is REJECTED if no signature is detected.", "type": "boolean_true", "field": "guard_signature_present", "severity": "rejection"},
+    {"rule": "handwriting_required", "description": "Form must be filled in by hand. At least 3 handwritten field values must be detected.", "type": "min_count", "field": "handwritten_field_count", "min": 3, "severity": "rejection"},
+    {"rule": "attendance_date_required", "description": "Attendance date must be filled in.", "type": "not_empty", "field": "attendance_date"},
+    {"rule": "check_in_time_required", "description": "Shift start time must be filled in.", "type": "not_empty", "field": "check_in_time"},
+    {"rule": "check_out_time_required", "description": "Shift end time must be filled in.", "type": "not_empty", "field": "check_out_time"},
+    {"rule": "post_location_required", "description": "Post / building location must be filled in.", "type": "not_empty", "field": "post_location"}
+  ],
+  "action_triggers": [
+    {"trigger": "all_valid", "action": "mark_approved", "target": "workflow_status", "description": "Mark form as APPROVED when signature + handwriting + required fields all pass"},
+    {"trigger": "validation_failed", "action": "mark_rejected", "target": "workflow_status", "description": "Auto-reject the form when any rejection-severity rule fails (missing signature or no handwriting)"},
+    {"trigger": "missing_guard_signature", "action": "send_notification", "target": "security_supervisor", "template": "form_missing_signature", "description": "Notify supervisor to chase the guard for signature"}
+  ],
+  "nl_prompt": "Extract every printed and handwritten field from this security guard attendance form (Form Daftar Hadir Satpam). Identify: guard name, guard ID, post / building location, shift (pagi / siang / malam / morning / afternoon / night), attendance date, check-in time, check-out time, any incidents observed, supervisor name. For each field, indicate whether the value was handwritten or printed. Detect the guard signature and supervisor signature (if present) — return the bounding box and a flag. Count the number of handwritten field values found. The form is only valid if (a) the guard signature is present and (b) at least 3 fields were filled in by hand. Return all values exactly as they appear in the original document (Indonesian or English)."
+}

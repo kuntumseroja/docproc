@@ -40,6 +40,7 @@ const DashboardPage: React.FC = () => {
   const [recentWorkflows, setRecentWorkflows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [startingPdp, setStartingPdp] = useState(false);
+  const [startingSecurity, setStartingSecurity] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -96,10 +97,27 @@ const DashboardPage: React.FC = () => {
         navigate('/upload');
       }
     } catch {
-      // Fallback: still go to compliance page with pre-selected regulation
       navigate('/compliance?regulation=uu-pdp-2022');
     } finally {
       setStartingPdp(false);
+    }
+  };
+
+  const startSecurityWorkflow = async () => {
+    if (startingSecurity) return;
+    setStartingSecurity(true);
+    try {
+      const res = await api.post('/workflows/from-template/security-guard-attendance');
+      const workflowId = res.data?.id;
+      if (workflowId) {
+        navigate(`/upload?workflow=${workflowId}`);
+      } else {
+        navigate('/upload');
+      }
+    } catch {
+      navigate('/upload');
+    } finally {
+      setStartingSecurity(false);
     }
   };
 
@@ -191,6 +209,44 @@ const DashboardPage: React.FC = () => {
                     <Tag type="blue" size="sm">Indonesia</Tag>
                     <Tag type="purple" size="sm">Data Privacy</Tag>
                     <Tag type="green" size="sm">Workflow</Tag>
+                  </div>
+                </div>
+              </div>
+            </ClickableTile>
+
+            {/* Security Guard Attendance Form Review */}
+            <ClickableTile
+              onClick={startSecurityWorkflow}
+              disabled={startingSecurity}
+              style={{ padding: 20 }}
+            >
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <div style={{
+                  width: 40, height: 40, borderRadius: 8,
+                  background: 'linear-gradient(135deg, #8a3ffc 0%, #6929C4 100%)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  <Security size={22} style={{ color: '#fff' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                    <span style={{ fontSize: 15, fontWeight: 500, color: '#161616' }}>
+                      Security Attendance Form Review
+                    </span>
+                    {startingSecurity ? (
+                      <InlineLoading description="" status="active" style={{ width: 'auto' }} />
+                    ) : (
+                      <ArrowRight size={16} style={{ color: '#4589FF' }} />
+                    )}
+                  </div>
+                  <p style={{ fontSize: 13, color: '#525252', fontWeight: 300, lineHeight: 1.5, marginBottom: 8 }}>
+                    Upload a filled security guard attendance form. Granite-Docling extracts text, isolates handwritten field crops, and flags missing or unsigned forms as REJECTED.
+                  </p>
+                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                    <Tag type="purple" size="sm">Multimodal OCR</Tag>
+                    <Tag type="magenta" size="sm">Handwriting</Tag>
+                    <Tag type="cyan" size="sm">Signature audit</Tag>
                   </div>
                 </div>
               </div>

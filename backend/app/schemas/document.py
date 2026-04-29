@@ -42,6 +42,9 @@ class DocumentResultsResponse(BaseModel):
     completed_at: datetime
     error_message: Optional[str] = None
     action_logs: List[ActionLogEntry] = []
+    # Full metadata blob — includes review_status, signatures, handwritten_fields,
+    # validation_results, and granite-docling artifacts when applicable.
+    metadata: Optional[dict] = None
 
 
 class BatchProcessRequest(BaseModel):

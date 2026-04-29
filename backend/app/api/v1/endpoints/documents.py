@@ -7,7 +7,7 @@ import uuid
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy import select
@@ -209,11 +209,27 @@ async def process_document(
                     document.workflow_id = auto_wf.id
                     logger.info(f"Auto-detected CV workflow for {document_id}: {auto_wf.id}")
 
+        wf = None
+        extraction_engine = None
         if document.workflow_id:
             wf_result = await db.execute(select(Workflow).where(Workflow.id == document.workflow_id))
             wf = wf_result.scalar_one_or_none()
             if wf and wf.extraction_schema:
                 field_defs = wf.extraction_schema.get("fields", [])
+                # Workflow-level engine override (e.g. granite-docling for forms)
+                extraction_engine = wf.extraction_schema.get("extraction_engine")
+
+        # ── Granite-Docling multimodal path (forms with signatures / handwriting) ──
+        if extraction_engine == "granite-docling" and tmp_path and tmp_path.exists():
+            return await _process_with_granite_docling(
+                document=document,
+                tmp_path=tmp_path,
+                wf=wf,
+                field_defs=field_defs or [],
+                ocr_text=ocr_text,
+                start_time=start_time,
+                db=db,
+            )
 
         if not field_defs:
             # Fallback: guess from filename
@@ -355,6 +371,265 @@ Return ONLY valid JSON. Example format:
         return {"status": "failed", "document_id": document_id, "error": str(e)}
 
 
+# ── Granite-Docling multimodal extraction path ────────────────────────────────
+#
+# Used when a workflow has extraction_engine="granite-docling" in its schema.
+# Captures: full text, handwritten field crops, and signature thumbnails.
+# Persists signatures + handwriting samples in document.metadata_json so the
+# review UI can render them for audit.
+
+async def _process_with_granite_docling(
+    document: Document,
+    tmp_path: Path,
+    wf: Optional[Workflow],
+    field_defs: List[Dict[str, Any]],
+    ocr_text: str,
+    start_time: float,
+    db: AsyncSession,
+) -> Dict[str, Any]:
+    from app.services.granite_docling_engine import GraniteDoclingEngine, get_engine
+
+    if not GraniteDoclingEngine.is_available():
+        document.status = DocumentStatus.FAILED
+        document.metadata_json = {
+            "error": "granite-docling engine not installed on backend",
+            "install_hint": "pip install -r backend/requirements-granite.txt",
+        }
+        await db.commit()
+        return {"status": "failed", "document_id": str(document.id), "error": "granite-docling not installed"}
+
+    logger.info(f"[granite-docling] processing {document.id}")
+    engine = get_engine()
+    granite_result = engine.process(tmp_path)
+
+    if granite_result.status == "failed":
+        document.status = DocumentStatus.FAILED
+        document.metadata_json = {
+            "ocr_engine": "granite-docling",
+            "error": granite_result.error_message or "granite-docling processing failed",
+        }
+        await db.commit()
+        return {"status": "failed", "document_id": str(document.id), "error": granite_result.error_message}
+
+    # ---- Map granite output → workflow schema fields via the LLM -----------
+    # The LLM only fills the printed-text-derived fields. Signature presence
+    # and handwriting count come directly from the granite multimodal output
+    # (no LLM hallucination risk).
+
+    field_names = [f["name"] for f in field_defs]
+    field_desc = "\n".join(
+        f"- {f['name']}: {f.get('description') or f.get('label') or f['name']} ({f.get('type', 'text')})"
+        for f in field_defs
+        # Skip the structural fields we'll fill ourselves
+        if f["name"] not in {"guard_signature_present", "supervisor_signature_present", "handwritten_field_count"}
+    )
+
+    # Compose form context: markdown body + handwritten fields list
+    form_text_blob = granite_result.markdown or granite_result.plain_text or ocr_text or ""
+    handwritten_fields = [f for f in granite_result.form_fields if f.is_handwritten]
+    handwritten_summary = "\n".join(
+        f"- {h.label or '(no label)'}: {h.value or '(no value)'}"
+        for h in handwritten_fields[:30]
+    ) or "(no handwritten fields detected)"
+
+    prompt_text = f"""Extract the requested fields from this filled security guard attendance form.
+The form was processed by IBM granite-docling-258M, which separately identified
+handwritten content from printed text.
+
+Fields to extract:
+{field_desc}
+
+Document body (markdown, layout preserved):
+---
+{form_text_blob[:6000]}
+---
+
+Handwritten fields detected (label: value):
+{handwritten_summary}
+
+Return ONLY valid JSON: {{"field_name": {{"value": "...", "confidence": 0.0-1.0}}, ...}}.
+If a field is not in the document, return {{"value": null, "confidence": 0.0}}."""
+
+    extracted_fields: Dict[str, Any] = {}
+    llm_model_used: Optional[str] = None
+    try:
+        from app.services.llm_provider import LLMProviderFactory
+        llm = LLMProviderFactory.from_settings()
+        max_out = max(2048, min(len(field_defs) * 150 + 500, 8000))
+        llm_response = await llm.chat(
+            messages=[
+                {"role": "system", "content": "You extract structured fields from forms. Return valid JSON only."},
+                {"role": "user", "content": prompt_text},
+            ],
+            temperature=0.0,
+            max_tokens=max_out,
+        )
+        llm_model_used = llm_response.model
+        response_text = llm_response.content.strip()
+        if response_text.startswith("```"):
+            response_text = response_text.split("\n", 1)[-1]
+            if response_text.endswith("```"):
+                response_text = response_text[:-3]
+            response_text = response_text.strip()
+        extracted_fields = json.loads(response_text)
+    except Exception as e:
+        logger.warning(f"[granite-docling] LLM mapping failed, falling back to handwritten-only: {e}")
+        # Fallback: just copy handwritten fields into the schema where labels match
+        lower_field_names = {n.lower() for n in field_names}
+        for h in handwritten_fields:
+            label = (h.label or "").lower().replace(" ", "_")
+            if label in lower_field_names and h.value:
+                extracted_fields[label] = {"value": h.value, "confidence": 0.6}
+
+    # ---- Inject the structural fields from granite output (authoritative) -
+    sig_count = len(granite_result.signatures)
+    hw_count = len(handwritten_fields)
+    extracted_fields["guard_signature_present"] = {
+        "value": "true" if sig_count >= 1 else "false",
+        "confidence": 0.95,
+    }
+    extracted_fields["supervisor_signature_present"] = {
+        "value": "true" if sig_count >= 2 else "false",
+        "confidence": 0.85,
+    }
+    extracted_fields["handwritten_field_count"] = {
+        "value": str(hw_count),
+        "confidence": 1.0,
+    }
+
+    # ---- Save extractions --------------------------------------------------
+    from sqlalchemy import delete as sa_delete
+    await db.execute(sa_delete(Extraction).where(Extraction.document_id == document.id))
+
+    for f in field_defs:
+        name = f["name"]
+        data = extracted_fields.get(name) or extracted_fields.get(name.lower()) or {}
+        raw_value = data.get("value") if isinstance(data, dict) else data
+        if isinstance(raw_value, list):
+            value = ", ".join(str(v) for v in raw_value)
+        elif raw_value is None:
+            value = ""
+        else:
+            value = str(raw_value)
+        confidence = float(data.get("confidence", 0.0)) if isinstance(data, dict) else 0.0
+        db.add(Extraction(
+            id=uuid.uuid4(),
+            document_id=document.id,
+            field_name=name,
+            field_value=value,
+            field_type=f.get("type", "text"),
+            confidence=confidence,
+            model_used=f"granite-docling+{llm_model_used or 'fallback'}",
+        ))
+
+    # ---- Run validation against rules + decide review_status --------------
+    rules = (wf.validation_rules or {}).get("rules", []) if wf and wf.validation_rules else []
+    validation_results: List[Dict[str, Any]] = []
+    rejected_reasons: List[str] = []
+
+    def _field_value(name: str) -> str:
+        d = extracted_fields.get(name) or extracted_fields.get(name.lower()) or {}
+        v = d.get("value") if isinstance(d, dict) else d
+        return "" if v is None else str(v).strip()
+
+    for rule in rules:
+        rule_type = rule.get("type")
+        passed = True
+        msg = ""
+        try:
+            if rule_type == "boolean_true":
+                fv = _field_value(rule.get("field", "")).lower()
+                passed = fv in ("true", "yes", "1")
+                msg = f"{rule.get('field')} = {fv or 'empty'}"
+            elif rule_type == "min_count":
+                fv_str = _field_value(rule.get("field", ""))
+                try:
+                    fv_num = int(fv_str) if fv_str else 0
+                except ValueError:
+                    fv_num = 0
+                min_required = int(rule.get("min", 1))
+                passed = fv_num >= min_required
+                msg = f"{rule.get('field')} = {fv_num} (need ≥ {min_required})"
+            elif rule_type == "not_empty":
+                fv = _field_value(rule.get("field", ""))
+                passed = bool(fv)
+                msg = f"{rule.get('field')} = {fv or '(empty)'}"
+            else:
+                # Unknown rule type — soft-pass so we don't block the form
+                passed = True
+                msg = f"unsupported rule type: {rule_type}"
+        except Exception as e:
+            passed = False
+            msg = f"rule evaluation error: {e}"
+
+        validation_results.append({
+            "rule": rule.get("rule"),
+            "description": rule.get("description"),
+            "passed": passed,
+            "severity": rule.get("severity", "warning"),
+            "detail": msg,
+        })
+        if not passed and rule.get("severity") == "rejection":
+            rejected_reasons.append(rule.get("description") or rule.get("rule") or "validation failed")
+
+    review_status = "rejected" if rejected_reasons else "approved"
+    processing_time = (time.time() - start_time) * 1000
+
+    # ---- Persist visual artifacts to metadata_json ------------------------
+    document.status = DocumentStatus.COMPLETED
+    document.metadata_json = {
+        "ocr_engine": "granite-docling",
+        "model_used": llm_model_used or "granite-docling",
+        "processing_time_ms": processing_time,
+        "fields_extracted": len([k for k in extracted_fields if k in field_names]),
+        "review_status": review_status,
+        "rejected_reasons": rejected_reasons,
+        "validation_results": validation_results,
+        "granite": {
+            "page_count": granite_result.page_count,
+            "signature_count": sig_count,
+            "handwritten_field_count": hw_count,
+            "headings": granite_result.headings,
+            "signatures": [
+                {
+                    "page_number": s.page_number,
+                    "bbox": s.bbox,
+                    "confidence": s.confidence,
+                    "thumbnail_base64": s.thumbnail_base64,
+                }
+                for s in granite_result.signatures
+            ],
+            "handwritten_fields": [
+                {
+                    "page_number": h.page_number,
+                    "label": h.label,
+                    "value": h.value,
+                    "bbox": h.bbox,
+                    "thumbnail_base64": h.thumbnail_base64,
+                }
+                for h in handwritten_fields
+            ],
+            # Full markdown extraction so reviewers can read the form text
+            "markdown": form_text_blob[:8000],
+        },
+    }
+    await db.commit()
+
+    logger.info(
+        f"[granite-docling] done {document.id}: review_status={review_status}, "
+        f"sigs={sig_count}, handwritten={hw_count}, time={processing_time:.0f}ms"
+    )
+    return {
+        "status": "completed",
+        "document_id": str(document.id),
+        "review_status": review_status,
+        "rejected_reasons": rejected_reasons,
+        "signature_count": sig_count,
+        "handwritten_field_count": hw_count,
+        "processing_time_ms": round(processing_time),
+    }
+
+
 @router.post("/process-batch", response_model=BatchProcessResponse)
 async def process_batch(
     request: BatchProcessRequest,
@@ -449,17 +724,20 @@ async def get_document_results(
             created_at=log.created_at,
         ))
 
+    md = document.metadata_json or {}
+    md_engine = md.get("ocr_engine") if isinstance(md, dict) else None
     return DocumentResultsResponse(
         document_id=str(document.id),
         file_name=document.original_filename,
         status=document.status.value,
         fields=fields,
         tables={},
-        processing_time_ms=0.0,
-        ocr_engine="mistral",
+        processing_time_ms=float(md.get("processing_time_ms") or 0.0),
+        ocr_engine=md_engine or "mistral",
         completed_at=document.updated_at,
         error_message=error_message,
         action_logs=action_log_entries,
+        metadata=md if isinstance(md, dict) else None,
     )
 
 
